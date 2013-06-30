@@ -7,6 +7,8 @@ namespace SotckAnalyzer.data
 {
     public class DailyData
     {
+
+
         public DateTime time;
         public decimal price;
         public decimal change;

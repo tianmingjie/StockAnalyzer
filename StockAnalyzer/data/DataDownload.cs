@@ -5,14 +5,15 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
+using SotckAnalyzer.util;
 
 namespace SotckAnalyzer.data
 {
     public class DataDownload
     {
-      
 
-                /// <summary>
+
+        /// <summary>
         /// 生成所有的股票的
         /// </summary>
         public static void generateAll()
@@ -35,17 +36,12 @@ namespace SotckAnalyzer.data
                 {
                     if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
                         //Console.WriteLine(toDate(dateTime.Date));
-                        generateFile(stock, toDate(dateTime.Date));
+                        generateFile(stock, StockUtil.FormatDate(dateTime.Date));
                 }
             }
             return;
         }
-        public static string toDate(DateTime date)
-        {
-            string d = date.Day < 10 ? "0" + date.Day.ToString() : date.Day.ToString();
-            string m = date.Month < 10 ? "0" + date.Month.ToString() : date.Month.ToString();
-            return date.Year + "-" + m + "-" + d;
-        }
+
 
         public static bool generateFile(string stock, string date)
         {
@@ -119,27 +115,33 @@ namespace SotckAnalyzer.data
         /// <param name="date"></param>
         /// <param name="stock"></param>
         /// <returns></returns>
-        public static bool downloadDataToCsv( string stock,string date)
+        public static bool downloadDataToCsv(string stock, string date)
         {
 
-            if(!Directory.Exists(Constant.ROOT_FOLDER + stock))Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
-            string filePath = Constant.ROOT_FOLDER + stock + @"\" + stock + "-" + date + ".csv";
-            WebClient client = new WebClient();
-            string url = "http://market.finance.sina.com.cn/downxls.php?date=" + date + "&symbol=" + stock;
-            string data = System.Text.Encoding.GetEncoding(936).GetString(client.DownloadData(url));
-            data = ReplaceChinese(data);
+            if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
+            string filePath = Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv";
             if (!File.Exists(filePath))
             {
+                WebClient client = new WebClient();
+                string url = "http://market.finance.sina.com.cn/downxls.php?date=" + date + "&symbol=" + stock;
+                string data = System.Text.Encoding.GetEncoding(936).GetString(client.DownloadData(url));
+                data = ReplaceChinese(data);
+
                 if (data != null && data.Length > 2048)
                 {
 
-                    using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "-" + date + ".csv"))
+                    using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
                     {
                         outfile.Write(data.ToString());
                     }
 
                 }
+                Console.WriteLine("Downloaded: " + filePath);
+            }
+            else
+            {
+                Console.WriteLine("Download Skipped: " + filePath);
             }
 
             return true;
@@ -150,7 +152,7 @@ namespace SotckAnalyzer.data
         /// <param name="date"></param>
         /// <param name="stock"></param>
         /// <returns></returns>
-        public static bool downloadDataToCsv(string stock, string startDate,string endDate)
+        public static bool downloadDataToCsv(string stock, string startDate, string endDate)
         {
             if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
@@ -160,7 +162,7 @@ namespace SotckAnalyzer.data
             {
                 if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
                     //Console.WriteLine(toDate(dateTime.Date));
-                    downloadDataToCsv(stock, toDate(dateTime.Date));
+                    downloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
             }
 
             return true;
@@ -172,7 +174,7 @@ namespace SotckAnalyzer.data
         /// <returns></returns>
         public static string ReplaceChinese(string data)
         {
-            data=data.Replace('\t', ',');
+            data = data.Replace('\t', ',');
             data = data.Replace("买盘", "B");
             data = data.Replace("卖盘", "S");
             data = data.Replace("中性盘", "Z");
