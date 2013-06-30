@@ -5,7 +5,7 @@ using System.Text;
 using LumenWorks.Framework.IO.Csv;
 using System.IO;
 using SotckAnalyzer.data;
-using SotckAnalyzer.util;
+using Common;
 
 namespace SotckAnalyzer.analyzer
 {
@@ -22,7 +22,7 @@ namespace SotckAnalyzer.analyzer
         {
             List<DailyDataSet> dds = new List<DailyDataSet>(); ;
             for (DateTime dateTime = DateTime.Parse(startDate);
-                 dateTime < DateTime.Parse(endDate);
+                 dateTime <= DateTime.Parse(endDate);
                  dateTime += TimeSpan.FromDays(1))
             {
                 if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday)){
@@ -84,6 +84,8 @@ namespace SotckAnalyzer.analyzer
 
                 string[] headers = csv.GetFieldHeaders();
 
+                decimal current;
+
                 while (csv.ReadNextRecord())
                 {
 
@@ -92,35 +94,39 @@ namespace SotckAnalyzer.analyzer
                     //    Console.Write(string.Format("{0} = {1};",
                     //                  headers[i], csv[i]));
                     //Console.WriteLine();
+                   current = Decimal.Parse(csv[1]);
+                    
                     if (index == 0)
                     {
-                        data.ClosePrice = Decimal.Parse(csv[1]);
+                        data.ClosePrice = current;
+                        data.HighestPrice = current;
+                        data.LowestPrice = current;
                     }
 
-                    if (data.OpenPrice < Decimal.Parse(csv[1]))
+                    if (data.HighestPrice < current)
                     {
-                        data.HighestPrice = Decimal.Parse(csv[1]);
+                        data.HighestPrice = current;
                         data.TimeWhenHighest = DateTime.Parse(date + " " + csv[0]);
                     }
-                    else
+                    if(data.LowestPrice>current)
                     {
-                        data.LowestPrice = Decimal.Parse(csv[1]);
+                        data.LowestPrice = current;
                         data.TimeWhenLowest = DateTime.Parse(date + " " + csv[0]);
                     }
 
                     dd.time = DateTime.Parse(date + " " + csv[0]);
-                    dd.price = Decimal.Parse(csv[1]);
+                    dd.price = current;
                     dd.change = Decimal.Parse(csv[2]);
                     dd.share = long.Parse(csv[3]);
                     dd.money = long.Parse(csv[4]);
                     dd.type = csv[5];
 
                     data.set.Add(dd);
-                    data.OpenPrice = Decimal.Parse(csv[1]);
+                    data.OpenPrice = current;
                     index++;
-
                 }
 
+                //Console.WriteLine(fileName+" "+fieldCount + " " + index);
             }
 
             return data;

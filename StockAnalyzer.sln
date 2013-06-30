@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SotckAnalyzer", "StockAnalyzer\SotckAnalyzer.csproj", "{D301A688-C1EA-4168-9206-4D0F4379DE80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadData", "DownloadData\DownloadData.csproj", "{8E37DA8B-A01C-492A-B160-9ADAE343E638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{8C100380-0414-43DB-AA3B-32417C48C89F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +17,14 @@ Global
 		{D301A688-C1EA-4168-9206-4D0F4379DE80}.Debug|x86.Build.0 = Debug|x86
 		{D301A688-C1EA-4168-9206-4D0F4379DE80}.Release|x86.ActiveCfg = Release|x86
 		{D301A688-C1EA-4168-9206-4D0F4379DE80}.Release|x86.Build.0 = Release|x86
+		{8E37DA8B-A01C-492A-B160-9ADAE343E638}.Debug|x86.ActiveCfg = Debug|x86
+		{8E37DA8B-A01C-492A-B160-9ADAE343E638}.Debug|x86.Build.0 = Debug|x86
+		{8E37DA8B-A01C-492A-B160-9ADAE343E638}.Release|x86.ActiveCfg = Release|x86
+		{8E37DA8B-A01C-492A-B160-9ADAE343E638}.Release|x86.Build.0 = Release|x86
+		{8C100380-0414-43DB-AA3B-32417C48C89F}.Debug|x86.ActiveCfg = Debug|x86
+		{8C100380-0414-43DB-AA3B-32417C48C89F}.Debug|x86.Build.0 = Debug|x86
+		{8C100380-0414-43DB-AA3B-32417C48C89F}.Release|x86.ActiveCfg = Release|x86
+		{8C100380-0414-43DB-AA3B-32417C48C89F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

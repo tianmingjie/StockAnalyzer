@@ -7,12 +7,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using SotckAnalyzer.util;
 
-namespace SotckAnalyzer.data
+namespace DownloadData
 {
     public class DataDownload
     {
-
-
         /// <summary>
         /// 生成所有的股票的
         /// </summary>

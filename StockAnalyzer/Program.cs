@@ -9,7 +9,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using SotckAnalyzer.data;
 using SotckAnalyzer.analyzer;
-using SotckAnalyzer.util;
+using Common;
 
 namespace SotckAnalyzer
 {
@@ -48,37 +48,64 @@ namespace SotckAnalyzer
             //conn.Close();
 
             // conectMySQL();
-
-            // DataDownload.downloadDataToCsv("sh600038", "2013-05-20", "2013-06-28");
+            //for (int i = 600000; i < 600210; i++)
+            //{
+ 
+            //    DataDownload.downloadDataToCsv("sh"+i, "2013-05-01", "2013-06-28");
+            //}
+           // DataDownload.downloadDataToCsv("sh600038", "2013-05-20", "2013-06-28");
             //DailyDataSet set = CsvAnalyzer.ReadCsv(@"D:\project\stock\data\sh600038\sh600038-2013-05-20.csv");
             //FilterData fd = new FilterData(set, "<6");
             //fd.Analye();
             //Console.WriteLine(fd.setByBigDeal.Count);
 
-            List<DailyDataSet> dds = CsvAnalyzer.ReadCsv("sh600038", "2013-05-20", "2013-06-28");
-            Console.WriteLine("date,bigBuyShare,bigSellShare,toalShare,bigBuyMoney,bigSellMoney,toalMoney,Open,Close,Average,Hightest,WhenHighest,Lowest,WhenLowest");
+            string stock = "sh600808";
+            string startDate = "2013-01-01";
+            string endDate = "2013-06-30";
+            string filter = "1000";
+            List<DailyDataSet> dds = CsvAnalyzer.ReadCsv(stock, startDate, endDate);
+            StringBuilder str = new StringBuilder();
+            str.Append("date,bigBuyShare,bigSellShare,toalShare,bigBuyMoney,bigSellMoney,toalMoney,Open,Close,Average,Hightest,WhenHighest,Lowest,WhenLowest,BigBuyShareRate,BigSellShareRate,BigBuyMoneyRate,BigSellMoneyRate\n");
             foreach (DailyDataSet ds in dds)
             {
 
-                FilterData fd = new FilterData(ds, ">500");
+                FilterData fd = new FilterData(ds, filter);
                 fd.Analye();
-                Console.Write(StockUtil.FormatDate(fd.set.date)+",");
-                Console.Write(fd.TotalBuyShareByBigDeal + ",");
-                Console.Write(fd.TotalSellShareByBigDeal + ",");
-                Console.Write(fd.set.TotalShare + ",");
-                Console.Write(fd.TotalBuyMoneyByBigDeal + ",");
-                Console.Write(fd.TotalSellMoneyByBigDeal + ",");
-                Console.Write(fd.set.TotalMoney + ",");
-                Console.Write(fd.set.OpenPrice + ",");
-                Console.Write(fd.set.ClosePrice + ",");
-                Console.Write(fd.set.Average + ",");
-                Console.Write(fd.set.HighestPrice + ",");
-                Console.Write(StockUtil.FormatTime(fd.set.TimeWhenHighest) + ",");
-                Console.Write(fd.set.LowestPrice + ",");
-                Console.Write(StockUtil.FormatTime(fd.set.TimeWhenLowest) + ",");
-                Console.WriteLine();
+                str.Append(StockUtil.FormatDate(fd.set.date) + ",");
+                str.Append(fd.TotalBuyShareByBigDeal + ",");
+                str.Append(fd.TotalSellShareByBigDeal + ",");
+                str.Append(fd.set.TotalShare + ",");
+                str.Append(fd.TotalBuyMoneyByBigDeal + ",");
+                str.Append(fd.TotalSellMoneyByBigDeal + ",");
+                str.Append(fd.set.TotalMoney + ",");
+                str.Append(fd.set.OpenPrice + ",");
+                str.Append(fd.set.ClosePrice + ",");
+                str.Append(fd.set.Average + ",");
+                str.Append(fd.set.HighestPrice + ",");
+                str.Append(StockUtil.FormatTime(fd.set.TimeWhenHighest) + ",");
+                str.Append(fd.set.LowestPrice + ",");
+                str.Append(StockUtil.FormatTime(fd.set.TimeWhenLowest) + ",");
+                str.Append(fd.RateOfBuyShareByTotal + ",");
+                str.Append(fd.RateOfSellShareByTotal + ",");
+                str.Append(fd.RateOfBuyMoneyByTotal + ",");
+                str.Append(fd.RateOfSellMoneyByTotal + ",");
+                str.Append("\n");
 
             }
+
+            string analyzePath = Constant.ANALYZE_FOLDER + stock + "_" + startDate + "_" + endDate + "_" + filter + ".csv";
+
+            if (File.Exists(analyzePath))
+            {
+                File.Delete(analyzePath);
+            }
+            using (StreamWriter outfile = new StreamWriter(Constant.ANALYZE_FOLDER + stock + "_" + startDate+"_"+ endDate+"_"+filter+ ".csv"))
+            {
+                outfile.Write(str);
+                Console.WriteLine("Analyzed: " + Constant.ANALYZE_FOLDER + stock + "_" + startDate + "_" + endDate + "_" + filter + ".csv");
+            }
+
+            
         }
 
         public static void conectMySQL()
