@@ -29,7 +29,7 @@ namespace Common
                 return stock;
             }
             else
-            { return Int32.Parse(stock) > 5999 ? "sh" + stock : "sz" + stock; }
+            { return Int32.Parse(stock) > 599999 ? "sh" + stock : "sz" + stock; }
         }
     }
 }

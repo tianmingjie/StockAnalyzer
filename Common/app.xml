@@ -1,4 +1,5 @@
 <StockApp>
 	<rootFolder>D:\project\stock\data\</rootFolder>
   <analyzeFolder>D:\project\stock\analyzeData\</analyzeFolder>
+  <mySql>server=127.0.0.1;user id=root; password=as; database=albertsong; pooling=false;charset=utf8</mySql>
 </StockApp>

@@ -88,42 +88,50 @@ namespace SotckAnalyzer.analyzer
 
                 while (csv.ReadNextRecord())
                 {
-
-                    DailyData dd = new DailyData();
-                    //for (int i = 0; i < fieldCount; i++)
-                    //    Console.Write(string.Format("{0} = {1};",
-                    //                  headers[i], csv[i]));
-                    //Console.WriteLine();
-                   current = Decimal.Parse(csv[1]);
-                    
-                    if (index == 0)
+                    try
                     {
-                        data.ClosePrice = current;
-                        data.HighestPrice = current;
-                        data.LowestPrice = current;
-                    }
+                        DailyData dd = new DailyData();
+                        //for (int i = 0; i < fieldCount; i++)
+                        //    Console.Write(string.Format("{0} = {1};",
+                        //                  headers[i], csv[i]));
+                        //Console.WriteLine();
+                        current = Decimal.Parse(csv[1].Replace("\0", ""));
 
-                    if (data.HighestPrice < current)
+                        if (index == 0)
+                        {
+                            data.ClosePrice = current;
+                            data.HighestPrice = current;
+                            data.LowestPrice = current;
+                        }
+
+                        if (data.HighestPrice < current)
+                        {
+                            data.HighestPrice = current;
+                            data.TimeWhenHighest = DateTime.Parse(date + " " + csv[0]);
+                        }
+                        if (data.LowestPrice > current)
+                        {
+                            data.LowestPrice = current;
+                            data.TimeWhenLowest = DateTime.Parse(date + " " + csv[0]);
+                        }
+
+                        dd.time = DateTime.Parse(date + " " + csv[0]);
+                        dd.price = current;
+                        dd.change = Decimal.Parse(csv[2]);
+                        dd.share = long.Parse(csv[3]);
+                        dd.money = long.Parse(csv[4]);
+                        dd.type = csv[5];
+
+                        data.set.Add(dd);
+                        data.OpenPrice = current;
+                        index++;
+                    }
+                    catch
                     {
-                        data.HighestPrice = current;
-                        data.TimeWhenHighest = DateTime.Parse(date + " " + csv[0]);
+                        ///TODO 吞掉异常
+                        ///
+                        Console.WriteLine("Can't parse at line "+index + "  "+fileName);
                     }
-                    if(data.LowestPrice>current)
-                    {
-                        data.LowestPrice = current;
-                        data.TimeWhenLowest = DateTime.Parse(date + " " + csv[0]);
-                    }
-
-                    dd.time = DateTime.Parse(date + " " + csv[0]);
-                    dd.price = current;
-                    dd.change = Decimal.Parse(csv[2]);
-                    dd.share = long.Parse(csv[3]);
-                    dd.money = long.Parse(csv[4]);
-                    dd.type = csv[5];
-
-                    data.set.Add(dd);
-                    data.OpenPrice = current;
-                    index++;
                 }
 
                 //Console.WriteLine(fileName+" "+fieldCount + " " + index);
