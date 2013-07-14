@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D301A688-C1EA-4168-9206-4D0F4379DE80}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SotckAnalyzer</RootNamespace>
     <AssemblyName>SotckAnalyzer</AssemblyName>
@@ -29,7 +29,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,8 +38,20 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net">
+      <HintPath>..\lib\Common.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="LumenWorks.Framework.IO">
       <HintPath>..\lib\CsvReader\LumenWorks.Framework.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\lib\Sprint.NET\net\4.0\release\Spring.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -54,12 +66,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="analyzer\CsvAnalyzer.cs" />
-    <Compile Include="data\DailyData.cs" />
-    <Compile Include="data\DailyDataSet.cs" />
+    <Compile Include="analyzer\BigDealAnalyzer.cs" />
+    <Compile Include="analyzer\IAnalyzer.cs" />
+    <Compile Include="analyzer\ISave.cs" />
+    <Compile Include="analyzer\MeanChang.cs" />
+    <Compile Include="data\BigDealData.cs" />
     <Compile Include="data\FilterData.cs" />
+    <Compile Include="data\RateData.cs" />
+    <Compile Include="data\StockData.cs" />
+    <Compile Include="reader\Csv.cs" />
+    <Compile Include="data\EntryData.cs" />
+    <Compile Include="data\DailyData.cs" />
+    <Compile Include="analyzer\BigDeal.cs" />
     <Compile Include="data\GeneralData.cs" />
-    <Compile Include="data\IndexData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -97,6 +116,13 @@
       <Project>{8C100380-0414-43DB-AA3B-32417C48C89F}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DownloadData\DownloadData.csproj">
+      <Project>{8E37DA8B-A01C-492A-B160-9ADAE343E638}</Project>
+      <Name>DownloadData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

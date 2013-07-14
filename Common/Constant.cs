@@ -39,5 +39,6 @@ namespace Common
 
         public static string ROOT_FOLDER = map["rootFolder"].EndsWith(@"\") ? map["rootFolder"] : map["rootFolder"] + @"\";// doc.SelectSingleNode("");
         public static string ANALYZE_FOLDER = map["analyzeFolder"].EndsWith(@"\") ? map["analyzeFolder"]  : map["analyzeFolder"] + @"\";
+        public static string BIG_DEAL = map["bigDeal"].Equals("") ? "500" : map["bigDeal"];
     }
 }

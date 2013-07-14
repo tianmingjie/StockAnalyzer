@@ -1,6 +1,6 @@
-set stock=000430
-set startDate=2013-05-01
-set endDate=2013-07-01
+set stock=600836
+set startDate=2013-02-01
+set endDate=2013-07-02
 set filter=600
 
 D:\project\github\StockAnalyzer\bin\DownloadData.exe %stock%  %startDate% %endDate%

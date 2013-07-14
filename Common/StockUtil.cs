@@ -31,5 +31,29 @@ namespace Common
             else
             { return Int32.Parse(stock) > 599999 ? "sh" + stock : "sz" + stock; }
         }
+        /// <summary>
+        ///  filename is sh600836-2013-10-10
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string RetrieveStock(string fileName)
+        {
+            return fileName.ToLower().StartsWith("sh")|| fileName.ToLower().StartsWith("sz")?fileName.ToLower().Substring(2,6):fileName.ToLower().Substring(0,6);
+        }
+
+        /// <summary>
+        /// filename is sh600836-2013-10-10
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string RetrieveDate(string fileName)
+        {
+            return fileName.ToLower().StartsWith("sh") || fileName.ToLower().StartsWith("sz") ? fileName.ToLower().Substring(9, 10) : fileName.ToLower().Substring(7, 10);
+        }
+
+        public static decimal FormatChange(decimal change)
+        {
+            return change > 0 ? change : -change ;
+        }
     }
 }

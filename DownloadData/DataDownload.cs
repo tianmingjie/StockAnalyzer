@@ -6,11 +6,14 @@ using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
 using Common;
+using log4net;
 
 namespace DownloadData
 {
     public class DataDownload
     {
+        private static readonly ILog LOG = LogManager.GetLogger(typeof(DataDownload));
+
         /// <summary>
         /// 生成csv 文件
         /// </summary>
@@ -36,19 +39,19 @@ namespace DownloadData
                     using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
                     {
                         outfile.Write(data.ToString());
-                        Console.WriteLine("Downloaded: " + filePath);
+                        LOG.Info("Downloaded: " + filePath);
                     }
 
                 }
                 else
                 {
-                    Console.WriteLine("None: " + filePath);
+                    LOG.Info("None: " + filePath);
                 }
                 
             }
             else
             {
-                Console.WriteLine("Skipped: " + filePath);
+                LOG.Info("Skipped: " + filePath);
             }
 
             return true;
@@ -68,7 +71,7 @@ namespace DownloadData
                  dateTime += TimeSpan.FromDays(1))
             {
                 if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
-                    //Console.WriteLine(toDate(dateTime.Date));
+                    //LOG.Info(toDate(dateTime.Date));
                     DownloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
             }
 
