@@ -12,13 +12,56 @@ namespace SotckAnalyzer.data
         {
         }
 
+        private long _interval=1440;
+        /// <summary>
+        /// minutes
+        /// </summary>
+        public long Interval
+        {
+            set {value=_interval;}
+            get{
+                return _interval;
+            }
+        }
+       // private List<EntryData> EntryDataList;
         public virtual List<EntryData> EntryDataList
         {
-            set;
             get;
+            set;
+            //set
+            //{
+            //    if (EntryDataList == null)
+            //    {
+            //        value = EntryDataList;
+            //    }
+            //}
+            //get
+            //{
+            //    return EntryDataList;
+            //}
         }
 
         #region total filtered
+        public DateTime StartTime
+        {
+            get{
+            return EntryDataList[0].time;
+            }
+            set
+            {
+            }
+        }
+
+        public DateTime EndTime
+        {
+            get
+            {
+                return EntryDataList[EntryDataList.Count-1].time;
+            }
+            set
+            {
+            }
+        }
 
         public long TotalMoney
         {

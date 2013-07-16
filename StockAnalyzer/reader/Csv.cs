@@ -25,7 +25,7 @@ namespace SotckAnalyzer.reader
             {
                 if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
                 {
-                    //Console.WriteLine(toDate(dateTime.Date));
+                    //LOG.Info(toDate(dateTime.Date));
                     DailyData s = ReadCsv(stock, StockUtil.FormatDate(dateTime.Date),isDownload);
                     if (s != null)
                     {
@@ -97,53 +97,66 @@ namespace SotckAnalyzer.reader
                 string[] headers = csv.GetFieldHeaders();
 
                 decimal current;
-
-                while (csv.ReadNextRecord())
-                {
+                //颠倒记录
+                IEnumerable<string[]> hi= csv.Reverse<string[]>();
+                //foreach(String[]  a in hi)
+                //{
+                //    Console.WriteLine(a[0]);
+                //}
+                //for(int i=0;i<hi.;i++)
+                //{
+                //    Console.WriteLine(csv[i,0]);
+                //}
+                //while (csv.ReadNextRecord())
+                //{
+                //Console.WriteLine(hi.Count<string[]>());
                     try
                     {
-                        EntryData dd = new EntryData();
-                        
-                        current = Decimal.Parse(csv[1].Replace("\0", ""));
-
-                        if (index == 0)
+                        foreach (String[] record in hi)
                         {
-                            data.ClosePrice = current;
-                            data.HighestPrice = current;
-                            data.LowestPrice = current;
-                        }
+                            EntryData dd = new EntryData();
 
-                        if (data.HighestPrice < current)
-                        {
-                            data.HighestPrice = current;
-                            data.TimeWhenHighest = DateTime.Parse(date + " " + csv[0]);
-                        }
-                        if (data.LowestPrice > current)
-                        {
-                            data.LowestPrice = current;
-                            data.TimeWhenLowest = DateTime.Parse(date + " " + csv[0]);
-                        }
+                            current = Decimal.Parse(record[1].Replace("\0", ""));
 
-                        dd.time = DateTime.Parse(date + " " + csv[0]);
-                        dd.price = current;
-                        dd.change = Decimal.Parse(csv[2]);
-                        dd.share = long.Parse(csv[3]);
-                        dd.money = long.Parse(csv[4]);
-                        dd.type = csv[5];
+                            if (index == 0)
+                            {
+                                data.ClosePrice = current;
+                                data.HighestPrice = current;
+                                data.LowestPrice = current;
+                            }
 
-                        data.set.Add(dd);
-                        data.OpenPrice = current;
-                        index++;
+                            if (data.HighestPrice < current)
+                            {
+                                data.HighestPrice = current;
+                                data.TimeWhenHighest = DateTime.Parse(date + " " + record[0]);
+                            }
+                            if (data.LowestPrice > current)
+                            {
+                                data.LowestPrice = current;
+                                data.TimeWhenLowest = DateTime.Parse(date + " " + record[0]);
+                            }
+
+                            dd.time = DateTime.Parse(date + " " + record[0]);
+                            dd.price = current;
+                            dd.change = Decimal.Parse(record[2]);
+                            dd.share = long.Parse(record[3]);
+                            dd.money = long.Parse(record[4]);
+                            dd.type = record[5];
+
+                            data.set.Add(dd);
+                            data.OpenPrice = current;
+                            index++;
+                        }
                     }
                     catch
                     {
                         ///TODO 吞掉异常
                         ///
-                        Console.WriteLine("Can't parse at line "+index + "  "+fileName);
+                        LOG.Info("Can't parse at line "+index + "  "+fileName);
                     }
-                }
+                //}
 
-                //Console.WriteLine(fileName+" "+fieldCount + " " + index);
+                //LOG.Info(fileName+" "+fieldCount + " " + index);
             }
 
             return data;

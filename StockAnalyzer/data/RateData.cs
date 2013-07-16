@@ -16,7 +16,7 @@ namespace SotckAnalyzer.data
         }
 
 
-        #region Share Rate to individual
+        #region Rate to individual
         public decimal RateOfSellShare2Sell
         {
             get
@@ -31,9 +31,6 @@ namespace SotckAnalyzer.data
                 return Math.Round((decimal)data1.TotalBuyShare / data2.TotalBuyShare, 2);
             }
         }
-
-        #endregion
-        #region Money Rate to individual
         public decimal RateOfSellMoney2Sell
         {
             get
@@ -51,7 +48,14 @@ namespace SotckAnalyzer.data
 
         #endregion
 
-        #region Rate of money
+        #region Rate of total
+        public decimal RateOfMoney2Total
+        {
+            get
+            {
+                return Math.Round((decimal)data1.TotalMoney / data2.TotalMoney, 2);
+            }
+        }
         public decimal RateOfSellMoney2Total
         {
             get
@@ -66,10 +70,13 @@ namespace SotckAnalyzer.data
                 return Math.Round((decimal)data1.TotalBuyMoney / data2.TotalMoney, 2);
             }
         }
-
-        #endregion
-
-        #region Rate of share
+        public decimal RateOfShare2Total
+        {
+            get
+            {
+                return Math.Round((decimal)data1.TotalShare / data2.TotalShare, 2);
+            }
+        }
         public decimal RateOfSellShare2Total
         {
             get

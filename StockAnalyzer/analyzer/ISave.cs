@@ -11,6 +11,6 @@ namespace SotckAnalyzer.analyzer
     /// </summary>
     interface ISave
     {
-         bool Save(StockData data, bool SaveToFile = true);
+         bool Save(FilterData data, bool SaveToFile = true);
     }
 }

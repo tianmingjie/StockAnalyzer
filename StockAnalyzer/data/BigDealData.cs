@@ -11,6 +11,8 @@ namespace SotckAnalyzer.data
 
         public StockData data;
 
+        private List<EntryData> _entrydata;
+
         public BigDealData(StockData data, String filter)
         {
             this.data = data;
@@ -21,11 +23,17 @@ namespace SotckAnalyzer.data
         {
             get
             {
-                IEnumerable<EntryData> querySet = from d in data.EntryDataList where d.share > Int32.Parse(filter) select d;
-                return querySet.ToList<EntryData>();
+                if (_entrydata == null)
+                {
+                    Console.WriteLine("big deal data");
+                    IEnumerable<EntryData> querySet = from d in data.EntryDataList where d.share > Int32.Parse(filter) select d;
+                    _entrydata = querySet.ToList<EntryData>();
+                }
+                return _entrydata;
             }
             set
             {
+                value = _entrydata;
             }
         }
         }

@@ -27,15 +27,23 @@ namespace SotckAnalyzer.data
         public bool isDownload=true;
         public string endDate;
 
+        public List<DailyData> _dataset;
+        private List<EntryData> _entrydata;
+
 
         public List<DailyData> Dataset
         {
             get
             {
-                return Csv.ReadCsv(StockUtil.FormatStock(stock), startDate, endDate, isDownload);
+                if (_dataset == null)
+                {
+                    _dataset = Csv.ReadCsv(StockUtil.FormatStock(stock), startDate, endDate, isDownload);
+                }
+                return _dataset;
             }
             set
             {
+                value = _dataset;
             }
         }
 
@@ -43,19 +51,26 @@ namespace SotckAnalyzer.data
         {
             get
             {
-                List<EntryData> list = new List<EntryData>();
-
-                foreach (DailyData daily in Dataset)
+                if (_entrydata == null)
                 {
-                    foreach (EntryData entry in daily.set)
+                    Console.WriteLine("stock data");
+                    _entrydata = new List<EntryData>();
+
+                    foreach (DailyData daily in Dataset)
                     {
-                        list.Add(entry);
+                        foreach (EntryData entry in daily.set)
+                        {
+                            _entrydata.Add(entry);
+                        }
                     }
+                    
                 }
-                return list;
+                return _entrydata;
+                
             }
             set
             {
+                value = _entrydata;
             }
         }
 

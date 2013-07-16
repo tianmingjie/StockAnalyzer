@@ -34,14 +34,34 @@ namespace SotckAnalyzer
 
                 StockData data1 = (StockData)ctx.GetObject("StockData");
                 // data.money = 1;
-                Console.WriteLine(data1.TotalShare);
+                Console.WriteLine(data1.EntryDataList.Count);
 
                 BigDealData bdd = (BigDealData)ctx.GetObject("BigDealData");
                 //List<EntryData> l=bdd.EntryDataList;
                 Console.WriteLine(bdd.TotalShare);
 
-                RateData rate = (RateData)ctx.GetObject("RateData");
-                Console.WriteLine(rate.RateOfBuyMoney2Total);
+                //RateData rate = (RateData)ctx.GetObject("RateData");
+                //Console.WriteLine(rate.RateOfShare2Total);
+
+                RangeData range = (RangeData)ctx.GetObject("RangeData");
+
+                List<FilterData> ff = range.Analyze();
+                foreach (FilterData e in ff)
+                {
+                    Console.WriteLine(e.EntryDataList.Count+" "+e.StartTime+" "+e.EndTime);
+                }
+                
+            //    List<FilterData> fl = new List<FilterData>();
+
+            //    long interval = 3600 * 24;
+                
+            //foreach(EntryData e in bdd.EntryDataList){
+            //    //if (e.time < bdd.StartTime.AddDays(30))
+            //    //{
+            //        Printer.PrintEntryData(e);
+            //    //}
+           // }
+                
 
             //}
             //catch (Exception e)

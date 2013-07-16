@@ -55,5 +55,7 @@ namespace Common
         {
             return change > 0 ? change : -change ;
         }
+
+
     }
 }
