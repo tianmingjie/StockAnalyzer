@@ -57,14 +57,15 @@
     <Compile Include="Constant.cs" />
     <Compile Include="excel\ExcelEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="sql\MySQL.cs" />
-    <Compile Include="sql\mysqlHlpercs.cs" />
     <Compile Include="StockUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="sql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

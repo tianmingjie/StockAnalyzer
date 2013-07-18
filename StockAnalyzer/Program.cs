@@ -36,12 +36,16 @@ namespace SotckAnalyzer
                 // data.money = 1;
                 Console.WriteLine(data1.EntryDataList.Count);
 
+                NormalData gd = (NormalData)ctx.GetObject("NormalData");
+                //List<EntryData> l=bdd.EntryDataList;
+                Console.WriteLine(gd.TotalBuyMoney);
+
                 BigDealData bdd = (BigDealData)ctx.GetObject("BigDealData");
                 //List<EntryData> l=bdd.EntryDataList;
-                Console.WriteLine(bdd.TotalShare);
+                Console.WriteLine(bdd.TotalBuyMoney);
 
-                //RateData rate = (RateData)ctx.GetObject("RateData");
-                //Console.WriteLine(rate.RateOfShare2Total);
+                RateData rate = (RateData)ctx.GetObject("RateData");
+                Console.WriteLine(rate.RateOfShare2Total);
 
                 RangeData range = (RangeData)ctx.GetObject("RangeData");
 
@@ -50,6 +54,9 @@ namespace SotckAnalyzer
                 {
                     Console.WriteLine(e.EntryDataList.Count+" "+e.StartTime+" "+e.EndTime);
                 }
+
+                
+
                 
             //    List<FilterData> fl = new List<FilterData>();
 

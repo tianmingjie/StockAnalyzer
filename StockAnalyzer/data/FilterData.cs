@@ -12,17 +12,6 @@ namespace SotckAnalyzer.data
         {
         }
 
-        private long _interval=1440;
-        /// <summary>
-        /// minutes
-        /// </summary>
-        public long Interval
-        {
-            set {value=_interval;}
-            get{
-                return _interval;
-            }
-        }
        // private List<EntryData> EntryDataList;
         public virtual List<EntryData> EntryDataList
         {
