@@ -60,8 +60,8 @@ namespace Common.excel
         //            //tr.recordTime.
         //            tr.price = Decimal.Parse(str[1]);
         //            tr.priceChange = Decimal.Parse(str[2] == "--" ? "0" : str[2]);
-        //            tr.number = long.Parse(str[3]);
-        //            tr.money = long.Parse(str[4]);
+        //            tr.number = decimal.Parse(str[3]);
+        //            tr.money = decimal.Parse(str[4]);
         //            string t = str[5];
         //            switch (t)
         //            {

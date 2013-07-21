@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SotckAnalyzer.data;
+using Common;
 
 namespace SotckAnalyzer.data
 {
@@ -13,7 +14,7 @@ namespace SotckAnalyzer.data
         }
 
        // private List<EntryData> EntryDataList;
-        public virtual List<EntryData> EntryDataList
+        public virtual List<EntryData> EntryList
         {
             get;
             set;
@@ -30,11 +31,65 @@ namespace SotckAnalyzer.data
             //}
         }
 
+        public virtual List<DailyData> DailyList
+        {
+            get;
+            set;
+            //set
+            //{
+            //    if (EntryDataList == null)
+            //    {
+            //        value = EntryDataList;
+            //    }
+            //}
+            //get
+            //{
+            //    return EntryDataList;
+            //}
+        }
+
+        #region individual
+        public decimal Open
+        {
+            get
+            {
+                if (EntryList.Count == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return EntryList[0].price;
+                }
+            }
+        }
+        public decimal Close
+        {
+            get
+            {
+                if (EntryList.Count == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return EntryList[EntryList.Count-1].price;
+                }
+            }
+        }
+
+        #endregion
         #region total filtered
         public DateTime StartTime
         {
             get{
-            return EntryDataList[0].time;
+                if (EntryList.Count == 0) {
+                    return new DateTime();
+                }
+                else
+                {
+                    return EntryList[0].time;
+                }
             }
             set
             {
@@ -45,19 +100,26 @@ namespace SotckAnalyzer.data
         {
             get
             {
-                return EntryDataList[EntryDataList.Count-1].time;
+                if (EntryList.Count == 0)
+                {
+                    return new DateTime();
+                }
+                else
+                {
+                    return EntryList[EntryList.Count - 1].time;
+                }
             }
             set
             {
             }
         }
 
-        public long TotalMoney
+        public decimal TotalMoney
         {
             get
             {
-                long money = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal money = 0.00M;
+                foreach (EntryData d in EntryList)
                 {
                         money += d.money;
                 }
@@ -65,12 +127,12 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public long TotalShare
+        public decimal TotalShare
         {
             get
             {
-                long share = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal share = 0;
+                foreach (EntryData d in EntryList)
                 {
                     if (d.type == "B")
                         share += d.share;
@@ -79,12 +141,12 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public long TotalBuyMoney
+        public decimal TotalBuyMoney
         {
             get
             {
-                long money = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal money = 0;
+                foreach (EntryData d in EntryList)
                 {
                     if (d.type == "B")
                         money += d.money;
@@ -93,12 +155,12 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public long TotalBuyShare
+        public decimal TotalBuyShare
         {
             get
             {
-                long share = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal share = 0;
+                foreach (EntryData d in EntryList)
                 {
                     if (d.type == "B")
                         share += d.share;
@@ -107,12 +169,12 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public long TotalSellMoney
+        public decimal TotalSellMoney
         {
             get
             {
-                long money = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal money = 0;
+                foreach (EntryData d in EntryList)
                 {
                     if (d.type == "S")
                         money += d.money;
@@ -121,12 +183,12 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public long TotalSellShare
+        public decimal TotalSellShare
         {
             get
             {
-                long share = 0;
-                foreach (EntryData d in EntryDataList)
+                decimal share = 0;
+                foreach (EntryData d in EntryList)
                 {
                     if (d.type == "S")
                         share += d.share;
@@ -142,7 +204,7 @@ namespace SotckAnalyzer.data
         {
             get
             {
-                return Math.Round((decimal)TotalBuyMoney / TotalBuyShare / 100, 2);
+                return StockUtil.FormatRate(TotalBuyMoney / TotalBuyShare / 100);
             }
         }
 
@@ -150,7 +212,7 @@ namespace SotckAnalyzer.data
         {
             get
             {
-                return Math.Round((decimal)TotalSellMoney / TotalSellShare / 100, 2);
+                return StockUtil.FormatRate(TotalSellMoney / TotalSellShare / 100);
             }
         }
 

@@ -55,7 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="DateUtil.cs" />
     <Compile Include="excel\ExcelEngine.cs" />
+    <Compile Include="Persistent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockUtil.cs" />
   </ItemGroup>

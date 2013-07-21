@@ -32,22 +32,22 @@ namespace SotckAnalyzer.analyzer
 
             if (filter.StartsWith(">"))
             {
-                querySet = from data in set.set where data.share > Int32.Parse(filter.Substring(1)) select data;
+                querySet = from data in set.entryList where data.share > Int32.Parse(filter.Substring(1)) select data;
             }
 
             else if (filter.StartsWith("<"))
             {
-                querySet = from data in set.set where data.share < Int32.Parse(filter.Substring(1)) select data;
+                querySet = from data in set.entryList where data.share < Int32.Parse(filter.Substring(1)) select data;
             }
 
             else if (filter.Contains("-"))
             {
                 String[] a = filter.Split('-');
-                querySet = from data in set.set where data.share > Int32.Parse(a[0]) && data.share < Int32.Parse(a[1]) select data;
+                querySet = from data in set.entryList where data.share > Int32.Parse(a[0]) && data.share < Int32.Parse(a[1]) select data;
             }
             else
             {
-                querySet = from data in set.set where data.share > Int32.Parse(filter) select data;
+                querySet = from data in set.entryList where data.share > Int32.Parse(filter) select data;
             }
             setByBigDeal = querySet.ToList<EntryData>();
         }

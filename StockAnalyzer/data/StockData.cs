@@ -7,7 +7,7 @@ using Common;
 
 namespace SotckAnalyzer.data
 {
-    public class StockData:FilterData
+    public class StockData
     {
         public StockData(string stock)
         {
@@ -31,7 +31,7 @@ namespace SotckAnalyzer.data
         private List<EntryData> _entrydata;
 
 
-        public List<DailyData> Dataset
+        public List<DailyData> DailyList
         {
             get
             {
@@ -47,7 +47,7 @@ namespace SotckAnalyzer.data
             }
         }
 
-        public override List<EntryData> EntryDataList
+        public List<EntryData> EntryList
         {
             get
             {
@@ -56,9 +56,9 @@ namespace SotckAnalyzer.data
                     Console.WriteLine("stock data");
                     _entrydata = new List<EntryData>();
 
-                    foreach (DailyData daily in Dataset)
+                    foreach (DailyData daily in DailyList)
                     {
-                        foreach (EntryData entry in daily.set)
+                        foreach (EntryData entry in daily.entryList)
                         {
                             _entrydata.Add(entry);
                         }

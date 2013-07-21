@@ -71,6 +71,7 @@
     <Compile Include="analyzer\ISave.cs" />
     <Compile Include="analyzer\MeanChang.cs" />
     <Compile Include="data\BigDealData.cs" />
+    <Compile Include="data\DataUtil.cs" />
     <Compile Include="data\FilterData.cs" />
     <Compile Include="data\RangeData.cs" />
     <Compile Include="data\RateData.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="data\EntryData.cs" />
     <Compile Include="data\DailyData.cs" />
     <Compile Include="analyzer\BigDeal.cs" />
-    <Compile Include="data\GeneralData.cs" />
+    <Compile Include="data\NormalData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="reader\Printer.cs" />

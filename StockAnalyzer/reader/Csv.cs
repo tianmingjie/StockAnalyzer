@@ -75,15 +75,15 @@ namespace SotckAnalyzer.reader
         public static DailyData ReadCsv(string fileName,bool isDownload)
         {
             DailyData data = new DailyData();
-            data.set = new List<EntryData>();
+            data.entryList = new List<EntryData>();
 
 
             FileInfo fi = new FileInfo(fileName);
 
             string fName = fi.Name;
-            data.stock = StockUtil.RetrieveStock(fName);
+            //data.stock = StockUtil.RetrieveStock(fName);
             string date = StockUtil.RetrieveDate(fName);
-            data.date = DateTime.Parse(date);
+            data.Date = DateTime.Parse(date);
 
 
             // open the file "data.csv" which is a CSV file with headers
@@ -139,11 +139,11 @@ namespace SotckAnalyzer.reader
                             dd.time = DateTime.Parse(date + " " + record[0]);
                             dd.price = current;
                             dd.change = Decimal.Parse(record[2]);
-                            dd.share = long.Parse(record[3]);
-                            dd.money = long.Parse(record[4]);
+                            dd.share = decimal.Parse(record[3]);
+                            dd.money = decimal.Parse(record[4]);
                             dd.type = record[5];
 
-                            data.set.Add(dd);
+                            data.entryList.Add(dd);
                             data.OpenPrice = current;
                             index++;
                         }

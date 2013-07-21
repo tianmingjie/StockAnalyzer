@@ -2,17 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common;
 
 namespace SotckAnalyzer.data
 {
     public class RateData
     {
-        FilterData data1, data2;
+        public FilterData data1, data2;
 
         public RateData(FilterData data1, FilterData data2)
         {
             this.data1 = data1;
             this.data2 = data2;
+        }
+
+        public string CompareDaily()
+        {
+            if (data1.DailyList.Count != data2.DailyList.Count) return null;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(String.Format("{0},{1},{2},{3}\n", "time", "bigSellShareRate", "bigBuyShareRate", "Average"));
+            for (int i = 0; i < data1.DailyList.Count; i++)
+            {
+                sb.Append(String.Format("{0},{1},{2},{3}\n", StockUtil.FormatDate(data1.DailyList[i].Date), StockUtil.FormatRate(data1.DailyList[i].TotalBuyMoney / data2.DailyList[i].TotalBuyMoney), StockUtil.FormatRate(data1.DailyList[i].TotalSellMoney / data2.DailyList[i].TotalSellMoney), StockUtil.FormatRate(data1.DailyList[i].TotalMoney / data2.DailyList[i].TotalMoney)));
+            }
+            return sb.ToString();
         }
 
 

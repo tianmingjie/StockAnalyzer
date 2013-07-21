@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Common
 {
     public class StockUtil
     {
+        public static decimal FormatRate(decimal t)
+        {
+            return Math.Round(t, 4);
+        }
         public static string FormatDate(DateTime date)
         {
             string d = date.Day < 10 ? "0" + date.Day.ToString() : date.Day.ToString();
@@ -20,6 +25,11 @@ namespace Common
             string m = date.Minute < 10 ? "0" + date.Minute.ToString() : date.Minute.ToString();
             string s = date.Second < 10 ? "0" + date.Second.ToString() : date.Second.ToString();
             return h + ":" + m + ":" + s;
+        }
+        public static string FormatAllTime(DateTime date)
+        {
+            return FormatDate(date)
+                + "_" + FormatTime(date);
         }
 
         public static string FormatStock(string stock)
@@ -55,6 +65,8 @@ namespace Common
         {
             return change > 0 ? change : -change ;
         }
+
+
 
 
     }

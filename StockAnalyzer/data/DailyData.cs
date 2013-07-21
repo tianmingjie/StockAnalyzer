@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common;
 
 namespace SotckAnalyzer.data
 {
@@ -10,39 +11,120 @@ namespace SotckAnalyzer.data
     /// </summary>
     public class DailyData
     {
-        public List<EntryData> set;
-        public string stock;
-        public DateTime date;
+        //Start the 12:00 am
+        private DateTime _date;
 
+        private DateTime _startTime;
+        private DateTime _endTime;
+        private decimal _highest;
+        private decimal _lowest;
+        private decimal _open;
+        private decimal _close;
+        private DateTime _timeWhenHighest;
+        private DateTime _timeWhenLowest;
+
+
+        public List<EntryData> entryList;
+        //public string stock;
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = value; }
+        }
+
+
+        public DateTime StartTime
+        {
+            get { return _startTime; }
+            set { _startTime = value; }
+        }
+
+        
+        public DateTime EndTime
+        {
+            get { return _endTime; }
+            set { _endTime = value; }
+        }
+        
         public decimal HighestPrice
         {
-            get;
-            set;
+            get { return _highest; }
+            set { _highest = value; }
         }
+
+        
+
         public decimal LowestPrice
         {
-            get;
-            set;
+            get { return _lowest; }
+            set { _lowest = value; }
         }
+
+        
+
         public decimal OpenPrice
         {
-            get;
-            set;
+            get { return _open; }
+            set { _open = value; }
         }
+
+        
+
         public decimal ClosePrice
         {
-            get;
-            set;
+            get { return _close; }
+            set { _close = value; }
         }
+
+        
+
         public DateTime TimeWhenHighest
         {
-            get;
-            set;
+            get { return _timeWhenHighest; }
+            set { _timeWhenHighest = value; }
         }
+ 
+       
+
         public DateTime TimeWhenLowest
         {
-            get;
-            set;
+            get { return _timeWhenLowest; }
+            set { this._timeWhenLowest = value; }
+        }
+
+        public void Init()
+        {
+            _startTime = entryList[0].time;
+            _endTime = entryList[entryList.Count - 1].time;
+            _date = DateTime.Parse(StockUtil.FormatDate(_startTime));
+            int index=0;
+            decimal current;
+            if (entryList.Count==0) { return; }
+            foreach(EntryData data in entryList)
+            {
+
+                current = data.price ;
+
+                if (index == 0)
+                {
+                    _close = current;
+                    _highest = current;
+                    _lowest = current;
+                }
+
+                if (_highest < current)
+                {
+                    _highest = current;
+                    _timeWhenHighest = data.time;
+                }
+                if (_lowest > current)
+                {
+                    _lowest = current;
+                    _timeWhenLowest = data.time;
+                }
+                _open= current;
+                index++;
+            }
         }
 
         public decimal Average
@@ -74,7 +156,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal money = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     money += d.money;
                 }
@@ -87,7 +169,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal share = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     share += d.share;
                 }
@@ -101,7 +183,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal money = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     if (d.type == "B")
                         money += d.money;
@@ -115,7 +197,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal share = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     if (d.type == "B")
                         share += d.share;
@@ -129,7 +211,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal money = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     if (d.type == "S")
                         money += d.money;
@@ -143,7 +225,7 @@ namespace SotckAnalyzer.data
             get
             {
                 decimal share = 0;
-                foreach (EntryData d in set)
+                foreach (EntryData d in entryList)
                 {
                     if (d.type == "S")
                         share += d.share;

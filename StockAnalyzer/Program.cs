@@ -28,89 +28,76 @@ namespace SotckAnalyzer
         {
 
 
-           //try
-           // {
+            try
+            {
                 IApplicationContext ctx = ContextRegistry.GetContext();
 
                 StockData data1 = (StockData)ctx.GetObject("StockData");
                 // data.money = 1;
-                Console.WriteLine(data1.EntryDataList.Count);
+                Console.WriteLine(data1.DailyList.Count);
 
                 NormalData gd = (NormalData)ctx.GetObject("NormalData");
                 //List<EntryData> l=bdd.EntryDataList;
-                Console.WriteLine(gd.TotalBuyMoney);
+                Console.WriteLine(gd.DailyList.Count);
+
+                //foreach (DailyData e in gd.DailyList)
+                //{
+                //    Console.WriteLine(e.date + " " + e.entryList.Count);
+                //}
 
                 BigDealData bdd = (BigDealData)ctx.GetObject("BigDealData");
                 //List<EntryData> l=bdd.EntryDataList;
-                Console.WriteLine(bdd.TotalBuyMoney);
+                Console.WriteLine(bdd.DailyList.Count);
 
-                RateData rate = (RateData)ctx.GetObject("RateData");
-                Console.WriteLine(rate.RateOfShare2Total);
+                ////foreach (DailyData e in bdd.DailyList)
+                ////{
+                ////    Console.WriteLine(e.date + " " + e.entryList.Count);
+                ////}
 
-                RangeData range = (RangeData)ctx.GetObject("RangeData");
 
-                List<FilterData> ff = range.Analyze();
-                foreach (FilterData e in ff)
-                {
-                    Console.WriteLine(e.EntryDataList.Count+" "+e.StartTime+" "+e.EndTime);
-                }
+                RangeData bigdeal = (RangeData)ctx.GetObject("BigRangeData");
+                RangeData alldeal = (RangeData)ctx.GetObject("AllRangeData");
 
-                
 
-                
-            //    List<FilterData> fl = new List<FilterData>();
+                Dictionary<string, FilterData> big = bigdeal.DataList;
+                Dictionary<string, FilterData> all = alldeal.DataList;
 
-            //    long interval = 3600 * 24;
-                
-            //foreach(EntryData e in bdd.EntryDataList){
-            //    //if (e.time < bdd.StartTime.AddDays(30))
-            //    //{
-            //        Printer.PrintEntryData(e);
-            //    //}
-           // }
-                
+                //foreach (KeyValuePair<string, FilterData> a in big)
+                //{
+                //    // Console.WriteLine(e.TotalBuyMoney + " " + e.StartTime + " " + e.EndTime);
+                //    Console.WriteLine(a.Key + " " + a.Value.TotalMoney);
+                //}
+               
 
-            //}
-            //catch (Exception e)
-            //{
-            //    LOG.Error("Movie Finder is broken.", e);
-            //}
-            //finally
-            //{
-            //    Console.WriteLine();
-            //}
+                //foreach (KeyValuePair<string, FilterData> a in all)
+                //{
+                //    // Console.WriteLine(e.TotalBuyMoney + " " + e.StartTime + " " + e.EndTime);
+                //    Console.WriteLine(a.Key + " " + a.Value.TotalMoney);
+                //}
 
-            //string stock = args[0];// "600200";
 
-            //string startDate = args[1]; //"2012-09-01";
-            //string endDate = args[2]; //;"2013-07-01";
-            //string filter = args[3];// "1000";
+                Persistent.WriteFile(@"D:\project\stock\analyzeData\test.csv",DataUtil.Compare(all, big));
 
-           // string stock = "002691";
 
-           // string startDate = "2013-06-27";
-           // string endDate = "2013-07-01";
-           // string filter = "200";
+                //RateData rate = (RateData)ctx.GetObject("RateData");
+                //Persistent.WriteFile
+                //    (@"D:\project\stock\analyzeData\test.csv", rate.CompareDaily());
 
-           // stock = StockUtil.FormatStock(stock);
 
-           //BigDealAnalyzer.Analyze(stock, filter, startDate, endDate);
+                //foreach (DateUnit d in DateUtil.ConvertBiHourlyDateUnit(DateTime.Parse("2013-07-03"), DateTime.Parse("2013-07-24")))
+                //{
+                //    Console.WriteLine(d.Start + " " + d.End);
+                //}
 
-           //List<DailyData> dds = Csv.ReadCsv(stock, startDate, endDate,true);
-
-           //StringBuilder str = new StringBuilder();
-           ////str.Append("date,bigBuyShare,bigSellShare,toalShare,bigBuyMoney,bigSellMoney,toalMoney,Open,Close,Average,Hightest,WhenHighest,Lowest,WhenLowest,BigBuyShareRate,BigSellShareRate,BigBuyMoneyRate,BigSellMoneyRate\n");
-           //foreach (DailyData ds in dds)
-           //{
-
-           //    MeanChange mc = new MeanChange(ds, filter);
-           //    List<EntryData> d = mc.Analye();
-           //    // Console.WriteLine(d.Count);
-           //    foreach (EntryData dd in d)
-           //    {
-           //        Console.WriteLine(dd.time + "," + dd.share + "," + dd.price + "," + dd.change + "," + dd.type);
-           //    }
-          // }
+            }
+            catch (Exception e)
+            {
+                LOG.Error("Movie Finder is broken.", e);
+            }
+            finally
+            {
+                Console.WriteLine();
+            }
             
         }
 

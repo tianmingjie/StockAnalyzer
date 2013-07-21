@@ -25,7 +25,7 @@ namespace SotckAnalyzer.analyzer
         {
 
             string analyzePath;
-            List<DailyData> dds = stockData.Dataset;
+            List<DailyData> dds = stockData.DailyList;
             StringBuilder str = new StringBuilder();
             str.Append("date,bigBuyShare,bigSellShare,toalShare,bigBuyMoney,bigSellMoney,toalMoney,Open,Close,Average,Hightest,WhenHighest,Lowest,WhenLowest,BigBuyShareRate,BigSellShareRate,BigBuyMoneyRate,BigSellMoneyRate\n");
             foreach (DailyData ds in dds)
@@ -33,7 +33,7 @@ namespace SotckAnalyzer.analyzer
 
                 BigDeal fd = new BigDeal(ds, filter);
                 fd.Analye();
-                str.Append(StockUtil.FormatDate(fd.set.date) + ",");
+                str.Append(StockUtil.FormatDate(fd.set.Date) + ",");
                 str.Append(fd.TotalBuyShareByBigDeal + ",");
                 str.Append(fd.TotalSellShareByBigDeal + ",");
                 str.Append(fd.set.TotalShare + ",");
@@ -83,7 +83,7 @@ namespace SotckAnalyzer.analyzer
 
                 BigDeal fd = new BigDeal(ds, filter);
                 fd.Analye();
-                str.Append(StockUtil.FormatDate(fd.set.date) + ",");
+                str.Append(StockUtil.FormatDate(fd.set.Date) + ",");
                 str.Append(fd.TotalBuyShareByBigDeal + ",");
                 str.Append(fd.TotalSellShareByBigDeal + ",");
                 str.Append(fd.set.TotalShare + ",");

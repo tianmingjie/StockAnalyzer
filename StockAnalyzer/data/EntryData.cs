@@ -15,8 +15,8 @@ namespace SotckAnalyzer.data
         public DateTime time;
         public decimal price;
         public decimal change;
-        public long share;
-        public long money;
+        public decimal share;
+        public decimal money;
         public string type;
     }
 }

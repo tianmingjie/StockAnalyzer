@@ -2,152 +2,132 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common;
 
 namespace SotckAnalyzer.data
 {
     public class RangeData
     {
         //minutes
-        string _interval = "30m";
+        string _type = "d";
         FilterData _filterData;
 
         List<FilterData> list;
-        public RangeData(FilterData filterData, string interval)
+        public RangeData(FilterData filterData, string type)
         {
             this._filterData = filterData;
-            this._interval = interval;
+            this._type = type;
         }
 
-        public List<FilterData> Analyze()
+        public Dictionary<String, FilterData> DataList
         {
-
-            if (list == null)
+            get
             {
-                list = new List<FilterData>();
+                Dictionary<String, FilterData> dic;
 
-
-                if (GetIntervalType().Equals("d"))
+                switch (_type.ToLower())
                 {
-                    for (DateTime dateTime = GetTradeStartTime(_filterData.StartTime); dateTime <= GetTradeEndTime(_filterData.EndTime); dateTime += TimeSpan.FromDays(GetInterval()))
-                    {
-                        AddList(list,dateTime,dateTime.AddDays(GetInterval()));
-                    }
+                    case  "d":
+                        dic=GetDailyList();
+                        break;
+                    case "w":
+                        dic = GetWeeklyList();
+                        break;
+                    case "m":
+                        dic = GetMonthlyList();
+                        break;
+                    case "h":
+                        dic = GetHourlyList();
+                        break;
+                    case "2h":
+                        dic = GetBiHourlyList();
+                        break;
+                    default:
+                        dic=GetDailyList();
+                        break;
                 }
-
-                if (GetIntervalType().Equals("w"))
-                {
-                    DateTime first = GetNextMonday(GetTradeStartTime(_filterData.StartTime));
-                    DateTime last = GetThisMonday(GetTradeStartTime(_filterData.EndTime));
-
-                    AddList(list, _filterData.StartTime, first);
-
-
-                    for (DateTime dateTime = first; dateTime < last; dateTime += TimeSpan.FromDays(7 * GetInterval()))
-                    {
-                        AddList(list,dateTime,dateTime.AddDays(7 * GetInterval()));
-                    }
-
-                    AddList(list, last, _filterData.EndTime);
-                }
-
-                if (GetIntervalType().Equals("M"))
-                {
-                    DateTime first = GetNextFirstDate(GetTradeStartTime(_filterData.StartTime));
-                    DateTime last = GetThisFirstDate(GetTradeStartTime(_filterData.EndTime));
-
-                    AddList(list,_filterData.StartTime,first);
-
-                    for (DateTime dateTime = first; dateTime < last; dateTime += TimeSpan.FromDays(GetMonthNumber(dateTime.AddDays(15))))
-                    {
-                        AddList(list,dateTime,dateTime.AddDays(GetMonthNumber(dateTime.AddDays(15))));
-                    }
-
-                    AddList(list,last,_filterData.EndTime);
-                }
-
-                if (GetIntervalType().Equals("m"))
-                {
-                    for (DateTime dateTime = GetTradeStartTime(_filterData.StartTime); dateTime <= GetTradeEndTime(_filterData.EndTime); dateTime += TimeSpan.FromDays(1))
-                    {
-                        for (DateTime d1 = GetTradeStartTime(dateTime); d1 <= GetTradeEndTime(dateTime); d1 += TimeSpan.FromMinutes(GetInterval()))
-                        {
-                            AddList(list,d1,d1.AddMinutes(GetInterval()));
-                        }
-                    }
-
-                }
-
-
+                return dic;
             }
-            return list;
         }
 
-        private void AddList(List<FilterData> list, DateTime start, DateTime end)
+        private Dictionary<String, FilterData> GetDailyList()
+        {
+            Dictionary<string, FilterData> dic = new Dictionary<string, FilterData>();
+            foreach(DateUnit unit in DateUtil.ConvertDailyDateUnit(_filterData.StartTime,_filterData.EndTime) ){
+                AddList(dic, unit);
+            }
+
+            return dic;
+        }
+
+        private Dictionary<String, FilterData> GetMonthlyList()
+        {
+            Dictionary<string, FilterData> dic = new Dictionary<string, FilterData>();
+            foreach (DateUnit unit in DateUtil.ConvertMonthlyDateUnit(_filterData.StartTime, _filterData.EndTime))
+            {
+                AddList(dic, unit);
+            }
+
+            return dic;
+        }
+
+        private Dictionary<String, FilterData> GetWeeklyList()
+        {
+            Dictionary<string, FilterData> dic = new Dictionary<string, FilterData>();
+            foreach (DateUnit unit in DateUtil.ConvertWeeklyDateUnit(_filterData.StartTime, _filterData.EndTime))
+            {
+                AddList(dic, unit);
+            }
+
+            return dic;
+        }
+
+        private Dictionary<String, FilterData> GetBiHourlyList()
+        {
+            Dictionary<string, FilterData> dic = new Dictionary<string, FilterData>();
+            foreach (DateUnit unit in DateUtil.ConvertBiHourlyDateUnit(_filterData.StartTime, _filterData.EndTime))
+            {
+                AddList(dic, unit);
+            }
+
+            return dic;
+        }
+
+        private Dictionary<String, FilterData> GetHourlyList()
+        {
+            Dictionary<string, FilterData> dic = new Dictionary<string, FilterData>();
+            foreach (DateUnit unit in DateUtil.ConvertHourlyDateUnit(_filterData.StartTime, _filterData.EndTime))
+            {
+                AddList(dic, unit);
+            }
+
+            return dic;
+        }
+
+        private void AddList(Dictionary<String, FilterData> dic,DateUnit unit)
         {
             FilterData f1 = new FilterData();
-            IEnumerable<EntryData> querySet = from d in _filterData.EntryDataList where d.time > start && d.time < end select d;
+            IEnumerable<EntryData> querySet = from d in _filterData.EntryList where d.time > unit.Start && d.time < unit.End select d;
             if (querySet.Count<EntryData>() > 0)
             {
-                f1.EntryDataList = querySet.ToList<EntryData>();
-                list.Add(f1);
+            f1.EntryList = querySet.ToList<EntryData>();
+            f1.DailyList = DataUtil.ConvertDailyList(f1.EntryList);
+
+            dic.Add(StockUtil.FormatAllTime(unit.Start) + "_" + StockUtil.FormatAllTime(unit.End), f1);
             }
+
         }
-        private DateTime GetNextFirstDate(DateTime d)
+
+        private string IntervalType
         {
-            return d.AddDays(GetMonthNumber(d)+1 - d.Day); 
-        }
-        private DateTime GetThisFirstDate(DateTime d)
-        {
-            return d.AddDays(1- d.Day);
-        }
-        private int GetMonthNumber(DateTime d)
-        {
-            int[] t = { 1, 3, 5, 7, 8, 10, 12 };
-            int[] t1 = { 4, 6, 10, 11 };
-            int dt = 0;
-            if (t.Contains<int>(d.Month))
-                dt = 31;
-            if (t1.Contains<int>(d.Month))
-                dt = 30;
-            if (d.Month == 2)
+            get
             {
-                if (d.Year % 4 == 0)
-                {
-                    dt = 29;
-                }
-                else
-                {
-                    dt = 28;
-                }
+                return _type;
             }
-            return dt;
-        }
-        private DateTime GetThisMonday(DateTime d)
-        {
-            return d.AddDays(1 - (int)d.DayOfWeek);
-        }
-        private DateTime GetNextMonday(DateTime d)
-        {
-            return d.AddDays(8-(int)d.DayOfWeek);
-        }
-
-        private DateTime GetTradeStartTime(DateTime d)
-        {
-            return new DateTime(d.Year, d.Month, d.Day, 9, 25, 0);
-        }
-
-        private DateTime GetTradeEndTime(DateTime d)
-        {
-            return new DateTime(d.Year, d.Month, d.Day, 15, 0, 5);
-        }
-        private int GetInterval()
-        {
-            return Int32.Parse(_interval.Substring(0, _interval.Length - 1));
-        }
-
-        private string GetIntervalType()
-        {
-            return _interval.Substring(_interval.Length - 1);
+            set
+            {
+                _type=value;
+            }
         }
     }
 }
