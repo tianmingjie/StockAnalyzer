@@ -37,23 +37,31 @@ namespace SotckAnalyzer.data
         public static string Compare(Dictionary<string,FilterData> big, Dictionary<string,FilterData> small)
         {
             StringBuilder sb=new StringBuilder();
-            sb.Append("Date,Total,Buy,Sell\n");
+            sb.Append("Date,Buy,Sell,Buy/Sell, Change\n");
             foreach(string a in big.Keys)
             {
+                decimal rateOfBuy, rateOfSell, rateOfChange;
+                decimal rateOfBuySell;
                 if (small.ContainsKey(a))
                 {
-                    sb.Append(a+",");
-                    sb.Append(StockUtil.FormatRate(small[a].TotalMoney / big[a].TotalMoney)+",");
-                    sb.Append(StockUtil.FormatRate(small[a].TotalBuyMoney / big[a].TotalMoney) + ",");
-                    sb.Append(StockUtil.FormatRate(small[a].TotalSellMoney / big[a].TotalMoney) + "\n");
+                    rateOfBuy = StockUtil.FormatRate(small[a].TotalBuyMoney / big[a].TotalMoney);
+                    rateOfSell = StockUtil.FormatRate(small[a].TotalSellMoney / big[a].TotalMoney);
+                    
                 }
                 else
                 {
-                    sb.Append(a + ",");
-                    sb.Append(0 + ",");
-                    sb.Append(0 + ",");
-                    sb.Append(0 + "\n");
+                    rateOfBuy = 0;
+                    rateOfSell = 0;
                 }
+                rateOfChange = StockUtil.FormatRate((big[a].Close - big[a].Open) / big[a].Open);
+                rateOfBuySell = StockUtil.FormatRate((big[a].TotalBuyMoney - big[a].TotalSellMoney) / big[a].TotalSellMoney);
+                sb.Append(a + ",");
+                //sb.Append(0 + ",");
+                sb.Append(rateOfBuy + ",");
+                sb.Append(rateOfSell + ",");
+                sb.Append(rateOfBuySell + ",");
+                sb.Append(rateOfChange + "\n");
+
             }
             return sb.ToString();
       }

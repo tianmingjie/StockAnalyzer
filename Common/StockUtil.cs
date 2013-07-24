@@ -19,6 +19,13 @@ namespace Common
             return date.Year + "-" + m + "-" + d;
         }
 
+        public static int FormatDateToNumber(DateTime date)
+        {
+            string d = date.Day < 10 ? "0" + date.Day.ToString() : date.Day.ToString();
+            string m = date.Month < 10 ? "0" + date.Month.ToString() : date.Month.ToString();
+            return Int32.Parse(date.Year + "" + m + "" + d);
+        }
+
         public static string FormatTime(DateTime date)
         {
             string h = date.Hour < 10 ? "0" + date.Hour.ToString() : date.Hour.ToString();
@@ -26,10 +33,21 @@ namespace Common
             string s = date.Second < 10 ? "0" + date.Second.ToString() : date.Second.ToString();
             return h + ":" + m + ":" + s;
         }
-        public static string FormatAllTime(DateTime date)
+        public static string FormateNumber(int a)
         {
-            return FormatDate(date)
-                + "_" + FormatTime(date);
+            return a > 10 ? a.ToString() : "0" + a.ToString();
+        }
+        public static string FormatAllTime(DateTime date,bool isHour=false)
+        {
+            if (isHour)
+            {
+                return date.Year.ToString().Substring(2) + FormateNumber(date.Month) + FormateNumber(date.Day) + FormateNumber(date.Hour) + FormateNumber(date.Minute);
+
+            }
+            else
+            {
+                return date.Year.ToString().Substring(2) + FormateNumber(date.Month) + FormateNumber(date.Day);
+            }
         }
 
         public static string FormatStock(string stock)
@@ -66,7 +84,18 @@ namespace Common
             return change > 0 ? change : -change ;
         }
 
+        public static bool UpdateDownloadTimeStamp(string path,string updateDate)
+        {
+            if (!Directory.Exists(path)) throw new Exception(path + " not exist.");
+            FileUtil.WriteFile(path + @"\update.txt", updateDate);
+            return true;
+        }
 
+        public static string ReadUpdateFile(string path)
+        {
+            if (!Directory.Exists(path)) throw new Exception(path + " not exist.");
+            return FileUtil.ReadFile(path + @"\update.txt");
+        }
 
 
     }

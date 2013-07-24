@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Common;
+using SotckAnalyzer.type;
 
 namespace SotckAnalyzer.data
 {
     public class RangeData
     {
         //minutes
-        string _type = "d";
-        FilterData _filterData;
+        private int _type = 0;
+        private FilterData _filterData;
 
-        List<FilterData> list;
-        public RangeData(FilterData filterData, string type)
+        private List<FilterData> list;
+        public RangeData(FilterData filterData, int type=0)
         {
             this._filterData = filterData;
             this._type = type;
@@ -25,21 +26,21 @@ namespace SotckAnalyzer.data
             {
                 Dictionary<String, FilterData> dic;
 
-                switch (_type.ToLower())
+                switch (_type)
                 {
-                    case  "d":
+                    case  0:
                         dic=GetDailyList();
                         break;
-                    case "w":
+                    case 2:
                         dic = GetWeeklyList();
                         break;
-                    case "m":
+                    case 1:
                         dic = GetMonthlyList();
                         break;
-                    case "h":
+                    case 3:
                         dic = GetHourlyList();
                         break;
-                    case "2h":
+                    case 4:
                         dic = GetBiHourlyList();
                         break;
                     default:
@@ -112,13 +113,19 @@ namespace SotckAnalyzer.data
             {
             f1.EntryList = querySet.ToList<EntryData>();
             f1.DailyList = DataUtil.ConvertDailyList(f1.EntryList);
-
-            dic.Add(StockUtil.FormatAllTime(unit.Start) + "_" + StockUtil.FormatAllTime(unit.End), f1);
+            if (_type == (int)RangeType.Hourly)
+            {
+                dic.Add(StockUtil.FormatAllTime(unit.Start, true) + "_" + StockUtil.FormatAllTime(unit.End, true), f1);
+            }
+            else
+            {
+                dic.Add(StockUtil.FormatAllTime(unit.Start) + "_" + StockUtil.FormatAllTime(unit.End), f1);
+            }
             }
 
         }
 
-        private string IntervalType
+        private int IntervalType
         {
             get
             {

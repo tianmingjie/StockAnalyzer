@@ -20,7 +20,7 @@ namespace DownloadData
         /// <param name="date"></param>
         /// <param name="stock"></param>
         /// <returns></returns>
-        public static bool DownloadDataToCsv(string stock, string date)
+        public static String DownloadDataToCsv(string stock, string date)
         {
 
             if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
@@ -54,7 +54,7 @@ namespace DownloadData
                 LOG.Info("Skipped: " + filePath);
             }
 
-            return true;
+            return filePath;
         }
         /// <summary>
         /// 生成csv 文件
@@ -62,7 +62,7 @@ namespace DownloadData
         /// <param name="date"></param>
         /// <param name="stock"></param>
         /// <returns></returns>
-        public static bool DownloadDataToCsv(string stock, string startDate, string endDate)
+        public static string DownloadDataToCsv(string stock, string startDate, string endDate)
         {
             if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
@@ -75,7 +75,7 @@ namespace DownloadData
                     DownloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
             }
 
-            return true;
+            return Constant.ROOT_FOLDER + stock;
         }
         /// <summary>
         /// 处理中文字符，减少文件大小

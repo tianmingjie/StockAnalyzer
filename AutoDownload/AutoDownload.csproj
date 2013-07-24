@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8E37DA8B-A01C-492A-B160-9ADAE343E638}</ProjectGuid>
+    <ProjectGuid>{ACED5DB1-6FD8-489B-89C7-09516A12AACA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DownloadData</RootNamespace>
-    <AssemblyName>DownloadData</AssemblyName>
+    <RootNamespace>AutoDownload</RootNamespace>
+    <AssemblyName>AutoDownload</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -38,12 +38,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="log4net">
       <HintPath>..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,8 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataDownload.cs" />
-    <Compile Include="Download.cs" />
+    <Compile Include="AutoDownload.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +58,13 @@
       <Project>{8C100380-0414-43DB-AA3B-32417C48C89F}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DownloadData\DownloadData.csproj">
+      <Project>{8E37DA8B-A01C-492A-B160-9ADAE343E638}</Project>
+      <Name>DownloadData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

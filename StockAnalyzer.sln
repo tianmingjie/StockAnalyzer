@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadData", "DownloadDat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{8C100380-0414-43DB-AA3B-32417C48C89F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDownload", "AutoDownload\AutoDownload.csproj", "{ACED5DB1-6FD8-489B-89C7-09516A12AACA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -25,6 +27,10 @@ Global
 		{8C100380-0414-43DB-AA3B-32417C48C89F}.Debug|x86.Build.0 = Debug|x86
 		{8C100380-0414-43DB-AA3B-32417C48C89F}.Release|x86.ActiveCfg = Release|x86
 		{8C100380-0414-43DB-AA3B-32417C48C89F}.Release|x86.Build.0 = Release|x86
+		{ACED5DB1-6FD8-489B-89C7-09516A12AACA}.Debug|x86.ActiveCfg = Debug|x86
+		{ACED5DB1-6FD8-489B-89C7-09516A12AACA}.Debug|x86.Build.0 = Debug|x86
+		{ACED5DB1-6FD8-489B-89C7-09516A12AACA}.Release|x86.ActiveCfg = Release|x86
+		{ACED5DB1-6FD8-489B-89C7-09516A12AACA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

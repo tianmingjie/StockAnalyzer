@@ -18,6 +18,7 @@ namespace SotckAnalyzer.reader
 
         public static List<DailyData> ReadCsv(string stock, string startDate, string endDate,bool isDownload)
         {
+
             List<DailyData> dds = new List<DailyData>(); ;
             for (DateTime dateTime = DateTime.Parse(startDate);
                  dateTime <= DateTime.Parse(endDate);
@@ -55,7 +56,6 @@ namespace SotckAnalyzer.reader
                     DataDownload.DownloadDataToCsv(stock, date,date);
                     if (!File.Exists(filePath))
                     {
-                        LOG.Info("Not Exist:" + filePath);
                         return null;
                     }
                     return ReadCsv(filePath, isDownload);

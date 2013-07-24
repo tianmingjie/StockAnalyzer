@@ -27,7 +27,7 @@ namespace SotckAnalyzer.data
             {
                 if (_entryList == null)
                 {
-                    Console.WriteLine("big deal data");
+                    //Console.WriteLine("big deal data");
                     IEnumerable<EntryData> querySet = from d in data.EntryList where d.share > Int32.Parse(filter) select d;
                     _entryList = querySet.ToList<EntryData>();
                 }

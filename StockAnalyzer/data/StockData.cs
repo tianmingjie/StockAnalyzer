@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using SotckAnalyzer.reader;
 using Common;
+using log4net;
 
 namespace SotckAnalyzer.data
 {
     public class StockData
     {
+
+        private static readonly ILog LOG = LogManager.GetLogger(typeof(StockData));
+
         public StockData(string stock)
         {
             this.stock = stock;
@@ -19,6 +23,7 @@ namespace SotckAnalyzer.data
             this.startDate=startDate;
             this.endDate = endDate;
             isDownload = download;
+            init();
         }
         public string stock;
 
@@ -31,6 +36,27 @@ namespace SotckAnalyzer.data
         private List<EntryData> _entrydata;
 
 
+        private void init()
+        {
+            if (_dataset == null)
+            {
+                _dataset = Csv.ReadCsv(StockUtil.FormatStock(stock), startDate, endDate, isDownload);
+            }
+            if (_entrydata == null)
+            {
+                LOG.Info("stock data");
+                _entrydata = new List<EntryData>();
+
+                foreach (DailyData daily in DailyList)
+                {
+                    foreach (EntryData entry in daily.entryList)
+                    {
+                        _entrydata.Add(entry);
+                    }
+                }
+
+            }
+        }
         public List<DailyData> DailyList
         {
             get
