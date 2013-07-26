@@ -15,41 +15,48 @@ namespace AutoDownload
 
         public static void Main(string[] args)
         {
-            log4net.Config.XmlConfigurator.Configure();
 
-            //StringBuilder sb = new StringBuilder();
-            if (StockUtil.FormatDateToNumber(File.GetLastAccessTime(Constant.ROOT_FOLDER + @"\file.txt")) < StockUtil.FormatDateToNumber(DateTime.Now))
+                log4net.Config.XmlConfigurator.Configure();
+
+            try
             {
-                File.Delete(Constant.ROOT_FOLDER + @"\file.txt");
-            }
-            if (!File.Exists(Constant.ROOT_FOLDER + @"\file.txt")) File.Create(Constant.ROOT_FOLDER + @"\file.txt");
-            string fileList = FileUtil.ReadFile(Constant.ROOT_FOLDER+@"\file.txt");
-            List<string> list = fileList.Split(',').ToList<string>();
-            foreach (String f in Directory.EnumerateDirectories(Constant.ROOT_FOLDER))
-            {
-               
-                string startDate = StockUtil.ReadUpdateFile(f);
-                string endDate=StockUtil.FormatDate(DateTime.Now);
-
-                //string startDate = "2013-02-01";
-                //string endDate="2013-07-01";
-
-                string stock = f.Substring(f.LastIndexOf(@"\")+1);
-                if (!list.Contains<string>(stock))
+                //
+                if (StockUtil.FormatDateToNumber(File.GetLastAccessTime(Constant.STOCK_FILE)) < StockUtil.FormatDateToNumber(DateTime.Now))
                 {
-                    DataDownload.DownloadDataToCsv(stock, startDate, endDate);
-                    StockUtil.UpdateDownloadTimeStamp(f, endDate);
+                    System.IO.File.WriteAllText(Constant.STOCK_FILE, string.Empty);
+                }
+                //get updated list
+                List<string> list = StockUtil.UpdateList;
 
-                    //sb.Append(stock+",");
+                foreach (string stock in StockUtil.StockList)
+                {
+                    //foreach (String f in Directory.EnumerateDirectories(Constant.ROOT_FOLDER))
+                    //{
+                    string path = Constant.ROOT_FOLDER + @"\" + stock;
+                    if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+                    string startDate = StockUtil.ReadUpdateFile(stock);
+                    string endDate = StockUtil.FormatDate(DateTime.Now);
 
-                    File.AppendAllText(Constant.ROOT_FOLDER + @"\file.txt", stock+",");
+                    //string startDate = "2013-02-01";
+                    //string endDate="2013-07-01";
 
-                    LOG.Debug(stock + " updated "+startDate + " "+endDate);
+                    //string stock = f.Substring(f.LastIndexOf(@"\")+1);
+                    if (!list.Contains<string>(stock))
+                    {
+                        DataDownload.DownloadDataToCsv(stock, startDate, endDate);
+                        StockUtil.UpdateDownloadTimeStamp(stock, endDate);
 
+                        File.AppendAllText(Constant.STOCK_FILE, stock + ",");
+
+                        LOG.Info(stock + " updated " + startDate + " " + endDate);
+
+                    }
                 }
             }
-
-           // FileUtil.WriteFile(Constant.ROOT_FOLDER + @"\file.txt",sb.ToString());
+            catch (Exception e)
+            {
+                LOG.Error(e);
+            }
         }
     }
 }

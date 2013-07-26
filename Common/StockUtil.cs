@@ -3,11 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using LumenWorks.Framework.IO.Csv;
 
 namespace Common
 {
     public class StockUtil
     {
+
+        public static List<string> StockList
+        {
+            get
+            {
+                // open the file "data.csv" which is a CSV file with headers
+                using (CsvReader csv = new CsvReader(
+                                       new StreamReader(Constant.STOCK_FILE), true))
+                {
+                    List<string> l = new List<string>();
+                    while (csv.ReadNextRecord())
+                    {
+                        //Console.WriteLine(csv[0]);
+                        l.Add(csv[0]);
+                    }
+                    return l;
+                }
+            }
+
+        }
+
+        public static List<string> UpdateList
+        {
+            get
+            {
+              return  FileUtil.ReadFile(Constant.AUTO_DOWNLOAD_FILE).Split(',').ToList<string>();
+            }
+
+        }
+
+        public static List<string> AnalyzeList
+        {
+            get
+            {
+                // open the file "data.csv" which is a CSV file with headers
+                using (CsvReader csv = new CsvReader(
+                                       new StreamReader(Constant.ANALYZE_FILE), true))
+                {
+                    List<string> l = new List<string>();
+                    while (csv.ReadNextRecord())
+                    {
+                        //Console.WriteLine(csv[0]);
+                        l.Add(csv[0]);
+                    }
+                    return l;
+                }
+            }
+        }
+
+
         public static decimal FormatRate(decimal t)
         {
             return Math.Round(t, 4);
@@ -84,17 +135,24 @@ namespace Common
             return change > 0 ? change : -change ;
         }
 
-        public static bool UpdateDownloadTimeStamp(string path,string updateDate)
+        public static bool UpdateDownloadTimeStamp(string stock,string updateDate)
         {
-            if (!Directory.Exists(path)) throw new Exception(path + " not exist.");
-            FileUtil.WriteFile(path + @"\update.txt", updateDate);
+            string fullPath = String.Format(Constant.UPDATE_FILE, stock);
+            if (!File.Exists(fullPath)) File.Create(fullPath).Close();
+            FileUtil.WriteFile(fullPath, updateDate);
             return true;
         }
 
-        public static string ReadUpdateFile(string path)
+        public static string ReadUpdateFile(string stock)
         {
-            if (!Directory.Exists(path)) throw new Exception(path + " not exist.");
-            return FileUtil.ReadFile(path + @"\update.txt");
+            string fullPath = String.Format(Constant.UPDATE_FILE, stock);
+            if (File.Exists(fullPath))
+            {
+                string t = FileUtil.ReadFile(fullPath);
+                return t.Trim().Equals("") ? "2013-02-01" : t ;
+            }
+            else 
+                return "2013-02-01";
         }
 
 

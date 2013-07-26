@@ -39,19 +39,19 @@ namespace DownloadData
                     using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
                     {
                         outfile.Write(data.ToString());
-                        LOG.Info("Downloaded: " + filePath);
+                        LOG.Debug("Downloaded: " + filePath);
                     }
 
                 }
                 else
                 {
-                    LOG.Info("None: " + filePath);
+                    LOG.Debug("None: " + filePath);
                 }
                 
             }
             else
             {
-                LOG.Info("Skipped: " + filePath);
+                LOG.Debug("Skipped: " + filePath);
             }
 
             return filePath;

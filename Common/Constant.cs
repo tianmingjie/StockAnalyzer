@@ -40,5 +40,9 @@ namespace Common
         public static string ROOT_FOLDER = map["rootFolder"].EndsWith(@"\") ? map["rootFolder"] : map["rootFolder"] + @"\";// doc.SelectSingleNode("");
         public static string ANALYZE_FOLDER = map["analyzeFolder"].EndsWith(@"\") ? map["analyzeFolder"]  : map["analyzeFolder"] + @"\";
         public static string BIG_DEAL = map["bigDeal"].Equals("") ? "500" : map["bigDeal"];
+        public static string STOCK_FILE =  map["stockFile"];
+        public static string AUTO_DOWNLOAD_FILE = map["autoDownloadFile"];
+        public static string ANALYZE_FILE = map["analyzeFile"].Equals("") ? ROOT_FOLDER + @"\analyze.txt" : map["analyzeFile"];
+        public static string UPDATE_FILE = map["updateFile"].Equals("") ? ROOT_FOLDER + @"\{0}\update.txt" : map["updateFile"];
     }
 }

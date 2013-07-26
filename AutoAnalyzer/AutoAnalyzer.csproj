@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{ACED5DB1-6FD8-489B-89C7-09516A12AACA}</ProjectGuid>
+    <ProjectGuid>{E7E5BA7F-A0B3-41E0-AFC6-277B201EFD1F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutoDownload</RootNamespace>
-    <AssemblyName>AutoDownload</AssemblyName>
+    <RootNamespace>AutoAnalyzer</RootNamespace>
+    <AssemblyName>AutoAnalyzer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -34,13 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\lib\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoDownload.cs" />
+    <Compile Include="AutoAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -58,16 +52,16 @@
       <Project>{8C100380-0414-43DB-AA3B-32417C48C89F}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DownloadData\DownloadData.csproj">
-      <Project>{8E37DA8B-A01C-492A-B160-9ADAE343E638}</Project>
-      <Name>DownloadData</Name>
+    <ProjectReference Include="..\StockAnalyzer\SotckAnalyzer.csproj">
+      <Project>{D301A688-C1EA-4168-9206-4D0F4379DE80}</Project>
+      <Name>SotckAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="stock.csv">
+    <None Include="analyze.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
