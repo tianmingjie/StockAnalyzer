@@ -18,34 +18,12 @@ namespace SotckAnalyzer.data
         {
             get;
             set;
-            //set
-            //{
-            //    if (EntryDataList == null)
-            //    {
-            //        value = EntryDataList;
-            //    }
-            //}
-            //get
-            //{
-            //    return EntryDataList;
-            //}
         }
 
         public virtual List<DailyData> DailyList
         {
             get;
             set;
-            //set
-            //{
-            //    if (EntryDataList == null)
-            //    {
-            //        value = EntryDataList;
-            //    }
-            //}
-            //get
-            //{
-            //    return EntryDataList;
-            //}
         }
 
         #region individual

@@ -21,9 +21,9 @@ namespace AutoDownload
             try
             {
                 //
-                if (StockUtil.FormatDateToNumber(File.GetLastAccessTime(Constant.STOCK_FILE)) < StockUtil.FormatDateToNumber(DateTime.Now))
+                if (StockUtil.FormatDateToNumber(File.GetLastAccessTime(Constant.AUTO_DOWNLOAD_FILE))+1 < StockUtil.FormatDateToNumber(DateTime.Now))
                 {
-                    System.IO.File.WriteAllText(Constant.STOCK_FILE, string.Empty);
+                    System.IO.File.WriteAllText(Constant.AUTO_DOWNLOAD_FILE, string.Empty);
                 }
                 //get updated list
                 List<string> list = StockUtil.UpdateList;
@@ -34,11 +34,11 @@ namespace AutoDownload
                     //{
                     string path = Constant.ROOT_FOLDER + @"\" + stock;
                     if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                    string startDate = StockUtil.ReadUpdateFile(stock);
+                    //string startDate = StockUtil.ReadUpdateFile(stock);
                     string endDate = StockUtil.FormatDate(DateTime.Now);
 
-                    //string startDate = "2013-02-01";
-                    //string endDate="2013-07-01";
+                   string startDate = "2012-09-01";
+                   // string endDate="2013-07-28";
 
                     //string stock = f.Substring(f.LastIndexOf(@"\")+1);
                     if (!list.Contains<string>(stock))
@@ -46,7 +46,7 @@ namespace AutoDownload
                         DataDownload.DownloadDataToCsv(stock, startDate, endDate);
                         StockUtil.UpdateDownloadTimeStamp(stock, endDate);
 
-                        File.AppendAllText(Constant.STOCK_FILE, stock + ",");
+                        File.AppendAllText(Constant.AUTO_DOWNLOAD_FILE, stock + ",");
 
                         LOG.Info(stock + " updated " + startDate + " " + endDate);
 

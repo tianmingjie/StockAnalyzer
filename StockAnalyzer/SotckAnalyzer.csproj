@@ -66,7 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="analyzer\BigDealAnalyzer.cs" />
     <Compile Include="analyzer\IAnalyzer.cs" />
     <Compile Include="analyzer\ISave.cs" />
     <Compile Include="analyzer\MeanChang.cs" />
@@ -81,7 +80,6 @@
     <Compile Include="reader\Csv.cs" />
     <Compile Include="data\EntryData.cs" />
     <Compile Include="data\DailyData.cs" />
-    <Compile Include="analyzer\BigDeal.cs" />
     <Compile Include="data\NormalData.cs" />
     <Compile Include="Analyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

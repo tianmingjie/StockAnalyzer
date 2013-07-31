@@ -9,6 +9,7 @@ namespace SotckAnalyzer.data
     public class BigDealData : FilterData
     {
         public string filter = "";
+        public string type = "";
 
         public StockData data;
 
@@ -19,6 +20,14 @@ namespace SotckAnalyzer.data
             this.data = data;
             this.filter = filter;
            // base.Stock = data.Stock;
+        }
+
+        public BigDealData(StockData data, String filter,String type)
+        {
+            this.data = data;
+            this.filter = filter;
+            this.type = type;
+            // base.Stock = data.Stock;
         }
 
         public override List<EntryData> EntryList
