@@ -10,7 +10,27 @@ namespace Common
     public class StockUtil
     {
 
-        public static List<string> StockList
+        //public static List<string> StockList
+        //{
+        //    get
+        //    {
+        //        // open the file "data.csv" which is a CSV file with headers
+        //        using (CsvReader csv = new CsvReader(
+        //                               new StreamReader(Constant.STOCK_FILE), true))
+        //        {
+        //            List<string> l = new List<string>();
+        //            while (csv.ReadNextRecord())
+        //            {
+        //                //Console.WriteLine(csv[0]);
+        //                l.Add(csv[0]);
+        //            }
+        //            return l;
+        //        }
+        //    }
+
+        //}
+
+        public static List<StockInfo> StockList
         {
             get
             {
@@ -18,11 +38,12 @@ namespace Common
                 using (CsvReader csv = new CsvReader(
                                        new StreamReader(Constant.STOCK_FILE), true))
                 {
-                    List<string> l = new List<string>();
+                    List<StockInfo> l = new List<StockInfo>();
                     while (csv.ReadNextRecord())
                     {
                         //Console.WriteLine(csv[0]);
-                        l.Add(csv[0]);
+                        l.Add(new StockInfo(){ 
+                            stock=csv[0]});
                     }
                     return l;
                 }
@@ -39,7 +60,26 @@ namespace Common
 
         }
 
-        public static List<string> AnalyzeList
+        //public static List<string> AnalyzeList
+        //{
+        //    get
+        //    {
+        //        // open the file "data.csv" which is a CSV file with headers
+        //        using (CsvReader csv = new CsvReader(
+        //                               new StreamReader(Constant.ANALYZE_FILE), true))
+        //        {
+        //            List<string> l = new List<string>();
+        //            while (csv.ReadNextRecord())
+        //            {
+        //                //Console.WriteLine(csv[0]);
+        //                l.Add(csv[0]);
+        //            }
+        //            return l;
+        //        }
+        //    }
+        //}
+
+        public static List<StockInfo> AnalyzeList
         {
             get
             {
@@ -47,11 +87,15 @@ namespace Common
                 using (CsvReader csv = new CsvReader(
                                        new StreamReader(Constant.ANALYZE_FILE), true))
                 {
-                    List<string> l = new List<string>();
+                    List<StockInfo> l = new List<StockInfo>();
                     while (csv.ReadNextRecord())
                     {
                         //Console.WriteLine(csv[0]);
-                        l.Add(csv[0]);
+                        l.Add(new StockInfo(){ 
+                            isAnalyze=csv[0].Trim().Equals("0")?false:true,
+                            stock=csv[1],
+                            filter=csv[3].Equals("")?Constant.BIG_DEAL:csv[3]
+                        });
                     }
                     return l;
                 }

@@ -13,13 +13,18 @@ namespace AutoAnalyzer
         {
             try
             {
-                foreach (string stock in StockUtil.AnalyzeList)
+                foreach (StockInfo stockInfo in StockUtil.AnalyzeList.Reverse<StockInfo>())
                 {
-                    Analyzer.Analyze(stock, "2013-02-01", StockUtil.FormatDate(DateTime.Now), "500");
-                    Console.WriteLine(stock + " is done");
+                    if (stockInfo.isAnalyze)
+                    {
+                        Analyzer.Analyze(stockInfo.stock, "2013-02-01", StockUtil.FormatDate(DateTime.Now), stockInfo.filter);
+                        Console.WriteLine(stockInfo.stock + " is done");
+                    }
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
+                Console.WriteLine(e);
             }
         }
     }

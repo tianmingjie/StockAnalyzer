@@ -23,37 +23,44 @@ namespace DownloadData
         public static String DownloadDataToCsv(string stock, string date)
         {
 
+
             if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
             string filePath = Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv";
-            if (!File.Exists(filePath))
+            try
             {
-                WebClient client = new WebClient();
-                string url = "http://market.finance.sina.com.cn/downxls.php?date=" + date + "&symbol=" + stock;
-                string data = System.Text.Encoding.GetEncoding(936).GetString(client.DownloadData(url));
-                data = ReplaceChinese(data);
-
-                if (data != null && data.Length > 2048)
+                if (!File.Exists(filePath))
                 {
+                    WebClient client = new WebClient();
+                    string url = "http://market.finance.sina.com.cn/downxls.php?date=" + date + "&symbol=" + stock;
+                    string data = System.Text.Encoding.GetEncoding(936).GetString(client.DownloadData(url));
+                    data = ReplaceChinese(data);
 
-                    using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
+                    if (data != null && data.Length > 2048)
                     {
-                        outfile.Write(data.ToString());
-                        LOG.Debug("Downloaded: " + filePath);
+
+                        using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
+                        {
+                            outfile.Write(data.ToString());
+                            LOG.Debug("Downloaded: " + filePath);
+                        }
+
+                    }
+                    else
+                    {
+                        LOG.Debug("None: " + filePath);
                     }
 
                 }
                 else
                 {
-                    LOG.Debug("None: " + filePath);
+                    LOG.Debug("Skipped: " + filePath);
                 }
-                
             }
-            else
+            catch
             {
-                LOG.Debug("Skipped: " + filePath);
+                LOG.Info("Error" + filePath);
             }
-
             return filePath;
         }
         /// <summary>

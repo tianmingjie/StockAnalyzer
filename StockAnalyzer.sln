@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDownload", "AutoDownloa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoAnalyzer", "AutoAnalyzer\AutoAnalyzer.csproj", "{E7E5BA7F-A0B3-41E0-AFC6-277B201EFD1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest", "Rest\Rest.csproj", "{EBF93367-8907-47CD-93EA-29ADD115AD8B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,16 +71,6 @@ Global
 		{E7E5BA7F-A0B3-41E0-AFC6-277B201EFD1F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E7E5BA7F-A0B3-41E0-AFC6-277B201EFD1F}.Release|x86.ActiveCfg = Release|x86
 		{E7E5BA7F-A0B3-41E0-AFC6-277B201EFD1F}.Release|x86.Build.0 = Release|x86
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EBF93367-8907-47CD-93EA-29ADD115AD8B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

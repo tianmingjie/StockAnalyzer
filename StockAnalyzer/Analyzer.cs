@@ -113,13 +113,12 @@ namespace SotckAnalyzer
             //RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
             // RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
 
-            if (Directory.Exists(Constant.ANALYZE_FOLDER + stock))
+            if (!Directory.Exists(Constant.ANALYZE_FOLDER + stock))
             {
-                Directory.Delete(Constant.ANALYZE_FOLDER + stock, true);
-
+                // Directory.Delete(Constant.ANALYZE_FOLDER + stock, true); 
+                Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
             }
-            Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
-
+           
             foreach (int type in Enum.GetValues(typeof(RangeType)))
             {
                 LOG.Info("start to analyze " + (RangeType)type);
@@ -131,6 +130,11 @@ namespace SotckAnalyzer
 
 
                 String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
+                if (File.Exists(filePath))
+                {
+                    //File.Delete(filePath);
+                    System.IO.File.WriteAllText(filePath, string.Empty);
+                }
                 FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
                 LOG.Info("End to analyze " + (RangeType)type);
             }

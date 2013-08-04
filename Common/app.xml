@@ -7,4 +7,6 @@
   <updateFile>D:\project\stock\data\{0}\update.txt</updateFile>
   <mySql>server=127.0.0.1;user id=root; password=as; database=albertsong; pooling=false;charset=utf8</mySql>
   <bigDeal>500</bigDeal>
+  <!--0/1 0 download update, 1, download all-->
+  <downloadAll>0</downloadAll>
 </StockApp>

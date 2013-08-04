@@ -7,7 +7,7 @@ namespace SotckAnalyzer.type
 {
     public enum RangeType
     {
-        //Daily = 0,
+        Daily = 0,
         Monthly=1,
         Weekly=2,
         Hourly=3,

@@ -37,29 +37,43 @@ namespace SotckAnalyzer.data
         public static string Compare(Dictionary<string,FilterData> big, Dictionary<string,FilterData> small)
         {
             StringBuilder sb=new StringBuilder();
-            sb.Append("Date,Buy,Sell,Buy/Sell, Change\n");
-            foreach(string a in big.Keys)
+            sb.Append("Date,BuyShare,SellShare,BuyMoney,SellMoney,increDiffShare,increDiffMoney, BuyRate,SellRate, Change\n");
+
+            decimal incrementalComShare = 0, incrementalComMoney = 0; 
+            
+            foreach (string a in big.Keys)
             {
-                decimal rateOfBuy, rateOfSell, rateOfChange;
-                decimal rateOfBuySell;
+                decimal rateOfBuy=0, rateOfSell=0, rateOfChange=0;
+                decimal rateOfBuySell=0;
+                decimal totalBuyShare=0,totalSellShare=0,totalBuyMoney=0,totalSellMoney=0;
+                
                 if (small.ContainsKey(a))
                 {
                     rateOfBuy = StockUtil.FormatRate(small[a].TotalBuyMoney / big[a].TotalMoney);
                     rateOfSell = StockUtil.FormatRate(small[a].TotalSellMoney / big[a].TotalMoney);
-                    
+                    totalBuyShare = small[a].TotalBuyShare;
+                    totalSellShare=small[a].TotalSellShare;
+                    totalBuyMoney=small[a].TotalBuyMoney;
+                    totalSellMoney=small[a].TotalSellMoney;
+                    incrementalComShare += totalBuyShare - totalSellShare;
+                    incrementalComMoney += totalBuyMoney - totalSellMoney;
+                    //incrementalBuyMoney += totalBuyMoney;
+                    //incrementalSellMoney += totalSellMoney;
                 }
-                else
-                {
-                    rateOfBuy = 0;
-                    rateOfSell = 0;
-                }
+
                 rateOfChange = StockUtil.FormatRate((big[a].Close - big[a].Open) / big[a].Open);
                 rateOfBuySell = StockUtil.FormatRate((big[a].TotalBuyMoney - big[a].TotalSellMoney) / big[a].TotalSellMoney);
                 sb.Append(a + ",");
+                sb.Append(totalBuyShare+ ",");
+                sb.Append(totalSellShare + ",");
+                sb.Append(totalBuyMoney/10000 + ",");
+                sb.Append(totalSellMoney / 10000 + ",");
+                sb.Append(incrementalComShare + ",");
+                sb.Append(incrementalComMoney / 10000 + ",");
                 //sb.Append(0 + ",");
                 sb.Append(rateOfBuy + ",");
                 sb.Append(rateOfSell + ",");
-                sb.Append(rateOfBuySell + ",");
+               // sb.Append(rateOfBuySell + ",");
                 sb.Append(rateOfChange + "\n");
 
             }
