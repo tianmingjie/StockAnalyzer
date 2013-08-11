@@ -11,8 +11,6 @@ namespace SotckAnalyzer.data
     public class StockData
     {
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(StockData));
-
         public StockData(string stock)
         {
             this.stock = stock;
@@ -44,7 +42,6 @@ namespace SotckAnalyzer.data
             }
             if (_entrydata == null)
             {
-                LOG.Info("stock data");
                 _entrydata = new List<EntryData>();
 
                 foreach (DailyData daily in DailyList)
@@ -79,7 +76,6 @@ namespace SotckAnalyzer.data
             {
                 if (_entrydata == null)
                 {
-                    Console.WriteLine("stock data");
                     _entrydata = new List<EntryData>();
 
                     foreach (DailyData daily in DailyList)

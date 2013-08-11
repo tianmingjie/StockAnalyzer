@@ -18,14 +18,6 @@ namespace Common
             return true;
         }
 
-        //public static DateTime ReadFile(string filePath)
-        //{
-        //    using (StreamReader outfile = new StreamReader(filePath))
-        //    {
-        //        return DateTime.Parse(outfile.ReadToEnd());
-        //    }
-        //}
-
         public static string ReadFile(string filePath)
         {
             using (StreamReader outfile = new StreamReader(filePath))

@@ -27,7 +27,7 @@ namespace SotckAnalyzer.analyzer
         {
             IEnumerable<EntryData> querySet = null;
 
-            decimal threshold=0.005M;
+            //decimal threshold=0.005M;
 
             //querySet = from data in set where data.share > Int32.Parse(filter) && data. select data;
             return  querySet.ToList<EntryData>();

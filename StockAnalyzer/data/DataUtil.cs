@@ -62,7 +62,7 @@ namespace SotckAnalyzer.data
                 }
 
                 rateOfChange = StockUtil.FormatRate((big[a].Close - big[a].Open) / big[a].Open);
-                rateOfBuySell = StockUtil.FormatRate((big[a].TotalBuyMoney - big[a].TotalSellMoney) / big[a].TotalSellMoney);
+                //rateOfBuySell = StockUtil.FormatRate((big[a].TotalBuyMoney - big[a].TotalSellMoney) / big[a].TotalSellMoney);
                 sb.Append(a + ",");
                 sb.Append(totalBuyShare+ ",");
                 sb.Append(totalSellShare + ",");

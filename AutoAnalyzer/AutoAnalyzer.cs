@@ -11,20 +11,25 @@ namespace AutoAnalyzer
     {
         public static void Main(string[] args)
         {
+            String stock = "" ;
             try
             {
+                
                 foreach (StockInfo stockInfo in StockUtil.AnalyzeList.Reverse<StockInfo>())
                 {
+                    stock= stockInfo.stock;
+                    StockLog.Log.Info(stock + " start...");
+                    
                     if (stockInfo.isAnalyze)
                     {
-                        Analyzer.Analyze(stockInfo.stock, "2013-02-01", StockUtil.FormatDate(DateTime.Now), stockInfo.filter);
-                        Console.WriteLine(stockInfo.stock + " is done");
+                        Analyzer.Analyze(stock,Constant.ANALYZE_START_DATE, StockUtil.FormatDate(DateTime.Now), stockInfo.filter);
+                        StockLog.Log.Info(stock + " is done");
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                StockLog.Log.Info(stock + " fail to analyze",e);
             }
         }
     }

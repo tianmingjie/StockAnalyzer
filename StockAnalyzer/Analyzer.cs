@@ -12,140 +12,95 @@ using SotckAnalyzer.analyzer;
 using SotckAnalyzer.type;
 using Spring.Context;
 using Spring.Context.Support;
-using log4net;
 
 namespace SotckAnalyzer
 {
     public static class Analyzer
     {
-         private static readonly ILog LOG = LogManager.GetLogger(typeof(Analyzer));
-         
+
         //static string Constant.ROOT_FOLDER = Constant.ROOT_FOLDER;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
-         {
-            log4net.Config.XmlConfigurator.Configure();
+        {
             Dictionary<string, string> dic = ProcessParam(args);
-            string stock=dic["-stock"]; //"002693";
-            string startDate=dic["-start"];//"2013-05-01";
-            string endDate,filter;
+            string stock = dic["-stock"]; //"002693";
+            string startDate = dic["-start"];//"2013-05-01";
+            string endDate, filter;
             if (dic.ContainsKey("-end"))
             {
-               endDate =dic["-end"] ;
+                endDate = dic["-end"];
             }
             else
             {
-                 endDate =StockUtil.FormatDate(DateTime.Now) ;
+                endDate = StockUtil.FormatDate(DateTime.Now);
             }
 
             if (dic.ContainsKey("-filter"))
             {
-               filter =dic["-filter"] ;
+                filter = dic["-filter"];
             }
             else
             {
-                 filter ="500" ;
+                filter = "500";
             }
 
-            LOG.Info(stock + " "+startDate+" "+endDate+ " "+filter);
+            StockLog.Log.Info(stock + " " + startDate + " " + endDate + " " + filter);
 
-            Analyze(stock,startDate,endDate,filter);
-            ////try
-            ////{
-            //    //IApplicationContext ctx = ContextRegistry.GetContext();
-            //    LOG.Info("start to create stock data");
-            //    StockData data1 = new StockData(stock,startDate,endDate,true);//(StockData)ctx.GetObject("StockData");
-            //    LOG.Info("start to create normal data");
-            //    NormalData gd = new NormalData(data1);//(NormalData)ctx.GetObject("NormalData");
-            //    LOG.Info("start to create big deal data");
-            //    BigDealData bdd = new BigDealData(data1,filter);//(BigDealData)ctx.GetObject("BigDealData");
-            //    //RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
-            //   // RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
-
-            //    if (Directory.Exists(Constant.ANALYZE_FOLDER + stock))
-            //    {
-            //        Directory.Delete(Constant.ANALYZE_FOLDER + stock, true);
-
-            //    }
-            //    Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
-
-            //    foreach (int type in Enum.GetValues(typeof(RangeType)))
-            //    {
-            //        LOG.Info("start to analyze "+ (RangeType)type);
-
-            //        RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
-            //        RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
-            //        Dictionary<string, FilterData> big = bigdeal.DataList;
-            //        Dictionary<string, FilterData> all = alldeal.DataList;
-
-
-            //        String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv",Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
-            //        FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
-            //        LOG.Info("End to analyze " + (RangeType)type);
-            //    }
-
-
-
-            //}
-            //catch (Exception e)
-            //{
-            //    LOG.Error("Movie Finder is broken.", e);
-            //}
-            //finally
-            //{
-            //    Console.WriteLine();
-            //}
-            
+            Analyze(stock, startDate, endDate, filter);
         }
 
-        public static void Analyze(String stock, string startDate,string endDate,string filter)
+        public static void Analyze(String stock, string startDate, string endDate, string filter)
         {
             //IApplicationContext ctx = ContextRegistry.GetContext();
-            LOG.Info("start to create stock data");
+            StockLog.Log.Info("start to create stock data");
             StockData data1 = new StockData(stock, startDate, endDate, true);//(StockData)ctx.GetObject("StockData");
-            LOG.Info("start to create normal data");
+            StockLog.Log.Info("start to create normal data");
             NormalData gd = new NormalData(data1);//(NormalData)ctx.GetObject("NormalData");
-            LOG.Info("start to create big deal data");
+            StockLog.Log.Info("start to create big deal data");
             BigDealData bdd = new BigDealData(data1, filter);//(BigDealData)ctx.GetObject("BigDealData");
             //RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
             // RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
+        
+                if (!Directory.Exists(Constant.ANALYZE_FOLDER + stock))
+                {
+                    // Directory.Delete(Constant.ANALYZE_FOLDER + stock, true); 
+                    Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
+                }
+                else
+                {
+                    if (Constant.CLEAN)
+                    {
+                        Directory.Delete(Constant.ANALYZE_FOLDER + stock, true);
+                        Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
+                    }
+                }
 
-            if (!Directory.Exists(Constant.ANALYZE_FOLDER + stock))
-            {
-                // Directory.Delete(Constant.ANALYZE_FOLDER + stock, true); 
-                Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
-            }
-           
             foreach (int type in Enum.GetValues(typeof(RangeType)))
             {
-                LOG.Info("start to analyze " + (RangeType)type);
-
-                RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
-                RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
-                Dictionary<string, FilterData> big = bigdeal.DataList;
-                Dictionary<string, FilterData> all = alldeal.DataList;
-
-
                 String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
-                if (File.Exists(filePath))
+                StockLog.Log.Info("start to analyze " + (RangeType)type);
+                if (!File.Exists(filePath))
                 {
-                    //File.Delete(filePath);
-                    System.IO.File.WriteAllText(filePath, string.Empty);
+                    
+                    RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
+                    RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
+                    Dictionary<string, FilterData> big = bigdeal.DataList;
+                    Dictionary<string, FilterData> all = alldeal.DataList;
+                    FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
                 }
-                FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
-                LOG.Info("End to analyze " + (RangeType)type);
+                StockLog.Log.Info("End to analyze " + (RangeType)type);
             }
         }
         public static Dictionary<string, string> ProcessParam(string[] list)
         {
-            Dictionary<string,string> dic=new Dictionary<string,string>();
+            Dictionary<string, string> dic = new Dictionary<string, string>();
             //string[] list=a.Split(' ');
-            for (int i = 0; i < list.Length-1; i++)
+            for (int i = 0; i < list.Length - 1; i++)
             {
-                if (list[i].StartsWith("-") && !list[i+1].StartsWith("-"))
+                if (list[i].StartsWith("-") && !list[i + 1].StartsWith("-"))
                 {
                     dic.Add(list[i], list[i + 1]);
                 }

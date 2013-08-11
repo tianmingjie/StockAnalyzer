@@ -10,7 +10,7 @@ namespace SotckAnalyzer.type
         Daily = 0,
         Monthly=1,
         Weekly=2,
-        Hourly=3,
+        //Hourly=3,
         //Bihourly=4
     }
 }

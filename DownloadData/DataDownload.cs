@@ -6,13 +6,11 @@ using System.Net;
 using System.IO;
 using System.Text.RegularExpressions;
 using Common;
-using log4net;
 
 namespace DownloadData
 {
     public class DataDownload
     {
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(DataDownload));
 
         /// <summary>
         /// 生成csv 文件
@@ -42,24 +40,24 @@ namespace DownloadData
                         using (StreamWriter outfile = new StreamWriter(Constant.ROOT_FOLDER + stock + @"\" + stock + "_" + date + ".csv"))
                         {
                             outfile.Write(data.ToString());
-                            LOG.Debug("Downloaded: " + filePath);
+                            StockLog.Log.Debug("Downloaded: " + filePath);
                         }
 
                     }
                     else
                     {
-                        LOG.Debug("None: " + filePath);
+                        StockLog.Log.Debug("None: " + filePath);
                     }
 
                 }
                 else
                 {
-                    LOG.Debug("Skipped: " + filePath);
+                    StockLog.Log.Debug("Skipped: " + filePath);
                 }
             }
             catch
             {
-                LOG.Info("Error" + filePath);
+                StockLog.Log.Info("Error" + filePath);
             }
             return filePath;
         }

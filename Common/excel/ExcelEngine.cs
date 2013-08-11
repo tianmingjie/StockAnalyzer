@@ -99,8 +99,7 @@ namespace Common.excel
             }
             catch (Exception ex)
             {
-                obj = null;
-                //MessageBox.Show("Unable to release the Object " + ex.ToString());
+                StockLog.Log.Error(ex);
             }
             finally
             {

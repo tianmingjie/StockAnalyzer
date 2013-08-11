@@ -45,5 +45,9 @@ namespace Common
         public static string ANALYZE_FILE = map["analyzeFile"].Equals("") ? ROOT_FOLDER + @"\analyze.txt" : map["analyzeFile"];
         public static string UPDATE_FILE = map["updateFile"].Equals("") ? ROOT_FOLDER + @"\{0}\update.txt" : map["updateFile"];
         public static string DOWNLOAD_ALL = map["downloadAll"].Equals("") ? "0" : map["downloadAll"];
+        public static string ANALYZE_START_DATE = map["analyzeStartDate"].Equals("") ? "2012-09-01" : map["analyzeStartDate"];
+        public static string ANALYZE_CHART_DIR =  map["analyeChartDir"];
+        public static bool CLEAN = Boolean.Parse(map["analyeChartDir"]);
+    
     }
 }

@@ -13,7 +13,6 @@ namespace SotckAnalyzer.data
         private int _type = 0;
         private FilterData _filterData;
 
-        private List<FilterData> list;
         public RangeData(FilterData filterData, int type=0)
         {
             this._filterData = filterData;
@@ -113,14 +112,14 @@ namespace SotckAnalyzer.data
             {
             f1.EntryList = querySet.ToList<EntryData>();
             f1.DailyList = DataUtil.ConvertDailyList(f1.EntryList);
-            if (_type == (int)RangeType.Hourly)
-            {
-                dic.Add(StockUtil.FormatAllTime(unit.Start, true) + "_" + StockUtil.FormatAllTime(unit.End, true), f1);
-            }
-            else
-            {
-                dic.Add(StockUtil.FormatAllTime(unit.Start) + "_" + StockUtil.FormatAllTime(unit.End), f1);
-            }
+            //if (_type == (int)RangeType.Hourly)
+            //{
+           //     dic.Add(StockUtil.FormatAllTime(unit.Start, true) + "_" + StockUtil.FormatAllTime(unit.End, true), f1);
+           // }
+            //else
+            //{
+            dic.Add(StockUtil.FormatAllTime(unit.Start) + "_" + StockUtil.FormatAllTime(unit.End), f1);
+           // }
             }
 
         }

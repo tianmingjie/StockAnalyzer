@@ -7,15 +7,12 @@ using System.IO;
 using SotckAnalyzer.data;
 using Common;
 using DownloadData;
-using log4net;
+
 
 namespace SotckAnalyzer.reader
 {
     public class Csv
     {
-
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(Csv));
-
         public static List<DailyData> ReadCsv(string stock, string startDate, string endDate,bool isDownload)
         {
 
@@ -152,7 +149,7 @@ namespace SotckAnalyzer.reader
                     {
                         ///TODO 吞掉异常
                         ///
-                        LOG.Info("Can't parse at line "+index + "  "+fileName);
+                        StockLog.Log.Info("Can't parse at line " + index + "  " + fileName);
                     }
                 //}
 
