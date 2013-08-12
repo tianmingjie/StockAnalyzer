@@ -130,7 +130,7 @@ namespace Common
         }
         public static string FormateNumber(int a)
         {
-            return a > 10 ? a.ToString() : "0" + a.ToString();
+            return a > 9 ? a.ToString() : "0" + a.ToString();
         }
         public static string FormatAllTime(DateTime date,bool isHour=false)
         {
