@@ -24,43 +24,52 @@ namespace AutoDownload
 
         public static void Auto()
         {
-            
+
             List<StockInfo> total = StockUtil.StockList;
             int count = total.Count;
-            int range = total.Count / 10;
-            List<StockInfo> list1 = StockUtil.StockList.GetRange(0, range);
-            List<StockInfo> list2 = total.GetRange(range + 1, range);
-            List<StockInfo> list3 = total.GetRange((range) * 2 + 1, range);
-            List<StockInfo> list4 = total.GetRange((StockUtil.StockList.Count / 10) * 3 + 1, range);
-            List<StockInfo> list5 = total.GetRange((range) * 4 + 1, range);
-            List<StockInfo> list6 = total.GetRange((range) * 5 + 1, range);
-            List<StockInfo> list7 = total.GetRange((range) * 6 + 1, range);
-            List<StockInfo> list8 = total.GetRange((range) * 7 + 1, range);
-            List<StockInfo> list9 = total.GetRange((range) * 8 + 1, range);
-            List<StockInfo> list10 = total.GetRange((range) * 9 + 1, total.Count % 10);
 
-            Thread thread1 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread2 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread3 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread4 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread5 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread6 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread7 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread8 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread9 = new Thread(new ParameterizedThreadStart(Process));
-            Thread thread10 = new Thread(new ParameterizedThreadStart(Process));
-            thread1.Start(list1);
-            thread2.Start(list2);
-            thread3.Start(list3);
-            thread4.Start(list4);
-            thread5.Start(list5);
-            thread6.Start(list6);
-            thread7.Start(list7);
-            thread8.Start(list8);
-            thread9.Start(list9);
-            thread10.Start(list10);
+            int totalThread = 100;
+            int range = total.Count / totalThread;
+            int start = -1;
+
+            for (int i = 0; i < totalThread; i++)
+            {
+                new Thread(new ParameterizedThreadStart(Process)).Start(total.GetRange(start + 1, range));
+                start = range * i;
+            }
+            //    List<StockInfo> list1 = StockUtil.StockList.GetRange(0, range);
+            //    List<StockInfo> list2 = total.GetRange(range + 1, range);
+            //    List<StockInfo> list3 = total.GetRange(range * 2 + 1, range);
+            //    List<StockInfo> list4 = total.GetRange(range * 3 + 1, range);
+            //    List<StockInfo> list5 = total.GetRange(range * 4 + 1, range);
+            //    List<StockInfo> list6 = total.GetRange(range * 5 + 1, range);
+            //    List<StockInfo> list7 = total.GetRange(range * 6 + 1, range);
+            //    List<StockInfo> list8 = total.GetRange(range * 7 + 1, range);
+            //    List<StockInfo> list9 = total.GetRange(range * 8 + 1, range);
+            //    List<StockInfo> list10 = total.GetRange(range * 9 + 1, total.Count % 10);
+
+            //    Thread thread1 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread2 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread3 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread4 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread5 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread6 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread7 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread8 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread9 = new Thread(new ParameterizedThreadStart(Process));
+            //    Thread thread10 = new Thread(new ParameterizedThreadStart(Process));
+            //    thread1.Start(list1);
+            //    thread2.Start(list2);
+            //    thread3.Start(list3);
+            //    thread4.Start(list4);
+            //    thread5.Start(list5);
+            //    thread6.Start(list6);
+            //    thread7.Start(list7);
+            //    thread8.Start(list8);
+            //    thread9.Start(list9);
+            //    thread10.Start(list10);
+            //}
         }
-
         public static void Process(Object o)
         {
 

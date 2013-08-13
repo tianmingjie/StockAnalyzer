@@ -9,9 +9,9 @@ using SotckAnalyzer.data;
 using SotckAnalyzer.reader;
 using Common;
 using SotckAnalyzer.analyzer;
-using SotckAnalyzer.type;
-using Spring.Context;
-using Spring.Context.Support;
+using Common.type;
+//using Spring.Context;
+//using Spring.Context.Support;
 
 namespace SotckAnalyzer
 {
@@ -80,7 +80,8 @@ namespace SotckAnalyzer
 
             foreach (int type in Enum.GetValues(typeof(RangeType)))
             {
-                String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
+                //String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
+                String filePath = string.Format(@"{0}{1}\{1}_{3}_{2}.csv", Constant.ANALYZE_FOLDER, stock, (RangeType)type,filter);
                 StockLog.Log.Info("start to analyze " + (RangeType)type);
                 if (!File.Exists(filePath))
                 {

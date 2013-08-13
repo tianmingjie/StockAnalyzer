@@ -147,7 +147,7 @@ namespace Common
         public  static int GetMonthNumber(DateTime d)
         {
             int[] t = { 1, 3, 5, 7, 8, 10, 12 };
-            int[] t1 = { 4, 6, 10, 11 };
+            int[] t1 = { 4, 6, 9, 11 };
             int dt = 0;
             if (t.Contains<int>(d.Month))
                 dt = 31;

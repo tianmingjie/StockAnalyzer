@@ -65,10 +65,15 @@
     <Compile Include="DateUtil.cs" />
     <Compile Include="excel\ExcelEngine.cs" />
     <Compile Include="FileUtil.cs" />
+    <Compile Include="IStockModule.cs" />
+    <Compile Include="ModuleInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StockException.cs" />
     <Compile Include="StockInfo.cs" />
     <Compile Include="StockLog.cs" />
     <Compile Include="StockUtil.cs" />
+    <Compile Include="type\EntryType.cs" />
+    <Compile Include="type\RangeType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.xml">

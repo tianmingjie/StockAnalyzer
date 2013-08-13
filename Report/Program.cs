@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using GoogleChartSharp;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using Common;
@@ -13,9 +12,9 @@ namespace Report
     {
         static void Main(string[] args)
         {
-            //c1(@"D:\project\stock\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", "increDiffMoney");
-            //c2(@"D:\project\stock\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", new String[] { "BuyShare", "SellShare" },"BuySellShare",ChartType.COLUMN);
-            //c2(@"D:\project\stock\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", new String[] { "increDiffMoney" }, "increDiffMoney",ChartType.LINE);
+            //c1(@"D:\stock\store\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", "increDiffMoney");
+            //c2(@"D:\stock\store\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", new String[] { "BuyShare", "SellShare" },"BuySellShare",ChartType.COLUMN);
+            //c2(@"D:\stock\store\analyzeData\sh600789\sh600789_2012-09-01_2013-08-08_500_Weekly.csv", new String[] { "increDiffMoney" }, "increDiffMoney",ChartType.LINE);
             Console.WriteLine(GetString(1));
             //Console.WriteLine(Convert.ToChar(Convert.ToInt32('A')+3));
 
@@ -33,7 +32,12 @@ namespace Report
             }
         }
 
-        private static void ReportExcelToImage(String filePath, String[] columnList,String title,ChartType chartType=ChartType.COLUMN)
+        private static void Report(String filePath)
+        {
+            ReportExcelToImage(filePath, new String[] { "BuyShare", "SellShare" }, "BuySellShare", ChartType.COLUMN);
+            ReportExcelToImage(filePath, new String[] { "increDiffMoney" }, "increDiffMoney", ChartType.LINE);
+        }
+        public static void ReportExcelToImage(String filePath, String[] columnList,String title,ChartType chartType=ChartType.COLUMN)
         {
             FileInfo file = new FileInfo(filePath);
             String directory="";
