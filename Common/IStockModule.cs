@@ -7,6 +7,6 @@ namespace Common
 {
 	public interface IStockModule
 	{
-        bool Execute(ModuleInfo info);
+        bool Execute(StockInfo info);
 	}
 }

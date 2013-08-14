@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Common;
 using SotckAnalyzer;
+using Modulizer;
 
 namespace AutoAnalyzer
 {
@@ -11,6 +12,7 @@ namespace AutoAnalyzer
     {
         public static void Main(string[] args)
         {
+            ModulizerMain modulizer = new ModulizerMain();
             String stock = "" ;
             try
             {
@@ -22,7 +24,8 @@ namespace AutoAnalyzer
                     
                     if (stockInfo.isAnalyze)
                     {
-                        Analyzer.Analyze(stock,Constant.ANALYZE_START_DATE, StockUtil.FormatDate(DateTime.Now), stockInfo.filter);
+                        //Analyzer.Analyze(stock,Constant.ANALYZE_START_DATE, StockUtil.FormatDate(DateTime.Now), stockInfo.filter);
+                        modulizer.Execute(stockInfo);
                         StockLog.Log.Info(stock + " is done");
                     }
                 }

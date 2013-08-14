@@ -8,7 +8,7 @@ namespace DownloadData
 {
     public class DownloadModule:IStockModule
     {
-        public bool Execute(ModuleInfo info)
+        public bool Execute(StockInfo info)
         {
             string startDate;
             if (Constant.DOWNLOAD_ALL.Equals("0"))

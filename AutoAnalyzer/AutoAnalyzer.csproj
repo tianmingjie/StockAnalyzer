@@ -56,6 +56,10 @@
       <Project>{8C100380-0414-43DB-AA3B-32417C48C89F}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Modulizer\Modulizer.csproj">
+      <Project>{F2C558CF-AA09-4162-976E-6131ED970B83}</Project>
+      <Name>Modulizer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StockAnalyzer\SotckAnalyzer.csproj">
       <Project>{D301A688-C1EA-4168-9206-4D0F4379DE80}</Project>
       <Name>SotckAnalyzer</Name>

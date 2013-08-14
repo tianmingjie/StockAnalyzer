@@ -98,101 +98,12 @@ namespace Report
 
         }
 
-        //private static void c1(String fileName,String column)
-        //{
-        //    Excel.Application xlApp;
-        //    Excel.Workbook xlWorkBook;
-        //    Excel.Worksheet xlWorkSheet;
-        //    object misValue = System.Reflection.Missing.Value;
-
-        //    xlApp = new Excel.Application();
-        //    xlWorkBook = xlApp.Workbooks.Open(fileName);
-        //    xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-        //    Excel.Range chartRange;
-
-        //    Excel.ChartObjects xlCharts = (Excel.ChartObjects)xlWorkSheet.ChartObjects(Type.Missing);
-        //    Excel.ChartObject myChart = (Excel.ChartObject)xlCharts.Add(10, 80, 600, 550);
-        //    Excel.Chart chartPage = myChart.Chart;
-
-        //    //non-empty count of csv file
-        //    int count = Convert.ToInt32(xlApp.WorksheetFunction.CountA(xlWorkSheet.get_Range("A:A")));
-        //    //non-empty count of header
-        //    int line1 = Convert.ToInt32(xlApp.WorksheetFunction.CountA(xlWorkSheet.Rows[1]));
-
-
-        //    //Excel.Range r = xlWorkSheet.get_Range(xlWorkSheet.Cells[1,1], xlWorkSheet.Cells[1,line1]);
-        //    int columnIndex=GetColumnIndex(xlWorkSheet, line1, column);
-
-        //    //chartRange = xlWorkSheet.get_Range("A1:A27, B1:B27, C1:C27");
-        //    //chartRange = xlWorkSheet.get_Range(xlWorkSheet.Cells[1, columnIndex], xlWorkSheet.Cells[line, columnIndex]);
-        //    chartRange = xlWorkSheet.get_Range("A1:A"+count+","+GetString(columnIndex)+"1:"+GetString(columnIndex)+count);
-
-        //    chartPage.SetSourceData(chartRange, misValue);
-        //    //chartPage.ChartType = Excel.XlChartType.xlColumnClustered;
-        //    chartPage.ChartType = Excel.XlChartType.xlLine;
-
-        //    chartPage.Axes(Excel.XlAxisType.xlValue);
-        //    //export chart as picture file
-        //    chartPage.Export(@"C:\excel_chart_export.jpg", "JPG", misValue);
-
-        //    xlWorkBook.Close(false, misValue, misValue);
-        //    xlApp.Quit();
-
-        //    releaseObject(xlWorkSheet);
-        //    releaseObject(xlWorkBook);
-        //    releaseObject(xlApp);
-
-        //    Console.WriteLine("Excel file created , you can find the file");
-        //}
-
-        //private static void c(String fileName)
-        //{
-        //    Excel.Application xlApp;
-        //    Excel.Workbook xlWorkBook;
-        //    Excel.Worksheet xlWorkSheet;
-        //    object misValue = System.Reflection.Missing.Value;
-
-        //    xlApp = new Excel.Application();
-        //    xlWorkBook = xlApp.Workbooks.Open(fileName);
-        //    xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-        //    Excel.Range chartRange;
-
-        //    Excel.ChartObjects xlCharts = (Excel.ChartObjects)xlWorkSheet.ChartObjects(Type.Missing);
-        //    Excel.ChartObject myChart = (Excel.ChartObject)xlCharts.Add(10, 80, 600, 550);
-        //    Excel.Chart chartPage = myChart.Chart;
-
-        //    int line=Convert.ToInt32(xlApp.WorksheetFunction.CountA(xlWorkSheet.get_Range("A:A")));
-
-        //    int line1 =Convert.ToInt32( xlApp.WorksheetFunction.CountA(xlWorkSheet.Rows[1]));
-
-        //    //Excel.Range r = xlWorkSheet.get_Range(xlWorkSheet.Cells[1,1], xlWorkSheet.Cells[1,line1]);
-        //    Console.WriteLine(GetColumnIndex(xlWorkSheet, line1, "Date"));
-            
-        //    chartRange = xlWorkSheet.get_Range("C1", "C27");
-
-        //    chartPage.SetSourceData(chartRange, misValue);
-        //    chartPage.ChartType = Excel.XlChartType.xlColumnClustered;
-
-        //    chartPage.Axes(Excel.XlAxisType.xlValue);
-        //    //export chart as picture file
-        //    chartPage.Export(@"C:\excel_chart_export.jpg", "JPG", misValue);
-
-        //    xlWorkBook.Close(false, misValue, misValue);
-        //    xlApp.Quit();
-
-        //    releaseObject(xlWorkSheet);
-        //    releaseObject(xlWorkBook);
-        //    releaseObject(xlApp);
-
-        //    Console.WriteLine("Excel file created , you can find the file");
-        //}
-
         private static int GetColumnIndex(Excel.Worksheet xlWorkSheet, int size, String columnName)
         {
             for (int i = 1; i < size + 1; i++)
             {
                 String name = xlWorkSheet.Cells[1, i].Value;
-                Console.WriteLine(name+" "+i);
+                //Console.WriteLine(name+" "+i);
                 if (columnName.Trim().Equals(name.ToString().Trim()))
                     return i;          
             }

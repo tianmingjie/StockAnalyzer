@@ -9,7 +9,7 @@ namespace Report
 {
     public class ReportModule:IStockModule
     {
-        public bool Execute(ModuleInfo info)
+        public bool Execute(StockInfo info)
         {
             foreach (int type in Enum.GetValues(typeof(RangeType)))
             {
