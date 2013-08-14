@@ -193,10 +193,10 @@ namespace Common
             if (File.Exists(fullPath))
             {
                 string t = FileUtil.ReadFile(fullPath);
-                return t.Trim().Equals("") ? "2013-02-01" : t ;
+                return t.Trim().Equals("") ? Constant.ANALYZE_START_DATE: t ;
             }
-            else 
-                return "2013-02-01";
+            else
+                return Constant.ANALYZE_START_DATE;
         }
 
 
