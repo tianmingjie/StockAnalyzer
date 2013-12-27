@@ -27,7 +27,7 @@ namespace Modulizer
             }
             //info.startDate = "2013-03-01";
             String[] bigDeal = GetPara(args, "-big").Split(',');
-            if (bigDeal.Length <=1)
+            if (bigDeal[0].Equals(""))
             {
                 bigDeal = new String[] { "500", "1000", "2000" };
             }
