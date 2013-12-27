@@ -19,8 +19,20 @@ namespace Modulizer
 
             StockInfo info =new StockInfo();
 
-            info.stock = "sz002424";
-            info.filter = "1000";
+            info.stock = StockUtil.FormatStock(GetPara(args,"-stock"));
+            info.startDate = GetPara(args, "-start");
+            if(info.startDate.Equals(""))
+            {
+                info.startDate = "2013-03-01";
+            }
+            //info.startDate = "2013-03-01";
+            String[] bigDeal = GetPara(args, "-big").Split(',');
+            if (bigDeal.Length <=1)
+            {
+                bigDeal = new String[] { "500", "1000", "2000" };
+            }
+            info.filterList = bigDeal;
+            //info.filterList = new String[] { "500", "1000", "2000" };
             List <IStockModule> list= new List<IStockModule>();
             list.Add(new DownloadModule());
             list.Add(new AnalyzeModule());
@@ -31,6 +43,20 @@ namespace Modulizer
                 module.Execute(info);
             }
 
+        }
+
+        public static string GetPara(String[] args, String key)
+        {
+            String ret = "";
+            for (int i = 0; i < args.Length; i = i + 2)
+            {
+                if (args[i].Equals(key))
+                {
+                    ret = args[i + 1];
+                }
+            }
+
+            return ret;
         }
 
         public bool Execute(StockInfo info)

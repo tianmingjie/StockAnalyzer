@@ -10,7 +10,9 @@ namespace SotckAnalyzer
     {
         public bool Execute(StockInfo info)
         {
-            Analyzer.Analyze(info.stock, Constant.ANALYZE_START_DATE, StockUtil.FormatDate(DateTime.Now), info.filter);
+            string startDate = info.startDate.Equals("") ? Constant.ANALYZE_START_DATE : info.startDate;
+            //string endDate = info.endDate.Equals("") ? StockUtil.FormatDate(DateTime.Now) : info.endDate;
+            Analyzer.Analyze(info.stock, startDate, StockUtil.FormatDate(DateTime.Now), info.filterList);
             return true;
         }
     }

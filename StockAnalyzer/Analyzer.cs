@@ -60,7 +60,11 @@ namespace SotckAnalyzer
             StockLog.Log.Info("start to create normal data");
             NormalData gd = new NormalData(data1);//(NormalData)ctx.GetObject("NormalData");
             StockLog.Log.Info("start to create big deal data");
-            BigDealData bdd = new BigDealData(data1, filter);//(BigDealData)ctx.GetObject("BigDealData");
+
+
+            BigDealData bdd = new BigDealData(data1, filter);
+            
+            //(BigDealData)ctx.GetObject("BigDealData");
             //RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
             // RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
         
@@ -93,6 +97,45 @@ namespace SotckAnalyzer
                     FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
                 }
                 StockLog.Log.Info("End to analyze " + (RangeType)type);
+            }
+        }
+
+        public static void Analyze(String stock, string startDate, string endDate, string[] filterList)
+        {
+            //IApplicationContext ctx = ContextRegistry.GetContext();
+            StockLog.Log.Info("start to create stock data");
+            StockData data1 = new StockData(stock, startDate, endDate, true);//(StockData)ctx.GetObject("StockData");
+            StockLog.Log.Info("start to create normal data");
+            NormalData gd = new NormalData(data1);//(NormalData)ctx.GetObject("NormalData");
+
+            StockUtil.CreateStockFolder(stock);
+
+            foreach (String filter in filterList)
+            {
+                BigDealData bdd = new BigDealData(data1, filter);
+                StockLog.Log.Info("start to create big deal data "+filter);
+                //(BigDealData)ctx.GetObject("BigDealData");
+                //RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
+                // RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
+
+
+
+                foreach (int type in Enum.GetValues(typeof(RangeType)))
+                {
+                    //String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
+                    String filePath = string.Format(@"{0}{1}\{1}_{3}_{2}.csv", Constant.ANALYZE_FOLDER, stock, (RangeType)type, filter);
+                    StockLog.Log.Info("start to analyze " + (RangeType)type);
+                    if (!File.Exists(filePath))
+                    {
+
+                        RangeData bigdeal = new RangeData(bdd, type); //(RangeData)ctx.GetObject("BigRangeData");
+                        RangeData alldeal = new RangeData(gd, type);//(RangeData)ctx.GetObject("AllRangeData");
+                        Dictionary<string, FilterData> big = bigdeal.DataList;
+                        Dictionary<string, FilterData> all = alldeal.DataList;
+                        FileUtil.WriteFile(filePath, DataUtil.Compare(all, big));
+                    }
+                    StockLog.Log.Info("End to analyze " + (RangeType)type);
+                }
             }
         }
         public static Dictionary<string, string> ProcessParam(string[] list)
