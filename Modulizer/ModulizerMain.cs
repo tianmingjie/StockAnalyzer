@@ -19,7 +19,7 @@ namespace Modulizer
 
             StockInfo info =new StockInfo();
 
-            info.stock = "sz002424";
+            info.stock = "sz000919";
             info.filter = "1000";
             List <IStockModule> list= new List<IStockModule>();
             list.Add(new DownloadModule());

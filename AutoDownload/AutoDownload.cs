@@ -76,7 +76,7 @@ namespace AutoDownload
             List<StockInfo> list = (List<StockInfo>)o;
             foreach (StockInfo stock in list)
             {
-                string path = Constant.ROOT_FOLDER + @"\" + stock;
+                string path = Constant.ROOT_FOLDER + stock.stock;
                 if (!Directory.Exists(path)) Directory.CreateDirectory(path);
                 string startDate;
                 if (Constant.DOWNLOAD_ALL.Equals("0"))
