@@ -10,18 +10,18 @@ using Common.type;
 
 namespace Modulizer
 {
-    public class ModulizerMain :IStockModule
+    public class ModulizerMain : IStockModule
     {
         public static void Main(string[] args)
         {
 
             //List<DateUnit> u=DateUtil.ConvertMonthlyDateUnit(DateTime.Parse("2012-09-03"), DateTime.Now);
 
-            StockInfo info =new StockInfo();
+            StockInfo info = new StockInfo();
 
-            info.stock = StockUtil.FormatStock(GetPara(args,"-stock"));
+            info.stock = StockUtil.FormatStock(GetPara(args, "-stock"));
             info.startDate = GetPara(args, "-start");
-            if(info.startDate.Equals(""))
+            if (info.startDate.Equals(""))
             {
                 info.startDate = "2013-03-01";
             }
@@ -33,7 +33,7 @@ namespace Modulizer
             }
             info.filterList = bigDeal;
             //info.filterList = new String[] { "500", "1000", "2000" };
-            List <IStockModule> list= new List<IStockModule>();
+            List<IStockModule> list = new List<IStockModule>();
             list.Add(new DownloadModule());
             list.Add(new AnalyzeModule());
             list.Add(new ReportModule());
