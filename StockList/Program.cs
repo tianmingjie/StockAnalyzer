@@ -43,8 +43,8 @@ namespace StockList
             {   
                 string name="";
                 if (InValidStock(TrimStock(i), out name))
-                {   
-                    dict.Add("sh"+i.ToString(),name);
+                {
+                    dict.Add("sh" + TrimStock(i), name);
                 }
             }
 
@@ -53,7 +53,7 @@ namespace StockList
                 string name="";
                 if (InValidStock(TrimStock(i), out name))
                 {
-                    dict.Add("sz" + i.ToString(), name);
+                    dict.Add("sz" + TrimStock(i), name);
                 }
             }
 
@@ -62,7 +62,7 @@ namespace StockList
                 string name="";
                 if (InValidStock(TrimStock(i).ToString(), out name))
                 {
-                    dict.Add("sz" + i.ToString(), name);
+                    dict.Add("sz" + TrimStock(i), name);
                 }
             }
             return dict;
@@ -88,7 +88,7 @@ namespace StockList
                 int a=str.IndexOf("\"");
                 int b=str.IndexOf(",");
                 name = str.Substring(a+1, b - a-1);
-                //Console.WriteLine(stock+":"+name);
+                Console.WriteLine(stock+":"+name);
             }
             return inValid;
         }
