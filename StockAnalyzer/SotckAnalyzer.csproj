@@ -146,6 +146,10 @@
       <Project>{8E37DA8B-A01C-492A-B160-9ADAE343E638}</Project>
       <Name>DownloadData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Report\Report.csproj">
+      <Project>{DDD72A99-A279-4106-B5DF-1F4B7AB49CF0}</Project>
+      <Name>Report</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

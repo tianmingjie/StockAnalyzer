@@ -1,0 +1,1 @@
+C:\D_Drive\stock\StockAnalyzer\Modulizer\bin\Debug\Modulizer.exe  -stock sh600676 -start 2013-02-01 -big "2000"

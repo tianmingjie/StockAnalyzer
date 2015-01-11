@@ -94,6 +94,7 @@ namespace Common
                         l.Add(new StockInfo(){ 
                             isAnalyze=csv[0].Trim().Equals("0")?false:true,
                             stock=csv[1],
+                            //process the list
                             filter=csv[3].Equals("")?Constant.BIG_DEAL:csv[3]
                         });
                     }
@@ -102,6 +103,24 @@ namespace Common
             }
         }
 
+        public static bool CreateStockFolder(string stock)
+        {
+            if (!Directory.Exists(Constant.ANALYZE_FOLDER + stock))
+            {
+                // Directory.Delete(Constant.ANALYZE_FOLDER + stock, true); 
+                Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
+            }
+            else
+            {
+                if (Constant.CLEAN)
+                {
+                    Directory.Delete(Constant.ANALYZE_FOLDER + stock, true);
+                    Directory.CreateDirectory(Constant.ANALYZE_FOLDER + stock);
+                }
+            }
+
+            return true;
+        }
 
         public static decimal FormatRate(decimal t)
         {

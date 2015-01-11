@@ -11,12 +11,16 @@ namespace Report
     {
         public bool Execute(StockInfo info)
         {
-            foreach (int type in Enum.GetValues(typeof(RangeType)))
+            foreach (string filter in info.filterList)
             {
-                //String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
-                String filePath = string.Format(@"{0}{1}\{1}_{3}_{2}.csv", Constant.ANALYZE_FOLDER, info.stock, (RangeType)type, info.filter);
-                Program.ReportExcelToImage(filePath, new String[] { "BuyShare", "SellShare" }, "BuySellShare", ChartType.COLUMN);
-                Program.ReportExcelToImage(filePath, new String[] { "increDiffMoney" }, "increDiffMoney", ChartType.LINE);
+                foreach (int type in Enum.GetValues(typeof(RangeType)))
+                {
+
+                    //String filePath = string.Format(@"{0}{1}\{1}_{2}_{3}_{4}_{5}.csv", Constant.ANALYZE_FOLDER, stock, startDate, endDate, filter, (RangeType)type);
+                    String filePath = string.Format(@"{0}{1}\{1}_{3}_{2}.csv", Constant.ANALYZE_FOLDER, info.stock, (RangeType)type, filter);
+                    Program.ReportExcelToImage(filePath, new String[] { "BuyShare", "SellShare" }, "BuySellShare", ChartType.COLUMN);
+                    Program.ReportExcelToImage(filePath, new String[] { "increDiffMoney" }, "increDiffMoney", ChartType.LINE);
+                }
             }
             return true;
         }
