@@ -1,0 +1,164 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="js/highstock.js"></script>
+    <script type="text/javascript" src="js/modules/exporting.js"></script>
+    <script>
+        $(function () {
+            $("#GoButton").click(function () {
+
+
+                var seriesOptions,
+                    yAxisOptions = [],
+                    seriesCounter = 0,
+
+                    colors = Highcharts.getOptions().colors;
+
+                var stock = $("#stock").val();
+                var type = $("#TypeSelect  option:selected").text();
+                var big = $("#BigSelect  option:selected").text();
+                var start = $("#start").val();
+
+                var tag = [];
+                var totalshare = [];
+                var sellshare = [];
+                var buyshare = [];
+                var incrementalBuyMoney = [];
+                var incrementalSellMoney = [];
+                var diff = [];
+
+                $.ajaxSetup({ async: false });
+                var url = "/rest/rest/query/id/" + stock + "?big=" + big + "&type=" + type + "&start=" + start;
+                var t = $.getJSON(url);
+                for (var i in t.responseJSON) {
+                    tag[i] = t.responseJSON[i]["tag"];
+                    totalshare[i] = t.responseJSON[i]["totalshare"];
+                    sellshare[i] = t.responseJSON[i]["sellshare"];
+                    buyshare[i] = t.responseJSON[i]["buyshare"];
+                    incrementalBuyMoney[i] = t.responseJSON[i]["incrementalBuyMoney"];
+                    incrementalSellMoney[i] = t.responseJSON[i]["incrementalSellMoney"];
+                    diff[i] = incrementalBuyMoney[i] - incrementalSellMoney[i];
+                }
+
+
+                seriesOptions = {
+                    name: "test",
+                    data: totalshare
+                };
+
+                $('#container').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'stock analyze chart',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: 'Source: finance.sina.com.cn',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: tag
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'trade data'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: 'shou'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [{
+                        name: 'sellshare',
+                        data: sellshare
+                    }, {
+                        name: 'buyshare',
+                        data: buyshare
+                    }]
+                });
+
+
+
+
+
+                $('#container2').highcharts({
+                    chart: {
+                        type: 'line'
+                    },
+                    title: {
+                        text: 'diff money chart',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: 'Source: finance.sina.com.cn',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: tag
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'trade data'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    tooltip: {
+                        valueSuffix: 'RMB'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle',
+                        borderWidth: 0
+                    },
+                    series: [
+                    {
+                        name: 'diff',
+                        data: diff
+                    }
+                    //{
+                    //    name: 'incrementalBuyMoney',
+                    //    data: incrementalBuyMoney
+                    //}
+                    //, {
+                    //    name: 'incrementalSellMoney',
+                    //    data: incrementalSellMoney
+                    //}
+                    ]
+                });
+
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div id="input">
+        <input id="stock" type="text" value="sz000830" />
+        <input id="start" type="text" value="20140101" />
+        <select id="TypeSelect"><option>w</option><option>m</option><option>d</option></select>
+        <select id="BigSelect"><option>2000</option><option>1000</option><option>500</option><option>4000</option><option>8000</option></select>
+        <input id="GoButton" type="button" value="Go" />
+
+    </div>
+    <div id="container" style="min-width:500px;height:300px"></div>
+    <div id="container2" style="min-width:500px;height:300px"></div>
+</body>
+</html>

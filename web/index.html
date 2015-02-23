@@ -1,0 +1,30 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>requirejs入门（一）</title>
+    <meta charset="utf-8">
+    <script src="js/jquery-2.1.3.js"></script>
+    <script>
+        $(document).ready(function () {
+            var str;
+            var tag = [];
+            var totalmoney = [];
+            $.ajaxSetup({ async: false });
+            var t = $.getJSON("/test/Stock.svc/query/id/sz000830?big=2000&type=w&start=20140601");
+            for (var i in t.responseJSON) {
+                tag[i] = t.responseJSON[i]["tag"];
+                totalmoney[i] = t.responseJSON[i]["totalmoney"];
+            }
+
+
+            $("#test").text(tag);
+
+
+        });
+
+    </script>
+</head>
+<body>
+    haah    <div id="test"></div>
+</body>
+</html>
