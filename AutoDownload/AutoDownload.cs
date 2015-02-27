@@ -7,6 +7,8 @@ using System.IO;
 using DownloadData;
 using log4net;
 using System.Threading;
+using big.entity;
+using big;
 
 namespace AutoDownload
 {
@@ -16,19 +18,25 @@ namespace AutoDownload
         {
             try
             {
-                Auto();
+
+                Auto(Constant.DOWNLOAD_THREAD_NUMBER);
+
             } catch(Exception e){
                 StockLog.Log.Error(e);
             }
         }
 
-        public static void Auto()
+        public static void Auto(int totalThread = 2)
         {
 
-            List<StockInfo> total = StockUtil.StockList;
+            //List<InfoData> total = new List<InfoData>();
+
+            //total.Add(new InfoData() { sid = "sh600009" });
+            //total.Add(new InfoData() { sid = "sh600010" });
+            List<InfoData> total =BizApi.QueryInfoAll();
             int count = total.Count;
 
-            int totalThread = 100;
+            //int totalThread = 10;
             int range = total.Count / totalThread;
             int start = -1;
 
@@ -37,73 +45,34 @@ namespace AutoDownload
                 new Thread(new ParameterizedThreadStart(Process)).Start(total.GetRange(start + 1, range));
                 start = range * i;
             }
-            //    List<StockInfo> list1 = StockUtil.StockList.GetRange(0, range);
-            //    List<StockInfo> list2 = total.GetRange(range + 1, range);
-            //    List<StockInfo> list3 = total.GetRange(range * 2 + 1, range);
-            //    List<StockInfo> list4 = total.GetRange(range * 3 + 1, range);
-            //    List<StockInfo> list5 = total.GetRange(range * 4 + 1, range);
-            //    List<StockInfo> list6 = total.GetRange(range * 5 + 1, range);
-            //    List<StockInfo> list7 = total.GetRange(range * 6 + 1, range);
-            //    List<StockInfo> list8 = total.GetRange(range * 7 + 1, range);
-            //    List<StockInfo> list9 = total.GetRange(range * 8 + 1, range);
-            //    List<StockInfo> list10 = total.GetRange(range * 9 + 1, total.Count % 10);
-
-            //    Thread thread1 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread2 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread3 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread4 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread5 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread6 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread7 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread8 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread9 = new Thread(new ParameterizedThreadStart(Process));
-            //    Thread thread10 = new Thread(new ParameterizedThreadStart(Process));
-            //    thread1.Start(list1);
-            //    thread2.Start(list2);
-            //    thread3.Start(list3);
-            //    thread4.Start(list4);
-            //    thread5.Start(list5);
-            //    thread6.Start(list6);
-            //    thread7.Start(list7);
-            //    thread8.Start(list8);
-            //    thread9.Start(list9);
-            //    thread10.Start(list10);
-            //}
         }
         public static void Process(Object o)
         {
 
-            List<StockInfo> list = (List<StockInfo>)o;
-            foreach (StockInfo stock in list)
+            List<InfoData> list = (List<InfoData>)o;
+            foreach (InfoData id in list)
             {
-                string path = Constant.ROOT_FOLDER + stock.stock;
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                string startDate;
-                if (Constant.DOWNLOAD_ALL.Equals("0"))
-                {
-                    startDate = StockUtil.ReadUpdateFile(stock.stock);
-                }
-                else
-                {
-                    startDate = "2012-09-01";
-                }
-                string endDate = StockUtil.FormatDate(DateTime.Now);
-
-                //string startDate = "2012-09-01";
-                // string endDate="2013-07-28";
-
-                //string stock = f.Substring(f.LastIndexOf(@"\")+1);
-                //if (!list.Contains<string>(stock))
-                //{
-                DataDownload.DownloadDataToCsv(stock.stock, startDate, endDate);
-                StockUtil.UpdateDownloadTimeStamp(stock.stock, endDate);
-
-               // File.AppendAllText(Constant.AUTO_DOWNLOAD_FILE, stock + ",");
-
-                StockLog.Log.Info(stock.stock + " updated " + startDate + " " + endDate);
-
-                //}
+                DownloadSingle(id);
             }
+        }
+
+        public static void DownloadSingle(InfoData id)
+        {
+            DownloadSingle(id.sid);
+        }
+
+
+        public static void DownloadSingle(string sid)
+        {
+            string path = Constant.ROOT_FOLDER + sid;
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+            string startDate = BizApi.QueryExtractLastUpdate(sid).AddDays(1).ToString("yyyy-MM-dd");
+            string endDate = StockUtil.FormatDate(DateTime.Now);
+
+            DataDownload.DownloadDataToCsvByReader(sid, startDate, endDate);
+            if(!Constant.CLEAN) StockUtil.UpdateDownloadTimeStamp(sid, endDate);
+            StockLog.Log.Info(sid + " updated " + startDate + " " + endDate);
         }
     }
 

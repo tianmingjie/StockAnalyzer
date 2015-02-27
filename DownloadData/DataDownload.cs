@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Common;
 
+
 namespace DownloadData
 {
     public class DataDownload
@@ -21,6 +22,7 @@ namespace DownloadData
         public static String DownloadDataToCsv(string stock, string date)
         {
 
+            bool valid = false;
 
             if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
@@ -43,24 +45,67 @@ namespace DownloadData
                             StockLog.Log.Debug("Downloaded: " + filePath);
                         }
 
+                        valid = true;
+
                     }
                     else
                     {
                         StockLog.Log.Debug("None: " + filePath);
+                        valid = false;
                     }
 
                 }
                 else
                 {
                     StockLog.Log.Debug("Skipped: " + filePath);
+                    valid = false;
                 }
             }
             catch
             {
                 StockLog.Log.Info("Error" + filePath);
+                valid = false;
             }
+
+            //import to db
+            if (Constant.DOWNLOAD_AND_INSERT&&valid) { 
+                Import.ImportRawData.ImportFile(stock,filePath);
+            }
+
+            if (Constant.CLEAN)
+                File.Delete(filePath);
+
             return filePath;
         }
+
+        public static String DownloadDataToCsvByReader(string stock, string date)
+        {
+            try
+            {
+                    WebClient client = new WebClient();
+                    string url = "http://market.finance.sina.com.cn/downxls.php?date=" + date + "&symbol=" + stock;
+                    string data = System.Text.Encoding.GetEncoding(936).GetString(client.DownloadData(url));
+                    data = ReplaceChinese(data);
+
+                    if (data != null && data.Length > 2048)
+                    {
+                        TextReader stream = new StringReader(data);
+                        Import.ImportRawData.ImportFileByReader(stock, date, stream);
+                    }
+                    else
+                    {
+                        StockLog.Log.Debug("None: " + stock+"-"+date);
+                    }
+            }
+            catch
+            {
+                StockLog.Log.Error("Error" + stock + "-" + date);
+            }
+
+
+            return stock + "-" + date;
+        }
+
         /// <summary>
         /// 生成csv 文件
         /// </summary>
@@ -77,7 +122,25 @@ namespace DownloadData
             {
                 if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
                     //LOG.Info(toDate(dateTime.Date));
+                    
                     DownloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
+            }
+
+            return Constant.ROOT_FOLDER + stock;
+        }
+
+        public static string DownloadDataToCsvByReader(string stock, string startDate, string endDate)
+        {
+            if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
+
+            for (DateTime dateTime = DateTime.Parse(startDate);
+                 dateTime <= DateTime.Parse(endDate);
+                 dateTime += TimeSpan.FromDays(1))
+            {
+                if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
+                    //LOG.Info(toDate(dateTime.Date));
+
+                    DownloadDataToCsvByReader(stock, StockUtil.FormatDate(dateTime.Date));
             }
 
             return Constant.ROOT_FOLDER + stock;

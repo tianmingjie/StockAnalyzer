@@ -1,4 +1,6 @@
-﻿using System;
+﻿using big;
+using big.entity;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,26 +14,10 @@ namespace StockList
     {
         public static void Main(string[] args)
         {
-            string filename = "";
-            if (args.Length == 0)
-            {
-                filename = "stock.csv";
-            }
-            else
-            {
-                filename = args[0];
-            }
-            
-            Dictionary<string,string> d=GenerateStockList();
-            StringBuilder sb = new StringBuilder();
-            sb.Append("code,name\r\n");
-            foreach (string a in d.Keys)
-            {
-                //Console.WriteLine(a, d[a]);
-                sb.Append(a+","+d[a]+"\r\n");
-            }
-            if (File.Exists(filename)) File.Delete(filename);
-            File.WriteAllText(filename, sb.ToString(), Encoding.UTF8);
+            //List<InfoData> list = BizApi.QueryInfoByIndustry2("金融服务","银行");
+
+            decimal[] list = BizApi.QueryExtractList("sh600000");
+            Console.WriteLine();
         }
 
         public static Dictionary<string,string> GenerateStockList()

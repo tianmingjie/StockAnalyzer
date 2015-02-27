@@ -1,4 +1,5 @@
 ﻿using big.entity;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +28,8 @@ namespace big
 
         public static string INFO = "basicinfo";
 
+        //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
+
         #region 插入更新
         /// <summary>
         /// if table exist,update status, if not exist, create table
@@ -49,7 +52,7 @@ namespace big
                 MySqlHelper.ExecuteNonQuery(sql);
                 string sql1 = string.Format("insert {0}(tablename,lastupdate) value('{1}','{2}')", CREATE_TABLE_STATUS, sid, DateTime.Now.ToString());
                 MySqlHelper.ExecuteNonQuery(sql1);
-                string sq3 = string.Format("insert {0}(sid,lastupdate)values('{1}','{2}')", EXTRACT_TABLE_STATUS, sid, new DateTime(2014, 1, 1));
+                string sq3 = string.Format("insert {0}(sid,lastupdate)values('{1}','{2}')", EXTRACT_TABLE_STATUS, sid, DateTime.MinValue);
                 MySqlHelper.ExecuteNonQuery(sq3);
             }
             //if (create_table == 1)
@@ -66,8 +69,8 @@ namespace big
             string sid = bd.sid;
             //CreateDataTable(sid);
             string sql = String.Format(
-                "INSERT INTO {0}(time,c_type,big,buyshare,buymoney,sellshare,sellmoney,totalshare,totalmoney)VALUES('{1}','{2}',{3},{4},{5},{6},{7},{8},{9})",
-                        sid, bd.time, bd.c_type, bd.big, bd.buyshare, bd.buymoney, bd.sellshare, bd.sellmoney, bd.totalshare, bd.totalmoney);
+                "INSERT INTO {0}(time,c_type,big,buyshare,buymoney,sellshare,sellmoney,totalshare,totalmoney,open,close,high,low)VALUES('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})",
+                        sid, bd.time, bd.c_type, bd.big, bd.buyshare, bd.buymoney, bd.sellshare, bd.sellmoney, bd.totalshare, bd.totalmoney,bd.open,bd.close,bd.high,bd.low);
             MySqlHelper.ExecuteNonQuery(sql);
             UpdateExtractStatus(bd);
         }
@@ -96,10 +99,7 @@ namespace big
             }
         }
 
-        public static InfoData Query(string sid)
-        {
-            return new InfoData();
-        }
+
         #endregion
         //更新数据抽取的时间戳
         public static void UpdateExtractStatus(BasicData bd)
@@ -190,7 +190,7 @@ namespace big
 
                     sid = sid,
                     big = big,
-                    c_type = "m",
+                    c_type = type,
                     buyshare = (Double)dr["buyshare"],
                     buymoney = (Decimal)((Double)dr["buymoney"]),
                     sellshare = (Double)dr["sellshare"],
@@ -227,27 +227,114 @@ namespace big
         public static DateTime QueryExtractLastUpdate(string sid)
         {
             IList<BasicData> list = new List<BasicData>();
-            string sql = string.Format("select lastupdate from {0} where big={1} ", EXTRACT_TABLE_STATUS, sid);
+            string sql = string.Format("select lastupdate from {0} where sid='{1}' ", EXTRACT_TABLE_STATUS, sid);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DateTime dt;
             if (ds.Tables[0].Rows.Count > 0)
                 dt = DateTime.Parse(ds.Tables[0].Rows[0][0].ToString());
             else
-                dt = DateTime.MinValue;
+                dt = Constant.DEFAULT_LASTUPDATE;
             return dt;
         }
 
-        public static int QueryWeight(string sid)
+        public static decimal QueryWeight(string sid)
         {
-            int weight = 1;
+            decimal weight = 1.0M;
             string sql = string.Format("select weight from {0} where sid='{1}'", INFO, sid);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             if (ds.Tables[0].Rows.Count > 0)
-                weight = Int32.Parse(ds.Tables[0].Rows[0][0].ToString());
+                weight = Decimal.Parse(ds.Tables[0].Rows[0][0].ToString());
 
             return weight;
         }
 
+        public static decimal[] QueryExtractList(string sid)
+        {
+            string str = "";
+            string sql = string.Format("select list from {0} where sid='{1}'", INFO, sid);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                str = ds.Tables[0].Rows[0][0].ToString();
+                string[] liststr=str.Split(',');
+                decimal[] list=new decimal[liststr.Length];
+                for(int i=0;i<liststr.Length;i++)
+                    list[i]=decimal.Parse(liststr[i]);
+                return list;
+            }
+            else
+            {
+                return new decimal[] { 500, 1000, 2000 };
+            }
+
+        }
+
+        #endregion
+
+        #region info
+
+        public static List<InfoData> QueryInfoAll()
+        {
+            InfoData id = new InfoData();
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight from {0} order by sid", INFO);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return BuildInfoData(ds.Tables[0]);
+        }
+
+        public static InfoData QueryInfoById(string sid)
+        {
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight from {0} where sid='{1}' ", INFO, sid);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return BuildInfoData(ds.Tables[0])[0];
+        }
+
+        public static List<InfoData> QueryInfoByIndustry(string insutry)
+        {
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight from {0} where firstlevel='{1}' ", INFO, insutry);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            return BuildInfoData(ds.Tables[0]);
+        }
+
+        public static List<InfoData> QueryInfoByIndustry2(string insutry,string industry2)
+        {
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight from {0} where firstlevel='{1}' and secondlevel='{2}' ", INFO, insutry,industry2);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            return BuildInfoData(ds.Tables[0]);
+        }
+
+        public static List<InfoData> QueryInfoByLocation(string location)
+        {
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight from {0} where location='{1}' ", INFO, location);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return BuildInfoData(ds.Tables[0]);
+        }
+
+        public static List<InfoData> BuildInfoData(DataTable dt)
+        {
+            List<InfoData> list = new List<InfoData>();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    InfoData id = new InfoData();
+                    id.sid = dr["sid"].ToString();
+                    id.name = dr["name"].ToString();
+                    id.lastupdate = DateTime.Parse(dr["lastupdate"].ToString());
+                    id.totalshare = Double.Parse(dr["totalshare"].ToString());
+                    id.floatshare = Double.Parse(dr["floatshare"].ToString());
+                    id.location = dr["location"].ToString();
+                    id.firstlevel = dr["firstlevel"].ToString(); ;
+                    id.secondlevel = dr["secondlevel"].ToString();
+                    id.weight = Decimal.Parse(dr["weight"].ToString());
+                    list.Add(id);
+                }
+            }
+
+            return list;
+        }
         #endregion
     }
 }

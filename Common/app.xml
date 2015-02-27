@@ -1,15 +1,17 @@
 <StockApp>
-	<rootFolder>D:\stock\store\data\</rootFolder>
-  <autoDownloadFile>D:\stock\store\data\file.txt</autoDownloadFile>
+	<rootFolder>D:\temp\test\data\auto\</rootFolder>
+  <autoDownloadFile>D:\temp\test\data\auto\file.txt</autoDownloadFile>
   <analyzeFile>analyze.csv</analyzeFile>
   <stockFile>stock.csv</stockFile>
   <analyzeFolder>D:\stock\store\analyzeData\</analyzeFolder>
-  <updateFile>D:\stock\store\data\{0}\update.txt</updateFile>
-  <analyzeStartDate>2012-09-01</analyzeStartDate>
+  <updateFile>D:\temp\test\data\auto\{0}\update.txt</updateFile>
+  <analyzeStartDate>2014-01-01</analyzeStartDate>
   <analyeChartDir>D:\stock\store\chart</analyeChartDir>
   <clean>true</clean>
-  <mySql>server=127.0.0.1;user id=root; password=as; database=albertsong; pooling=false;charset=utf8</mySql>
   <bigDeal>500</bigDeal>
   <!--0/1 0 download update, 1, download all-->
   <downloadAll>0</downloadAll>
+  <downloadthreadnum>1</downloadthreadnum>
+  <downloadAndInsert>true</downloadAndInsert>
+  <mysqlstring>Database='Test';Data Source='localhost';User Id='root';Password='admin';charset='utf8';pooling=true"</mysqlstring>
 </StockApp>

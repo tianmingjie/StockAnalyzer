@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Report", "Report\Report.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modulizer", "Modulizer\Modulizer.csproj", "{F2C558CF-AA09-4162-976E-6131ED970B83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockList", "StockList\StockList.csproj", "{AF16D744-EBA3-4716-A242-D3B495D81AE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "StockList\Test.csproj", "{AF16D744-EBA3-4716-A242-D3B495D81AE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Import", "Import\Import.csproj", "{34B4CEC5-B675-4BB9-AD79-B5F3EF9CE8E9}"
 EndProject

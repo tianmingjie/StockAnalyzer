@@ -50,6 +50,25 @@ namespace Rest
             return list;
         }
 
+
+        [WebGet(UriTemplate = "info/id/{id}", ResponseFormat = WebMessageFormat.Json)]
+        public InfoData QueryInfoById(string id)
+        {
+            return BizApi.QueryInfoById(id);
+        }
+
+        [WebGet(UriTemplate = "info/industry1/{industry1}", ResponseFormat = WebMessageFormat.Json)]
+        public List<InfoData> QueryInfoByIndutry(string industry1)
+        {
+            return BizApi.QueryInfoByIndustry(industry1);
+        }
+
+        [WebGet(UriTemplate = "info/industry1/{industry1}/industry2/{industry2}", ResponseFormat = WebMessageFormat.Json)]
+        public List<InfoData> QueryInfoByIndutry2(string industry1,string industry2)
+        {
+            return BizApi.QueryInfoByIndustry2(industry1, industry2);
+        }
+
         [WebGet(UriTemplate = "lastupdate/id/{id}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryLastUpdate(string id)
         {

@@ -146,7 +146,7 @@ namespace Info
             dic.Add("totalshare", (Decimal.Parse(values[2]) / Decimal.Parse(values[3]) * 100).ToString("0"));
             dic.Add("top10float", values[1]);
             dic.Add("top10total", values[3]);
-            int w=GetWeight(floatshare);
+            decimal w=GetWeight(floatshare);
             dic.Add("weight", w.ToString("0"));
             dic.Add("list", string.Format("{0},{1},{2}", 500 * w, 1000 * w, 2000 * w));
             return dic;
@@ -221,11 +221,17 @@ namespace Info
             }
             return id;
         }
-        public static int GetWeight(decimal val)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static decimal GetWeight(decimal val)
         {
             if (val < 100000) return 1;
-            else if (val > 500000) return 4;
-            else return 2;
+            else if (val > 500000) return 2.5M;
+            else return 1.5M;
         }
 
 

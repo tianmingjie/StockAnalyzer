@@ -46,5 +46,14 @@ namespace big.entity
         public double incrementalBuyMoney;
         [DataMember]
         public double incrementalSellMoney;
+
+        [DataMember]
+        public decimal open;
+        [DataMember]
+        public decimal close;
+        [DataMember]
+        public decimal high;
+        [DataMember]
+        public decimal low;
     }
 }

@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="js/highstock.js"></script>
+    <script type="text/javascript" src="js/modules/exporting.js"></script>
+    <script>
+        $(function () {
+
+            var u=decodeURIComponent(window.location.href);
+            var par = u.substring(u.lastIndexOf('?')+1,u.length);
+            var d = par.split('&');
+            var industry1="", industry2="";
+            for (var i = 0; i < d.length; i++) {
+                var keyValue = d[i].split('=');
+                var key = keyValue[0];
+                var value = keyValue[1];
+                if (key == "industry1") industry1 = value;
+                if (key == "industry2") industry2 = value;
+                //alert('the key is:' + key);
+                //alert('the value is:' + value);
+            }
+            //<tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>weight</th></tr>
+
+            var stock = $("#stock").val();
+            var url;
+
+            if (industry2=="")
+                url = "/rest/rest/info/industry1/" + industry1;
+            else
+                url = "/rest/rest/info/industry1/" + industry1 + "/industry2/" + industry2;
+
+                $.ajaxSetup({ async: false });
+                var t = $.getJSON(url);
+                for (var i in t.responseJSON) {
+                    var newRow = "<tr>";
+                    var weight = t.responseJSON[i]["weight"];
+                    var sid = t.responseJSON[i]["sid"];
+                    var link = "<a target='_blank' href='/web/single_dynamic.html?sid=" + sid + "&big=" + 500*weight + "'>" + sid + "</a>";
+                    newRow += "<td>" + link + "</td>";
+                    newRow+="<td>"+t.responseJSON[i]["name"]+"</td>";
+                    newRow+="<td>"+t.responseJSON[i]["totalshare"]+"</td>";
+                    newRow+="<td>"+t.responseJSON[i]["floatshare"]+"</td>";
+                    newRow+="<td>"+t.responseJSON[i]["firstlevel"]+"</td>";
+                    newRow+="<td>"+t.responseJSON[i]["secondlevel"]+"</td>";
+                    newRow += "<td>" + weight + "</td>";
+                    $("#table1 tr:last").after(newRow);
+                }
+            });
+            ;
+
+    </script>
+</head>
+<body>
+    <div id="input">
+        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>weight</th></tr></table>
+    </div>
+
+    <a id="industry1" href=""></a>
+    
+</body>
+</html>

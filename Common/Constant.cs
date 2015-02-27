@@ -48,6 +48,13 @@ namespace Common
         public static string ANALYZE_START_DATE = map["analyzeStartDate"].Equals("") ? "2012-09-01" : map["analyzeStartDate"];
         public static string ANALYZE_CHART_DIR =  map["analyeChartDir"];
         public static bool CLEAN = Boolean.Parse(map["clean"]);
+
+        public static string MYSQL_STRING = map["mysqlstring"];
+        public static bool DOWNLOAD_AND_INSERT = Boolean.Parse(map["downloadAndInsert"]);
+
+        public static int DOWNLOAD_THREAD_NUMBER = map["downloadthreadnum"].Equals("") ? 2 :Int32.Parse(map["downloadthreadnum"]);
+        //default start date and update time
+        public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
     
     }
 }

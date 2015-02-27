@@ -25,13 +25,34 @@
             });
 
             $("#QueryButton").click(function () {
+                show();
+            });
+
+            var u = decodeURIComponent(window.location.href);
+            var par = u.substring(u.lastIndexOf('?') + 1, u.length);
+            var d = par.split('&');
+            var sid = "", big = "";
+            for (var i = 0; i < d.length; i++) {
+                var keyValue = d[i].split('=');
+                var key = keyValue[0];
+                var value = keyValue[1];
+                if (key == "sid") sid = value;
+                if (key == "big") big = value;
+            }
 
 
+            $("#stock").val(sid);
+            $("#BigSelect").empty();
+            $("#BigSelect").append("<option  selected='selected'>" + big + "</option>");
+
+            show();
+
+            function show() {
                 var seriesOptions,
-                    yAxisOptions = [],
-                    seriesCounter = 0,
+                 yAxisOptions = [],
+                 seriesCounter = 0,
 
-                    colors = Highcharts.getOptions().colors;
+                 colors = Highcharts.getOptions().colors;
 
                 var stock = $("#stock").val();
                 var type = $("#TypeSelect  option:selected").text();
@@ -54,8 +75,8 @@
                     totalshare[i] = t.responseJSON[i]["totalshare"];
                     sellshare[i] = t.responseJSON[i]["sellshare"];
                     buyshare[i] = t.responseJSON[i]["buyshare"];
-                    incrementalBuyMoney[i] = t.responseJSON[i]["incrementalBuyMoney"]/10000;
-                    incrementalSellMoney[i] = t.responseJSON[i]["incrementalSellMoney"]/10000;
+                    incrementalBuyMoney[i] = t.responseJSON[i]["incrementalBuyMoney"] / 10000;
+                    incrementalSellMoney[i] = t.responseJSON[i]["incrementalSellMoney"] / 10000;
                     diff[i] = incrementalBuyMoney[i] - incrementalSellMoney[i];
                 }
 
@@ -109,9 +130,6 @@
                 });
 
 
-
-
-
                 $('#container2').highcharts({
                     chart: {
                         type: 'line'
@@ -151,29 +169,20 @@
                         name: 'diff',
                         data: diff
                     }
-                    //{
-                    //    name: 'incrementalBuyMoney',
-                    //    data: incrementalBuyMoney
-                    //}
-                    //, {
-                    //    name: 'incrementalSellMoney',
-                    //    data: incrementalSellMoney
-                    //}
                     ]
                 });
-
+            };
             });
-        });
 
     </script>
 </head>
 <body>
     <div id="input">
-        <input id="stock" type="text" value="sh600000" />
+        <input id="stock" type="text" />
         <input id="start" type="text" value="20140101" />
         <select id="TypeSelect"><option>w</option><option>m</option><option>d</option></select>
         <select id="BigSelect"><!--<option>2000</option><option>1000</option><option>500</option><option>3000</option><option>4000</option><option>750</option><option>1500</option>--></select>
-        <input id="GoButton" type="button" value="Go" />
+        <input id="GoButton" type="button" value="GetInfo" />
         <input id="QueryButton" type="button" value="Query" />
 
         <label id="name"></label>
