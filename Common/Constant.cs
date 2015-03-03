@@ -55,6 +55,8 @@ namespace Common
         public static int DOWNLOAD_THREAD_NUMBER = map["downloadthreadnum"].Equals("") ? 2 :Int32.Parse(map["downloadthreadnum"]);
         //default start date and update time
         public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
-    
+
+
+        public static int TOP = map["top"].Equals("") ? 50 : Int32.Parse(map["top"]);
     }
 }

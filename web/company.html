@@ -10,13 +10,14 @@
             var u=decodeURIComponent(window.location.href);
             var par = u.substring(u.lastIndexOf('?')+1,u.length);
             var d = par.split('&');
-            var industry1="", industry2="";
+            var industry1 = "", industry2 = "", location = "";
             for (var i = 0; i < d.length; i++) {
                 var keyValue = d[i].split('=');
                 var key = keyValue[0];
                 var value = keyValue[1];
                 if (key == "industry1") industry1 = value;
                 if (key == "industry2") industry2 = value;
+                if (key == "location") location = value;
                 //alert('the key is:' + key);
                 //alert('the value is:' + value);
             }
@@ -24,12 +25,15 @@
 
             var stock = $("#stock").val();
             var url;
-
-            if (industry2=="")
-                url = "/rest/rest/info/industry1/" + industry1;
-            else
-                url = "/rest/rest/info/industry1/" + industry1 + "/industry2/" + industry2;
-
+            if(industry1!="" || industry2!="") {
+                if (industry2=="")
+                    url = "/rest/rest/info/industry1/" + industry1;
+                else
+                    url = "/rest/rest/info/industry1/" + industry1 + "/industry2/" + industry2;
+            }
+            if (location != "") {
+                url = "/rest/rest/info/location/" + location;
+            }
                 $.ajaxSetup({ async: false });
                 var t = $.getJSON(url);
                 for (var i in t.responseJSON) {

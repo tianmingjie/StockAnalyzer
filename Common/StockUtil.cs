@@ -10,25 +10,24 @@ namespace Common
     public class StockUtil
     {
 
-        //public static List<string> StockList
-        //{
-        //    get
-        //    {
-        //        // open the file "data.csv" which is a CSV file with headers
-        //        using (CsvReader csv = new CsvReader(
-        //                               new StreamReader(Constant.STOCK_FILE), true))
-        //        {
-        //            List<string> l = new List<string>();
-        //            while (csv.ReadNextRecord())
-        //            {
-        //                //Console.WriteLine(csv[0]);
-        //                l.Add(csv[0]);
-        //            }
-        //            return l;
-        //        }
-        //    }
+        public static List<string> ParseListFromCsvFile(string csvFile)
+        {
+            List<string> list = new List<string>();
+            // open the file "data.csv" which is a CSV file with headers
+            using (CsvReader csv = new CsvReader(new StreamReader(csvFile), true))
+            {  //颠倒记录
+                IEnumerable<string[]> hi = csv.Reverse<string[]>();
+                
+                foreach (String[] record in hi)
+                {
+                    string sid = record[1];
 
-        //}
+                    list.Add(sid);
+                }
+            }
+
+            return list;
+        }
 
         public static List<StockInfo> StockList
         {

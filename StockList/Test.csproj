@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AF16D744-EBA3-4716-A242-D3B495D81AE1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>StockList</RootNamespace>
     <AssemblyName>Test</AssemblyName>
@@ -31,6 +31,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +54,10 @@
     <ProjectReference Include="..\BizData\BizData.csproj">
       <Project>{66c0b860-1c77-4e05-b6bb-4343290d7f2e}</Project>
       <Name>BizData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rest\Rest.csproj">
+      <Project>{e9b9b532-23bb-4179-9163-586ac99948be}</Project>
+      <Name>Rest</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

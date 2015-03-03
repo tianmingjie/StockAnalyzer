@@ -1,13 +1,14 @@
 <StockApp>
-	<rootFolder>D:\temp\test\data\auto\</rootFolder>
-  <autoDownloadFile>D:\temp\test\data\auto\file.txt</autoDownloadFile>
+	<rootFolder>D:\temp\test\data\done\</rootFolder>
+  <!--<doneDownloadFile>D:\temp\test\data\done\file.txt</doneDownloadFile>-->
   <analyzeFile>analyze.csv</analyzeFile>
   <stockFile>stock.csv</stockFile>
   <analyzeFolder>D:\stock\store\analyzeData\</analyzeFolder>
-  <updateFile>D:\temp\test\data\auto\{0}\update.txt</updateFile>
+  <updateFile>D:\temp\test\data\done\{0}\update.txt</updateFile>
   <analyzeStartDate>2014-01-01</analyzeStartDate>
   <analyeChartDir>D:\stock\store\chart</analyeChartDir>
   <clean>true</clean>
+  <top>50</top>
   <bigDeal>500</bigDeal>
   <!--0/1 0 download update, 1, download all-->
   <downloadAll>0</downloadAll>

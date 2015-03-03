@@ -29,7 +29,7 @@ namespace Rest
         {
             DateTime endDate, startDate;
             IList<BasicData> list;
-            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = Common.ParseToDate(start);
+            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = Common.ParseToDate(end);
             if (string.IsNullOrEmpty(big)) big = "1000";
             if (string.IsNullOrEmpty(type)) type = "w";
             if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = Common.ParseToDate(start);
@@ -50,11 +50,49 @@ namespace Rest
             return list;
         }
 
+        [WebGet(UriTemplate = "line/id/{id}?type={type}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
+        public IList<LineData> QueryLineData(string id, string type, string start, string end)
+        {
+            DateTime endDate, startDate;
+            IList<LineData> list;
+            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = Common.ParseToDate(end);
+            if (string.IsNullOrEmpty(type)) type = "w";
+            if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = Common.ParseToDate(start);
 
+            switch (type)
+            {
+                case "m":
+                    list = BizApi.QueryLineByMonth(id, startDate, endDate);
+                    break;
+                case "d":
+                    list = BizApi.QueryLineByDay(id, startDate, endDate);
+                    break;
+                default:
+                    list = BizApi.QueryLineByWeek(id, startDate, endDate);
+                    break;
+            }
+
+            return list;
+        }
         [WebGet(UriTemplate = "info/id/{id}", ResponseFormat = WebMessageFormat.Json)]
         public InfoData QueryInfoById(string id)
         {
             return BizApi.QueryInfoById(id);
+        }
+
+        [WebInvoke(UriTemplate = "info/all?type={type}", Method = "GET", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+        //[WebGet(UriTemplate = "info/industry", ResponseFormat = WebMessageFormat.Json)]
+        public string[] QueryInfoByAllIndustry(string type)
+        {
+            if (type.Equals("L"))
+            {
+                return BizApi.QueryAllLocation();
+            }
+            else
+            {
+                return BizApi.QueryAllIndustry();
+            }
+
         }
 
         [WebGet(UriTemplate = "info/industry1/{industry1}", ResponseFormat = WebMessageFormat.Json)]
@@ -64,10 +102,24 @@ namespace Rest
         }
 
         [WebGet(UriTemplate = "info/industry1/{industry1}/industry2/{industry2}", ResponseFormat = WebMessageFormat.Json)]
-        public List<InfoData> QueryInfoByIndutry2(string industry1,string industry2)
+        public List<InfoData> QueryInfoByIndutry2(string industry1, string industry2)
         {
             return BizApi.QueryInfoByIndustry2(industry1, industry2);
         }
+
+        [WebGet(UriTemplate = "info/location/{location}", ResponseFormat = WebMessageFormat.Json)]
+        public List<InfoData> QueryInfoByLocation(string location)
+        {
+            return BizApi.QueryInfoByLocation(location);
+        }
+
+
+        [WebGet(UriTemplate = "analyze/date/{date}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string date)
+        {
+            return BizApi.QueryAnalyzeData(Common.ParseToDate(date));
+        }
+
 
         [WebGet(UriTemplate = "lastupdate/id/{id}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryLastUpdate(string id)

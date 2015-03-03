@@ -86,7 +86,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(SolutionDir)app.xml $(SolutionDir)\bin\rest</PostBuildEvent>
+    <PostBuildEvent>if not exist ($(SolutionDir)bin\rest) mkdir $(SolutionDir)bin\rest
+copy $(SolutionDir)app.xml $(SolutionDir)bin\rest</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

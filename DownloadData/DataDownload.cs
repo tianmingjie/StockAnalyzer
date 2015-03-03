@@ -13,6 +13,7 @@ namespace DownloadData
     public class DataDownload
     {
 
+        #region save local csv file
         /// <summary>
         /// 生成csv 文件
         /// </summary>
@@ -78,6 +79,35 @@ namespace DownloadData
             return filePath;
         }
 
+        /// <summary>
+        /// 生成csv 文件
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="stock"></param>
+        /// <returns></returns>
+        public static string DownloadDataToCsv(string stock, string startDate, string endDate)
+        {
+            if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
+
+            for (DateTime dateTime = DateTime.Parse(startDate);
+                 dateTime <= DateTime.Parse(endDate);
+                 dateTime += TimeSpan.FromDays(1))
+            {
+                if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
+                    //LOG.Info(toDate(dateTime.Date));
+
+                    DownloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
+            }
+
+            return Constant.ROOT_FOLDER + stock;
+        }
+
+
+
+        #endregion
+
+
+        #region don't save local file
         public static String DownloadDataToCsvByReader(string stock, string date)
         {
             try
@@ -106,27 +136,23 @@ namespace DownloadData
             return stock + "-" + date;
         }
 
-        /// <summary>
-        /// 生成csv 文件
-        /// </summary>
-        /// <param name="date"></param>
-        /// <param name="stock"></param>
-        /// <returns></returns>
-        public static string DownloadDataToCsv(string stock, string startDate, string endDate)
+
+        //download from one csv file
+        public static void DownloadDataToCsvByReaderFromCsvFile(string csvFile, string startDate, string endDate)
         {
-            if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
-
-            for (DateTime dateTime = DateTime.Parse(startDate);
-                 dateTime <= DateTime.Parse(endDate);
-                 dateTime += TimeSpan.FromDays(1))
+            List<string> list = Common.StockUtil.ParseListFromCsvFile(csvFile);
+            foreach (string stock in list)
             {
-                if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
-                    //LOG.Info(toDate(dateTime.Date));
-                    
-                    DownloadDataToCsv(stock, StockUtil.FormatDate(dateTime.Date));
-            }
+                if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
-            return Constant.ROOT_FOLDER + stock;
+                for (DateTime dateTime = DateTime.Parse(startDate);
+                     dateTime <= DateTime.Parse(endDate);
+                     dateTime += TimeSpan.FromDays(1))
+                {
+                    if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
+                        DownloadDataToCsvByReader(stock, StockUtil.FormatDate(dateTime.Date));
+                }
+            }
         }
 
         public static string DownloadDataToCsvByReader(string stock, string startDate, string endDate)
@@ -145,6 +171,7 @@ namespace DownloadData
 
             return Constant.ROOT_FOLDER + stock;
         }
+        #endregion
         /// <summary>
         /// 处理中文字符，减少文件大小
         /// </summary>

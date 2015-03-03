@@ -4,6 +4,7 @@ using System.Configuration;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Data;
+using Common;
 
 namespace big
 {
@@ -156,7 +157,9 @@ namespace big
             }
             catch (Exception e)
             {
-                throw e;
+                //throw e;
+                StockLog.Log.Error("Fail --"+cmdText);
+                return null;
             }
         }
 

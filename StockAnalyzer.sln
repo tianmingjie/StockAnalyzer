@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BizData", "BizData\BizData.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest", "Rest\Rest.csproj", "{E9B9B532-23BB-4179-9163-586AC99948BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyze", "Analyze\Analyze.csproj", "{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,18 @@ Global
 		{E9B9B532-23BB-4179-9163-586AC99948BE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E9B9B532-23BB-4179-9163-586AC99948BE}.Release|x64.ActiveCfg = Release|Any CPU
 		{E9B9B532-23BB-4179-9163-586AC99948BE}.Release|x86.ActiveCfg = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|x64.ActiveCfg = Release|Any CPU
+		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using big;
 using big.entity;
+using Rest;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,9 +17,18 @@ namespace StockList
         {
             //List<InfoData> list = BizApi.QueryInfoByIndustry2("金融服务","银行");
 
-            decimal[] list = BizApi.QueryExtractList("sh600000");
+            //BizApi.InsertAnalyzeData(new DateTime(2014,1,1),DateTime.Now);
+            //List<InfoData> list = BizApi.QueryInfoAll();
+            ////decimal[] list = BizApi.QueryExtractList("sh600000");
+            //List<AnalyzeData> list1 = BizApi.QueryAnalyzeData(DateTime.Now);
+
+            StockResource sr = new StockResource();
+            List<AnalyzeData> list1=sr.QueryAnalyze("20150303");
+            foreach (AnalyzeData ad in list1)
+                Console.WriteLine(ad.sid + "," + ad.value + "," + ad.name + "," + ad.firstlevel + "," + ad.secondlevel);
             Console.WriteLine();
         }
+
 
         public static Dictionary<string,string> GenerateStockList()
         {
