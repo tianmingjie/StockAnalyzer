@@ -33,9 +33,9 @@ namespace big
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
         #region analyze
-        public static List<AnalyzeData> QueryAnalyzeData(DateTime selectDate)
+        public static List<AnalyzeData> QueryAnalyzeData(DateTime selectDate,int big)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,lastupdate,rank,startdate from {0} where rank<{2} and lastupdate='{1}' order by rank", ANALYZE, selectDate.ToString("yyyy-MM-dd"), Constant.TOP);
+            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,lastupdate,rank,startdate from {0} where rank<{2} and lastupdate='{1}' and big={3} order by rank", ANALYZE, selectDate.ToString("yyyy-MM-dd"), Constant.TOP,big);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             List<AnalyzeData> list = new List<AnalyzeData>();
@@ -67,26 +67,20 @@ namespace big
 
             List<AnalyzeData> list=ComputeAll(start,end);
             for(int i=0;i<list.Count;i++){
+                if (Constant.ONLY_TOP)
+                {
+                    if (i > Constant.TOP) break;
+                }
                 AnalyzeData ad=list[i];
                 string sql = String.Format(
-                "INSERT INTO {0}(sid,value,name,firstlevel,secondlevel,lastupdate,rank,startdate)VALUES('{1}',{2},'{3}','{4}','{5}','{6}',{7},'{8}')",
-                        ANALYZE, ad.sid, ad.value, ad.name, ad.firstlevel, ad.secondlevel, DateTime.Now.ToString("yyyy-MM-dd"), i, start.ToString("yyyy-MM-dd"));
+                "INSERT INTO {0}(sid,value,name,firstlevel,secondlevel,lastupdate,rank,startdate,big)VALUES('{1}',{2},'{3}','{4}','{5}','{6}',{7},'{8}',{9})",
+                        ANALYZE, ad.sid, ad.value, ad.name, ad.firstlevel, ad.secondlevel, DateTime.Now.ToString("yyyy-MM-dd"), i, start.ToString("yyyy-MM-dd"),ad.big);
             MySqlHelper.ExecuteNonQuery(sql);
             }
         }
         public static List<AnalyzeData> ComputeAll(DateTime start, DateTime end)
         {
-            List<AnalyzeData> list = new List<AnalyzeData>();
-            List<InfoData> id_list = BizApi.QueryInfoAll();
-
-            foreach (InfoData id in id_list)
-            {
-                list.Add(ComputeSingle2(id.sid, (int)(id.weight * 1000), start, end));
-            }
-
-            //sort
-            list.Sort(new AnalyzeComparator());
-            return list;
+            return ComputeAll(BizApi.QueryInfoAll(),start,end);
         }
 
 
@@ -96,7 +90,11 @@ namespace big
 
             foreach (InfoData id in id_list)
             {
-                list.Add(ComputeSingle2(id.sid, (int)(id.weight * 1000), start, end));
+                string[] bigs = id.list.Split(','); ;
+                foreach (string big in bigs)
+                {
+                    list.Add(ComputeSingle2(id.sid, Int32.Parse(big), start, end));
+                }
             }
 
             //sort
@@ -112,7 +110,8 @@ namespace big
                 return new AnalyzeData()
                 {
                     sid = sid,
-                    value = 0
+                    value = 0,
+                    big=big
                 };
             DataTable dt = ds.Tables[0];
             string[] list = new string[dt.Rows.Count];
@@ -121,6 +120,7 @@ namespace big
                 AnalyzeData cd = new AnalyzeData()
                 {
                     sid = sid,
+                    big=big,
                     value = Decimal.Parse(dt.Rows[0]["value"].ToString() == "" ? "0" : dt.Rows[0]["value"].ToString()),
                     name = dt.Rows[0]["name"].ToString(),
                     firstlevel = dt.Rows[0]["firstlevel"].ToString(),

@@ -58,5 +58,6 @@ namespace Common
 
 
         public static int TOP = map["top"].Equals("") ? 50 : Int32.Parse(map["top"]);
+        public static bool ONLY_TOP = map["onlytop"].Equals("") ? false : Boolean.Parse(map["onlytop"]);
     }
 }

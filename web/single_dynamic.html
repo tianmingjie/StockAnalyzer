@@ -7,6 +7,11 @@
     <script>
         $(function () {
 
+			$("#startdateradio").click(function(){
+				var ss=$("input[name='startdate']:checked").val();
+				$("#start").val(ss);
+			});
+			
             $("#GoButton").click(function () {
                 var stock = $("#stock").val();
                 var url = "/rest/rest/info/id/" + stock;
@@ -103,7 +108,7 @@
                         x: -20 //center
                     },
                     subtitle: {
-                        text: 'Source: finance.sina.com.cn',
+                        text: '',
                         x: -20
                     },
                     xAxis: {
@@ -160,18 +165,21 @@
                         name: 's',
                         yAxis: 0,
                         type:'column',
-                        data: sellshare
+                        data: sellshare,
+						color:'green'
                     }, {
                         name: 'b',
                         yAxis: 0,
                         type:'column',
-                        data: buyshare
+                        data: buyshare,
+						color:'red'
                     },
                     {
                         name: 'close',
                         yAxis: 1,
                         type:'line',
-                        data: close
+                        data: close,
+						color:'blue'
                     }]
                 }); //high chart1
 
@@ -184,7 +192,7 @@
                         x: -20 //center
                     },
                     subtitle: {
-                        text: 'Source: finance.sina.com.cn',
+                        text: '',
                         x: -20
                     },
                     xAxis: {
@@ -212,7 +220,8 @@
                     series: [
                     {
                         name: 'diff',
-                        data: diff
+                        data: diff,
+						color:'blue'
                     }
                     ]
                 });//high chart 2
@@ -232,10 +241,14 @@
         <input id="QueryButton" type="button" value="Query" />
 
         <label id="name"></label>
-        <a id="industry1" target='_blank' href=""></a>
-        <a id="industry2" target='_blank' href=""></a>
-        <a id="location" target='_blank' href=""></a>
-
+        <a id="industry1" target='_parent' href=""></a>
+        <a id="industry2" target='_parent' href=""></a>
+        <a id="location" target='_parent' href=""></a>
+		<div id="startdateradio">
+			<input type="radio" name="startdate" value="20130101" checked="checked"> 20130101</input>
+			<input type="radio" name="startdate" value="20140101" >20140101</input>
+			<input type="radio" name="startdate" value="20140601" >20140601</input>
+		</div>
     </div>
 
     <div id="container" style="min-width:500px;height:300px"></div>

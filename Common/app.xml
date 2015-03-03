@@ -9,6 +9,8 @@
   <analyeChartDir>D:\stock\store\chart</analyeChartDir>
   <clean>true</clean>
   <top>50</top>
+  <!--only store tops-->
+  <onlytop>falses</onlytop>
   <bigDeal>500</bigDeal>
   <!--0/1 0 download update, 1, download all-->
   <downloadAll>0</downloadAll>

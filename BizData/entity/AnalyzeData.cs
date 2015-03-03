@@ -33,5 +33,8 @@ namespace big.entity
 
         [DataMember]
         public int rank;
+
+        [DataMember]
+        public int big;
     }
 }

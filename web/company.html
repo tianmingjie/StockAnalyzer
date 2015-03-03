@@ -40,13 +40,21 @@
                     var newRow = "<tr>";
                     var weight = t.responseJSON[i]["weight"];
                     var sid = t.responseJSON[i]["sid"];
-                    var link = "<a target='_blank' href='/web/single_dynamic.html?sid=" + sid + "&big=" + 500*weight + "'>" + sid + "</a>";
+                    var link = "<a target='_parent' href='/web/single_dynamic.html?sid=" + sid + "&big=" + 500*weight + "'>" + sid + "</a>";
                     newRow += "<td>" + link + "</td>";
                     newRow+="<td>"+t.responseJSON[i]["name"]+"</td>";
+					
                     newRow+="<td>"+t.responseJSON[i]["totalshare"]+"</td>";
                     newRow+="<td>"+t.responseJSON[i]["floatshare"]+"</td>";
-                    newRow+="<td>"+t.responseJSON[i]["firstlevel"]+"</td>";
-                    newRow+="<td>"+t.responseJSON[i]["secondlevel"]+"</td>";
+					var ind1=t.responseJSON[i]["firstlevel"];
+					var ind2=t.responseJSON[i]["secondlevel"];
+					var loc=t.responseJSON[i]["location"];
+					var ind_link1="<a target='_parent' href='/web/company.html?industry1=" + ind1+"'>"+ind1+"</a>";
+                    newRow+="<td>"+ind_link1+"</td>";
+					var ind_link2="<a target='_parent' href='/web/company.html?industry1=" + ind1+"&industry2="+ind2+"'>"+ind2+"</a>";
+                    newRow+="<td>"+ind_link2+"</td>";
+					var loc_link="<a target='_parent' href='/web/company.html?location=" + loc+"'>"+loc+"</a>";
+					newRow += "<td>" + loc_link + "</td>";
                     newRow += "<td>" + weight + "</td>";
                     $("#table1 tr:last").after(newRow);
                 }
@@ -57,7 +65,7 @@
 </head>
 <body>
     <div id="input">
-        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>weight</th></tr></table>
+        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>location</th><th>weight</th></tr></table>
     </div>
 
     <a id="industry1" href=""></a>
