@@ -114,10 +114,13 @@ namespace Rest
         }
 
 
-        [WebGet(UriTemplate = "analyze/date/{date}?big={big}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string date,int big)
+        [WebGet(UriTemplate = "analyze/date/{date}?level={level}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string date,string level)
         {
-            return BizApi.QueryAnalyzeData(Common.ParseToDate(date),big);
+            if(string.IsNullOrEmpty(level)) 
+                return BizApi.QueryAnalyzeData(Common.ParseToDate(date),1);
+            else  
+                return BizApi.QueryAnalyzeData(Common.ParseToDate(date),Int32.Parse(level));
         }
 
 

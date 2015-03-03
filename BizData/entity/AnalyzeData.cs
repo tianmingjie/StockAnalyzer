@@ -32,7 +32,10 @@ namespace big.entity
         public DateTime startdate;
 
         [DataMember]
-        public int rank;
+        public int rank=-1;
+
+        [DataMember]
+        public int level;
 
         [DataMember]
         public int big;

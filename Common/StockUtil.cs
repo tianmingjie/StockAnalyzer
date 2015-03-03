@@ -50,14 +50,14 @@ namespace Common
 
         }
 
-        public static List<string> UpdateList
-        {
-            get
-            {
-              return  FileUtil.ReadFile(Constant.AUTO_DOWNLOAD_FILE).Split(',').ToList<string>();
-            }
+        //public static List<string> UpdateList
+        //{
+        //    get
+        //    {
+        //      return  FileUtil.ReadFile(Constant.AUTO_DOWNLOAD_FILE).Split(',').ToList<string>();
+        //    }
 
-        }
+        //}
 
         //public static List<string> AnalyzeList
         //{
