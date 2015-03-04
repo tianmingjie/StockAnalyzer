@@ -23,7 +23,7 @@
                 //alert('the value is:' + value);
             }
 
-            var url = "/rest/rest/analyze?end=" + end_date + "&level=" + level + "&start=" + start_date;
+            var url = "/rest/rest/statistics?start=" + start_date + "&level=" + level + "&end=" + end_date;
 
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {

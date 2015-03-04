@@ -11,27 +11,48 @@
             start.setFullYear(2014);
             start.setMonth(0);
             start.setDate(1);
-            var d1 = "<iframe width='400' height='600'  src='/web/analyze.html?start=" + format(start) + "&end=" + format(end) + "&level=1' ></iframe>";
-            alert(d1);
-            $("#day1").html = d1;
-            $("#day2").html = d1;
-            $("#day3").html = d1;
+            $("#logo").text("Start:" + format(start) + "  End:" + format(end));
+            $("#day1").load("/web/analyze.html?start=" + format(start) + "&end=" + format(end) + "&level=1");
+            //$("#day2").load("/web/analyze.html?start=" + format(start) + "&end=" + format(end) + "&level=1");
+            //$("#day3").load("/web/analyze.html?start=" + format(start) + "&end=" + format(end) + "&level=1");
+
+            $("#query").click(function () {
+                //$("#day1").remove();
+                var start1 = $("#startselect  option:selected").text();
+                var level = $("#levelselect  option:selected").text();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                $("#day1").load("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+            });
         });
 
         function add0(m) { return m < 10 ? '0' + m : m }
         function format(date) {
             //shijianchuo是整数，否则要parseInt转换
             var y = date.getFullYear();
-            var m = date.getMonth()+1;
+            var m = date.getMonth() + 1;
             var d = date.getDate();
-            return y  + add0(m)  + add0(d);
+            return y + add0(m) + add0(d);
         }
+
     </script>
 </head>
 <body>
-    <div id="day1"/>
-        <div id="day2"/>
-            <div id="day3"/>
+<div id="Container">
+    <div id="Header">
+        <div><select id="startselect"> <option>20140101</option><option>20140601</option><option>20140901</option></select>
+            <select id="levelselect"> <option>1</option><option>2</option><option>0</option></select>
+            <input type="button" id="query" value="query" />
+        </div>
+        <div id="logo"></div>
+    </div>
+    <div id="Content">
+        <div id="day1"></div>
+    </div>
+    <div class="Clear"></div>
+    <div id="Footer">Footer</div>
+</div>
+<!--        <div id="day2"/>
+        <div id="day3"/>-->
                 <!--<iframe width='400' height='600' src="/web/analyze.html?start=20140601&end=20150304&level=1"></iframe>
                 <iframe width='400' height='600' src="/web/analyze.html?start=20140601&end=20150304&level=1"></iframe>
                 <iframe width='400' height='600' src="/web/analyze.html?start=20140601&end=20150304&level=1"></iframe>-->

@@ -1,0 +1,121 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="js/highstock.js"></script>
+    <script type="text/javascript" src="js/modules/exporting.js"></script>
+    <script>
+        $(function () {
+            $("#QueryButton").click(function () {
+
+                var start = $("#startselect  option:selected").text();
+                var level = $("#levelselect  option:selected").text();
+
+                var seriesOptions,
+                    yAxisOptions = [],
+                    seriesCounter = 0,
+                    colors = Highcharts.getOptions().colors;
+
+                var name = [];
+                var industry = [];
+                var value = [];
+
+                $.ajaxSetup({ async: false });
+                var url = "/rest/rest/statistics?level=" + level + "&start=" + start;
+                var t = $.getJSON(url);
+                for (var i in t.responseJSON) {
+                    name[i] = t.responseJSON[i]["name"];
+                    value[i] = t.responseJSON[i]["value"];
+                    }
+
+
+                $('#container').highcharts({
+                        chart: {
+                            type: 'bar'
+                        },
+                        title: {
+                            text: 'analyze chart',
+                            x: -20 //center
+                        },
+                        subtitle: {
+                            text: '',
+                            x: -20
+                        },
+                        xAxis: {
+                            categories: name
+                        },
+                        yAxis: [{
+                            title: {
+                                text: 'trade data'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        }, //first Y
+                        {
+                         
+                            title: {
+                                text: 'price'
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }],
+                            opposite: true
+                        } //second Y
+
+                        ],
+                        tooltip: {
+                            valueSuffix: 'WY'
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            x: 120,
+                            verticalAlign: 'top',
+                            y: 100,
+                            floating: true,
+                            backgroundColor: '#FFFFFF'
+                        },
+                        series: [{
+                            name: 'value',
+                            yAxis: 0,
+                            type:'column',
+                            data: value,
+							color:'green'
+                        }]
+                    }); //high chart
+
+                }); //ajax
+            });
+    </script>
+</head>
+<body>
+        <div id="input">
+               <div><select id="startselect"> <option>20140101</option><option>20140601</option><option>20140901</option></select>
+            <select id="levelselect"> <option>1</option><option>2</option><option>0</option></select>
+        </div>
+        <input id="GoButton" type="button" value="Go" />
+        <input id="QueryButton" type="button" value="Query" />
+
+        <label id="name"></label>
+        <a id="industry1" target='_parent' href=""></a>
+        <a id="industry2" target='_parent' href=""></a>
+        <a id="location" target='_parent' href=""></a>
+		<div id="startdateradio">
+			<input type="radio" name="startdate" value="20130101" checked="checked"> 20130101</input>
+			<input type="radio" name="startdate" value="20140101" >20140101</input>
+			<input type="radio" name="startdate" value="20140601" >20140601</input>
+		</div>
+        <!--<div id="industry1"></div>
+        <div id="industry2"></div>-->
+
+    </div>
+
+    <div id="container" style="min-width:500px;height:300px"></div>
+    <div id="container2" style="min-width:500px;height:300px"></div>
+</body>
+</html>

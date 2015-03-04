@@ -1,5 +1,5 @@
-set log=c:\log\analyze_log.txt
-cd c:\work\analyze
+set log=G:\log\analyze_log.txt
+cd G:\github\StockAnalyzer\bin
 
 date /t >> %log%
 time /t >> %log%

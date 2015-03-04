@@ -19,8 +19,21 @@ namespace Common
             if (t == null)
             {
                 XmlDocument doc = new XmlDocument();
+                string file = "";
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "app.xml"))
+                {
+                    file = AppDomain.CurrentDomain.BaseDirectory + "app.xml";
+                }
+                else if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "bin\\app.xml"))
+                {
+                    file = AppDomain.CurrentDomain.BaseDirectory + "bin\\app.xml";
+                }
+                else
+                {
+                    throw new Exception(AppDomain.CurrentDomain.BaseDirectory + " app.xml" + " not found!!");
+                }
                 //Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
-                doc.Load(AppDomain.CurrentDomain.BaseDirectory + "app.xml");
+                doc.Load(file);
 
                 XmlNode node = doc.SelectSingleNode("/StockApp");
 
@@ -29,14 +42,14 @@ namespace Common
                     map.Add(n.Name, n.InnerText);
                 }
 
-                if (!Directory.Exists(map["rootFolder"]))
-                {
-                    Directory.CreateDirectory(map["rootFolder"]);
-                }
-                if (!Directory.Exists(map["analyzeFolder"]))
-                {
-                    Directory.CreateDirectory(map["analyzeFolder"]);
-                }
+                //if (!Directory.Exists(map["rootFolder"]))
+                //{
+                //    Directory.CreateDirectory(map["rootFolder"]);
+                //}
+                //if (!Directory.Exists(map["analyzeFolder"]))
+                //{
+                //    Directory.CreateDirectory(map["analyzeFolder"]);
+                //}
             }
         }
 
