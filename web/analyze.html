@@ -19,17 +19,17 @@
                 if (key == "start") start_date = value;
                 if (key == "end") end_date = value;
                 if (key == "level") level = value;
-                //alert('the key is:' + key);
-                //alert('the value is:' + value);
             }
 
             var url = "/rest/rest/analyze?end=" + end_date + "&level=" + level + "&start=" + start_date;
-
+            $.ajaxSetup({ async: false });
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {
                     var newRow = "<tr>";
                     var big = data[i]["big"];
                     var sid = data[i]["sid"];
+
+
                     var link = "<a target='_parent' href='/web/single_dynamic.html?sid=" + sid + "&big=" + big + "'>" + sid + "</a>";
                     newRow += "<td>" + link + "</td>";
                     newRow += "<td>" + data[i]["name"] + "</td>";
@@ -47,8 +47,18 @@
 
                     //newRow += "<td>" + start_date + "</td>";
                     //newRow += "<td>" + end_date + "</td>";
-                    newRow += "<td>" + data[i]["rank"]; + "</td>";
-                    newRow += "<td>" + data[i]["value"]; + "</td>";
+                    newRow += "<td>" + data[i]["rank"] + "</td>";
+                    newRow += "<td>" + data[i]["value"] + "</td>";
+                    var url_1 = "/rest/rest/infoext/id/" + sid;
+                    $.ajaxSetup({ async: false });
+                    $.getJSON(url_1, function (data1) {
+                        newRow += "<td>" + data1["shiyinglv"] + "</td>";
+                        newRow += "<td>" + data1["shijinglv"] + "</td>";
+                        newRow += "<td>" + data1["jingzichan"] + "</td>";
+                        newRow += "<td>" + data1["shourutongbi"] + "</td>";
+                        newRow += "<td>" + data1["jingliruntongbi"] + "</td>";
+                        newRow += "<td>" + data1["meiguweifenpeilirun"] + "</td>";
+                    });
                     $("#table1 tr:last").after(newRow);
                 }
             });
@@ -58,7 +68,7 @@
 </head>
 <body>
     <div id="input">
-        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>industry1</th><th>industry2</th><!--<th>startdate</th><th>lastupdate</th>--><th>rank</th><th>value</th></tr></table>
+        <table id="table1" border="1"><tr><th>id</th><th>名字</th><th>行业1</th><th>行业2</th><th>排名</th><th>得分</th><th>市盈率</th><th>市净率</th><th>净资产</th><th>收入同比增长(%)</th><th>净资产同比增长(%)</th><th>每股未分配利润</th></tr></table>
     </div>
 
     <a id="industry1" href=""></a>

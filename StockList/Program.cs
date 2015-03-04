@@ -24,11 +24,14 @@ namespace StockList
 
 
             //StockResource sr = new StockResource();
-            DateTime end=new DateTime(2014,12,31);
-            DateTime start=end.AddMonths(-6);
-            List<AnalyzeData> list1 = BizApi.ComputeAll(1,start,end);
-            foreach (AnalyzeData ad in list1)
-                Console.WriteLine(ad.sid + "," + ad.value + "," + ad.name + "," + ad.firstlevel + "," + ad.secondlevel);
+            //DateTime end=new DateTime(2015,3,12);
+            //DateTime start=end.AddMonths(-1);
+            //List<AnalyzeData> list1 = BizApi.ComputeAll(1,start,end);
+            //foreach (AnalyzeData ad in list1)
+            //    Console.WriteLine(ad.sid + "," + ad.value + "," + ad.name + "," + ad.firstlevel + "," + ad.secondlevel);
+            //BizApi.InsertInfoExt(new InfoData() { sid = "sh600000" });
+
+            InfoExtData ifd = BizApi.QueryInfoExtById("sh600000");
             Console.WriteLine();
         }
 

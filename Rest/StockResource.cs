@@ -25,6 +25,7 @@ namespace Rest
             return "1.0";
         }
 
+
         [WebGet(UriTemplate = "query/id/{id}?big={big}&type={type}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
         public IList<BasicData> QueryData(string id, string big, string type, string start, string end)
         {
@@ -75,6 +76,13 @@ namespace Rest
 
             return list;
         }
+
+        [WebGet(UriTemplate = "infoext/id/{id}", ResponseFormat = WebMessageFormat.Json)]
+        public InfoExtData QueryInfoExtById(string id)
+        {
+            return BizApi.QueryInfoExtById(id);
+        }
+
         [WebGet(UriTemplate = "info/id/{id}", ResponseFormat = WebMessageFormat.Json)]
         public InfoData QueryInfoById(string id)
         {

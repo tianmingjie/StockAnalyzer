@@ -38,8 +38,52 @@ namespace big
             string sql1 = String.Format("delete from {0} where sid='{1}' ", INFOEXT, ied.sid);
             MySqlHelper.ExecuteNonQuery(sql1);
 
-            string sql = String.Format("insert into {0}values(sid,lastupdate,zongguben,liutonggu,yingyeshouruzengzhanglv,yingyeshouru,jinglirun,jinglirunzengzhanglv,meigushouyi,meigujingzichan,jingzichanshouyilv,meiguxianjinliu,meigugongjijin,meiguweifenpeilirun,shiyinglv,shijinglv)values('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}", INFOEXT, ied.sid, BizCommon.ParseToString(DateTime.Now), ied.zongguben, ied.liutonggu, ied.yingyeshouruzengzhanglv, ied.yingyeshouru, ied.jinglirun, ied.jinglirunzengzhanglv, ied.meigushouyi, ied.meigujingzichan, ied.jingzichanshouyilv, ied.meiguxianjinliu, ied.meigugongjijin, ied.meiguweifenpeilirun, ied.shiyinglv, ied.shijinglv);
+            string sql = String.Format("insert into {0}(sid,lastupdate,shouyi,shiyinglv,jingzichan,shijinglv,shouru, shourutongbi, jinglirun, jingliruntongbi,maolilv,jinglilv, ROE,  fuzhailv,zongguben, liutonggu,zongzhi,liuzhi,meiguweifenpeilirun,shangshishijian )values('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},'{20}')", INFOEXT, ied.sid, DateTime.Now.ToShortDateString(), ied.shouyi, ied.shiyinglv, ied.jingzichan,ied.shijinglv, ied.shouru, ied.shourutongbi, ied.jinglirun, ied.jingliruntongbi, ied.maolilv, ied.jinglilv, ied.ROE, ied.fuzhailv, ied.zongguben, ied.liutonggu, ied.zongzhi, ied.liuzhi, ied.meiguweifenpeilirun, ied.shangshishijian);
             MySqlHelper.ExecuteNonQuery(sql);
+            Console.WriteLine(ied.sid + " infoext inserted.");
+        }
+
+        public static InfoExtData QueryInfoExtById(string sid)
+        {
+            string sql = string.Format("select sid,lastupdate,shouyi,shiyinglv,jingzichan,shijinglv,shouru,shourutongbi,jinglirun,jingliruntongbi,maolilv,jinglilv,ROE,fuzhailv,zongguben, liutonggu,zongzhi,liuzhi,meiguweifenpeilirun,shangshishijian from {0} where sid='{1}' ", INFOEXT, sid);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return BuildInfoExtData(ds.Tables[0])[0];
+        }
+
+        public static List<InfoExtData> BuildInfoExtData(DataTable dt)
+        {
+            List<InfoExtData> list = new List<InfoExtData>();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    InfoExtData ied = new InfoExtData();
+                    ied.sid = dr["sid"].ToString();
+                    ied.lastupdate = DateTime.Parse(dr["lastupdate"].ToString()).ToString("yyyy-MM-dd");
+                    ied.shouyi = decimal.Parse(dr["shouyi"].ToString());
+                    ied.shiyinglv = decimal.Parse(dr["shiyinglv"].ToString());
+                    ied.jingzichan = decimal.Parse(dr["jingzichan"].ToString());
+                    ied.shijinglv = decimal.Parse(dr["shijinglv"].ToString());
+                    ied.shouru = decimal.Parse(dr["shouru"].ToString());
+                    ied.shourutongbi = decimal.Parse(dr["shourutongbi"].ToString());
+                    ied.jinglirun = decimal.Parse(dr["jinglirun"].ToString());
+                    ied.jingliruntongbi = decimal.Parse(dr["jingliruntongbi"].ToString());
+                    ied.maolilv = decimal.Parse(dr["maolilv"].ToString());
+                    ied.jinglilv = decimal.Parse(dr["jinglilv"].ToString());
+                    ied.ROE = decimal.Parse(dr["ROE"].ToString());
+                    ied.fuzhailv = decimal.Parse(dr["fuzhailv"].ToString());
+                    ied.zongguben = decimal.Parse(dr["zongguben"].ToString());
+                    ied.liutonggu = decimal.Parse(dr["liutonggu"].ToString());
+                    ied.zongzhi = decimal.Parse(dr["zongzhi"].ToString());
+                    ied.liuzhi = decimal.Parse(dr["liuzhi"].ToString());
+                    ied.meiguweifenpeilirun = decimal.Parse(dr["meiguweifenpeilirun"].ToString());
+                    ied.shangshishijian = DateTime.Parse(dr["shangshishijian"].ToString()).ToString("yyyy-MM-dd") ;
+                    list.Add(ied);
+                }
+            }
+
+            return list;
         }
         #endregion
         #region analyze

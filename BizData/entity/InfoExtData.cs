@@ -16,32 +16,42 @@ namespace big.entity
         public string lastupdate;
 
         [DataMember]
+        public decimal shouyi;
+        [DataMember]
+        public decimal shiyinglv;
+        [DataMember]
+        public decimal jingzichan;
+        [DataMember]
+        public decimal shijinglv;
+        [DataMember]
+        public decimal shouru;
+        [DataMember]
+        public decimal shourutongbi;
+        [DataMember]
+        public decimal jinglirun;
+        [DataMember]
+        public decimal jingliruntongbi;
+        [DataMember]
+        public decimal maolilv;
+        [DataMember]
+        public decimal jinglilv;
+        [DataMember]
+        public decimal ROE;
+        [DataMember]
+        public decimal fuzhailv;
+        [DataMember] //亿
         public decimal zongguben;
         [DataMember]
         public decimal liutonggu;
         [DataMember]
-        public decimal yingyeshouruzengzhanglv;
+        public decimal zongzhi;
         [DataMember]
-        public decimal yingyeshouru;
-        [DataMember]
-        public decimal jinglirun;
-        [DataMember]
-        public decimal jinglirunzengzhanglv;
-        [DataMember]
-        public decimal meigushouyi;
-        [DataMember]
-        public decimal meigujingzichan;
-        [DataMember]
-        public decimal jingzichanshouyilv;
-        [DataMember]
-        public decimal meiguxianjinliu;
-        [DataMember]
-        public decimal meigugongjijin;
+        public decimal liuzhi;
         [DataMember]
         public decimal meiguweifenpeilirun;
         [DataMember]
-        public decimal shiyinglv;
-        [DataMember]
-        public decimal shijinglv;
+        public string shangshishijian;
+
+
     }
 }
