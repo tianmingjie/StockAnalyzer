@@ -1,4 +1,5 @@
-﻿using System.ServiceModel.Activation;
+﻿using Common;
+using System.ServiceModel.Activation;
 using System.Web.Routing;
 
 namespace Rest
@@ -12,7 +13,7 @@ namespace Rest
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            Constant t = new Constant();
             RegisterRoutes();
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace big
 {
-    public class Common
+    public class BizCommon
     {
 
         //dateforme YYYYMMDD

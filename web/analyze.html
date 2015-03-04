@@ -7,55 +7,49 @@
     <script>
         $(function () {
 
+            // http://localhost/rest/rest/analyze?end=20150304&level=1&start=20140901
             var u=decodeURIComponent(window.location.href);
             var par = u.substring(u.lastIndexOf('?')+1,u.length);
             var d = par.split('&');
-            var industry1 = "", industry2 = "", location = "";
+            var end_date = "", level = "1",start_date="";
             for (var i = 0; i < d.length; i++) {
                 var keyValue = d[i].split('=');
                 var key = keyValue[0];
                 var value = keyValue[1];
-                if (key == "industry1") industry1 = value;
-                if (key == "industry2") industry2 = value;
-                if (key == "location") location = value;
+                if (key == "start") start_date = value;
+                if (key == "end") end_date = value;
+                if (key == "level") level = value;
                 //alert('the key is:' + key);
                 //alert('the value is:' + value);
             }
-            //<tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>weight</th></tr>
 
-            var stock = $("#stock").val();
-            var url;
-            if(industry1!="" || industry2!="") {
-                if (industry2=="")
-                    url = "/rest/rest/info/industry1/" + industry1;
-                else
-                    url = "/rest/rest/info/industry1/" + industry1 + "/industry2/" + industry2;
-            }
-            if (location != "") {
-                url = "/rest/rest/info/location/" + location;
-            }
+            var url = "/rest/rest/analyze?end=" + end_date + "&level=" + level + "&start="+start_date;
+
                 $.ajaxSetup({ async: false });
                 var t = $.getJSON(url);
                 for (var i in t.responseJSON) {
                     var newRow = "<tr>";
-                    var weight = t.responseJSON[i]["weight"];
+                    var big = t.responseJSON[i]["big"];
                     var sid = t.responseJSON[i]["sid"];
-                    var link = "<a target='_parent' href='/web/single_dynamic.html?sid=" + sid + "&big=" + 500*weight + "'>" + sid + "</a>";
+                    var link = "<a target='_parent' href='/web/single_dynamic.html?sid=" + sid + "&big=" + big + "'>" + sid + "</a>";
                     newRow += "<td>" + link + "</td>";
                     newRow+="<td>"+t.responseJSON[i]["name"]+"</td>";
 					
-                    newRow+="<td>"+t.responseJSON[i]["totalshare"]+"</td>";
-                    newRow+="<td>"+t.responseJSON[i]["floatshare"]+"</td>";
 					var ind1=t.responseJSON[i]["firstlevel"];
 					var ind2=t.responseJSON[i]["secondlevel"];
-					var loc=t.responseJSON[i]["location"];
+
 					var ind_link1="<a target='_parent' href='/web/company.html?industry1=" + ind1+"'>"+ind1+"</a>";
                     newRow+="<td>"+ind_link1+"</td>";
 					var ind_link2="<a target='_parent' href='/web/company.html?industry1=" + ind1+"&industry2="+ind2+"'>"+ind2+"</a>";
-                    newRow+="<td>"+ind_link2+"</td>";
-					var loc_link="<a target='_parent' href='/web/company.html?location=" + loc+"'>"+loc+"</a>";
-					newRow += "<td>" + loc_link + "</td>";
-                    newRow += "<td>" + weight + "</td>";
+					newRow += "<td>" + ind_link2 + "</td>";
+
+					var lastupdate = t.responseJSON[i]["lastupdate"];
+					var startdate = t.responseJSON[i]["startdate"];
+
+					//newRow += "<td>" + start_date + "</td>";
+					//newRow += "<td>" + end_date + "</td>";
+                    newRow += "<td>" + t.responseJSON[i]["rank"]; + "</td>";
+                    newRow += "<td>" + t.responseJSON[i]["value"]; + "</td>";
                     $("#table1 tr:last").after(newRow);
                 }
             });
@@ -65,7 +59,7 @@
 </head>
 <body>
     <div id="input">
-        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>total</th><th>float</th><th>first</th><th>second</th><th>location</th><th>weight</th></tr></table>
+        <table id="table1" border="1"><tr><th>id</th><th>name</th><th>industry1</th><th>industry2</th><!--<th>startdate</th><th>lastupdate</th>--><th>rank</th><th>value</th></tr></table>
     </div>
 
     <a id="industry1" href=""></a>

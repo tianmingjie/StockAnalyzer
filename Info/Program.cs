@@ -158,7 +158,7 @@ namespace Info
 
             WebClient client = new WebClient();
 
-            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", Common.ProcessStockId(id.sid)));
+            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", BizCommon.ProcessStockId(id.sid)));
 
             string content = System.Text.Encoding.UTF8.GetString(page);
             //string content = "成交额：1.62 亿元";
@@ -188,7 +188,7 @@ namespace Info
             // Stream data = client.OpenRead(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", stock));
             // StreamReader reader = new StreamReader(data);
             //string s = reader.ReadToEnd();
-            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/holder/", Common.ProcessStockId(id.sid)));
+            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/holder/", BizCommon.ProcessStockId(id.sid)));
 
             string content = System.Text.Encoding.UTF8.GetString(page);
             //string content = "成交额：1.62 亿元";

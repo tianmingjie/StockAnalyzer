@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
+using BizCommon = big.BizCommon;
 
 namespace Rest
 {
@@ -29,10 +30,10 @@ namespace Rest
         {
             DateTime endDate, startDate;
             IList<BasicData> list;
-            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = Common.ParseToDate(end);
+            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = BizCommon.ParseToDate(end);
             if (string.IsNullOrEmpty(big)) big = "1000";
             if (string.IsNullOrEmpty(type)) type = "w";
-            if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = Common.ParseToDate(start);
+            if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = BizCommon.ParseToDate(start);
 
             switch (type)
             {
@@ -55,9 +56,9 @@ namespace Rest
         {
             DateTime endDate, startDate;
             IList<LineData> list;
-            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = Common.ParseToDate(end);
+            if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = BizCommon.ParseToDate(end);
             if (string.IsNullOrEmpty(type)) type = "w";
-            if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = Common.ParseToDate(start);
+            if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = BizCommon.ParseToDate(start);
 
             switch (type)
             {
@@ -114,20 +115,47 @@ namespace Rest
         }
 
 
-        [WebGet(UriTemplate = "analyze/date/{date}?level={level}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string date,string level)
+        [WebGet(UriTemplate = "analyze?level={level}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string level, string start, string end)
         {
-            if(string.IsNullOrEmpty(level)) 
-                return BizApi.QueryAnalyzeData(Common.ParseToDate(date),1);
-            else  
-                return BizApi.QueryAnalyzeData(Common.ParseToDate(date),Int32.Parse(level));
+            int level_val = 1;
+            DateTime start_date = new DateTime(2014, 1, 1);
+            DateTime end_date = DateTime.Now;
+            if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
+            if (!string.IsNullOrEmpty(start)) start_date = BizCommon.ParseToDate(start);
+            if (!string.IsNullOrEmpty(end)) end_date = BizCommon.ParseToDate(end);
+
+            return BizApi.QueryAnalyzeData(end_date, start_date, level_val);
         }
 
+
+        [WebGet(UriTemplate = "statistics?level={level}&end={end}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyzeStatisticsBy(string level, string end, string type)
+        {
+            int level_val = 1;
+            DateTime end_date = DateTime.Now;
+            if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
+            if (!string.IsNullOrEmpty(end)) end_date = BizCommon.ParseToDate(end);
+
+            if (string.IsNullOrEmpty(type))
+                return BizApi.QueryAnalyzeStatisticsByName(end_date, level_val);
+            if (type.Equals("name"))
+                return BizApi.QueryAnalyzeStatisticsByName(end_date, level_val);
+            if (type.Equals("industry"))
+                return BizApi.QueryAnalyzeStatisticsByIndustry(end_date, level_val);
+            return null;
+        }
+
+        //[WebGet(UriTemplate = "analyze/date/{date}", ResponseFormat = WebMessageFormat.Json)]
+        //public List<AnalyzeData> QueryAnalyze(string date)
+        //{
+        //        return BizApi.QueryAnalyzeData(Common.ParseToDate(date), 1);
+        //}
 
         [WebGet(UriTemplate = "lastupdate/id/{id}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryLastUpdate(string id)
         {
-            return Common.ParseToString(BizApi.QueryExtractLastUpdate(id));
+            return BizCommon.ParseToString(BizApi.QueryExtractLastUpdate(id));
         }
 
 

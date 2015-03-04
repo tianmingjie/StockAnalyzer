@@ -14,7 +14,7 @@ namespace Analyze
             if(args.Length==0)
             BizApi.InsertAnalyzeData(new DateTime(2014, 1, 1), DateTime.Now);
             else
-            BizApi.InsertAnalyzeData(Common.ParseToDate(args[0]), DateTime.Now);
+            BizApi.InsertAnalyzeData(BizCommon.ParseToDate(args[0]), DateTime.Now);
         }
     }
 }

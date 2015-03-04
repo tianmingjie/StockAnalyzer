@@ -22,8 +22,9 @@ namespace StockList
             ////decimal[] list = BizApi.QueryExtractList("sh600000");
             //List<AnalyzeData> list1 = BizApi.QueryAnalyzeData(DateTime.Now);
 
-            StockResource sr = new StockResource();
-            List<AnalyzeData> list1=sr.QueryAnalyze("20150303");
+
+            //StockResource sr = new StockResource();
+            List<AnalyzeData> list1 = BizApi.QueryAnalyzeStatisticsByName(DateTime.Now,1);
             foreach (AnalyzeData ad in list1)
                 Console.WriteLine(ad.sid + "," + ad.value + "," + ad.name + "," + ad.firstlevel + "," + ad.secondlevel);
             Console.WriteLine();

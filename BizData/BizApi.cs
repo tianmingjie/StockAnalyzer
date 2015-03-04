@@ -32,7 +32,53 @@ namespace big
 
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
+
         #region analyze
+
+        public static List<AnalyzeData> QueryAnalyzeStatisticsByName(DateTime selectDate,int level) {
+          string sql = string.Format("select count(1) value,sum(rank) rank,name,sid,firstlevel,secondlevel from {0} where rank<{2} and lastupdate='{1}' and level={3} group by name having value >2 order by value desc,rank asc", ANALYZE, selectDate.ToString("yyyy-MM-dd"), Constant.TOP,level);
+          DataSet ds = MySqlHelper.GetDataSet(sql);
+          DataTable dt = ds.Tables[0];
+          List<AnalyzeData> list = new List<AnalyzeData>();
+          foreach (DataRow dr in dt.Rows)
+          {
+              AnalyzeData bd = new AnalyzeData()
+              {
+                  sid = dr["sid"].ToString(),
+                  name = dr["name"].ToString(),
+                  firstlevel = dr["firstlevel"].ToString(),
+                  secondlevel = dr["secondlevel"].ToString(),
+                  lastupdate = selectDate,
+                  value = Decimal.Parse(dr["value"].ToString()),
+                  rank = Int32.Parse(dr["rank"].ToString())
+              };
+
+              list.Add(bd);
+          }
+
+          return list;
+        }
+
+        public static List<AnalyzeData> QueryAnalyzeStatisticsByIndustry(DateTime selectDate, int level)
+        {
+            string sql = string.Format("select  count(1) value,firstlevel from {0} where rank<{2} and lastupdate='{1}' and level={3} group by firstlevel order by value desc  limit 10", ANALYZE, selectDate.ToString("yyyy-MM-dd"), Constant.TOP, level);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
+            List<AnalyzeData> list = new List<AnalyzeData>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                AnalyzeData bd = new AnalyzeData()
+                {
+                    firstlevel = dr["firstlevel"].ToString(),
+                    lastupdate = selectDate,
+                    value = Decimal.Parse(dr["value"].ToString())
+                };
+
+                list.Add(bd);
+            }
+
+            return list;
+        }
 
         public static List<AnalyzeData> QueryAnalyzeData(DateTime selectDate)
         {
@@ -61,9 +107,9 @@ namespace big
             return list;
         }
 
-        public static List<AnalyzeData> QueryAnalyzeData(DateTime selectDate,int level)
+        public static List<AnalyzeData> QueryAnalyzeData(DateTime lastupdate,DateTime start,int level)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,lastupdate,rank,startdate,big from {0} where rank<{2} and lastupdate='{1}' and level={3} order by rank", ANALYZE, selectDate.ToString("yyyy-MM-dd"), Constant.TOP,level);
+            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,lastupdate,rank,startdate,big from {0} where rank<{1} and lastupdate='{2}' and startdate='{3}' and level={4} order by rank", ANALYZE,Constant.TOP, lastupdate.ToString("yyyy-MM-dd"), start.ToString("yyyy-MM-dd"),level);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             List<AnalyzeData> list = new List<AnalyzeData>();
@@ -89,62 +135,37 @@ namespace big
             return list;
         }
         public static void  InsertAnalyzeData(DateTime start, DateTime end){
-            //int index=50;
-
-            //string sql1 = String.Format("delete from {0} where lastupdate='{1}'", ANALYZE, DateTime.Now.ToString("yyyy-MM-dd"));
-            //MySqlHelper.ExecuteNonQuery(sql1);
-
-            //List<AnalyzeData> list=ComputeAll(start,end);
-            //for(int i=0;i<list.Count;i++){
-            //    if (Constant.ONLY_TOP)
-            //    {
-            //        if (i > Constant.TOP) break;
-            //    }
-            //    AnalyzeData ad=list[i];
-            //    string sql = String.Format(
-            //    "INSERT INTO {0}(sid,value,name,firstlevel,secondlevel,lastupdate,rank,startdate,big)VALUES('{1}',{2},'{3}','{4}','{5}','{6}',{7},'{8}',{9})",
-            //            ANALYZE, ad.sid, ad.value, ad.name, ad.firstlevel, ad.secondlevel, DateTime.Now.ToString("yyyy-MM-dd"), i, start.ToString("yyyy-MM-dd"),ad.big);
-            //MySqlHelper.ExecuteNonQuery(sql);
-            //}
-
             InsertAnalyzeDataAll(BizApi.QueryInfoAll(), start, end);
         }
-
-
-
-        //public static List<AnalyzeData> ComputeAll(DateTime start, DateTime end)
-        //{
-        //    return ComputeAll(BizApi.QueryInfoAll(),start,end);
-        //}
 
         public static void InsertAnalyzeDataAll(List<InfoData> id_list, DateTime start, DateTime end)
         {
             List<AnalyzeData> list0 = new List<AnalyzeData>();
-            List<AnalyzeData> list1= new List<AnalyzeData>();
-            List<AnalyzeData> list2= new List<AnalyzeData>();
+            List<AnalyzeData> list1 = new List<AnalyzeData>();
+            List<AnalyzeData> list2 = new List<AnalyzeData>();
 
             foreach (InfoData id in id_list)
             {
                 string[] bigs = id.list.Split(','); ;
-                list0.Add(ComputeSingle2(id.sid, 0,Int32.Parse(bigs[0]), start, end));
-                list1.Add(ComputeSingle2(id.sid,1, Int32.Parse(bigs[1]), start, end));
-                list2.Add(ComputeSingle2(id.sid,2, Int32.Parse(bigs[2]), start, end));
+                list0.Add(ComputeSingle2(id.sid, 0, Int32.Parse(bigs[0]), start, end));
+                list1.Add(ComputeSingle2(id.sid, 1, Int32.Parse(bigs[1]), start, end));
+                list2.Add(ComputeSingle2(id.sid, 2, Int32.Parse(bigs[2]), start, end));
             }
 
             //sort
             list0.Sort(new AnalyzeComparator());
             list1.Sort(new AnalyzeComparator());
             list2.Sort(new AnalyzeComparator());
-            InsertAnalyzeData(list0, start, end,0);
-            InsertAnalyzeData(list1, start, end,1);
-            InsertAnalyzeData(list2, start, end,2);
+            InsertAnalyzeData(list0, start, end, 0);
+            InsertAnalyzeData(list1, start, end, 1);
+            InsertAnalyzeData(list2, start, end, 2);
         }
 
         public static void InsertAnalyzeData(List<AnalyzeData> list, DateTime start, DateTime end, int level)
         {
             //int index=50;
 
-            string sql1 = String.Format("delete from {0} where lastupdate='{1}' and level={2}", ANALYZE, DateTime.Now.ToString("yyyy-MM-dd"),level);
+            string sql1 = String.Format("delete from {0} where lastupdate='{1}' and startdate='{2}' and level={3}", ANALYZE,DateTime.Now.ToString("yyyy-MM-dd"), start,level);
             MySqlHelper.ExecuteNonQuery(sql1);
 
             //List<AnalyzeData> list = ComputeAll(id_list,start, end);
@@ -152,7 +173,7 @@ namespace big
             {
                 if (Constant.ONLY_TOP)
                 {
-                    if (i < Constant.TOP) continue;
+                    if (i > (Constant.TOP-1)) break;
                 }
                 AnalyzeData ad = list[i];
 
@@ -166,7 +187,7 @@ namespace big
         public static AnalyzeData ComputeSingle2(string sid,int level, int big, DateTime start, DateTime end)
         {
             //decimal value = 0;
-            string sql = string.Format("select name,firstlevel,secondlevel,sum(((buyshare-sellshare)/A.totalshare)*DATEDIFF(now(),time)*(((close-(totalmoney/A.totalshare))*(close-(totalmoney/A.totalshare))+(open-(totalmoney/A.totalshare))*(open-(totalmoney/A.totalshare))+(high-(totalmoney/A.totalshare))*(high-(totalmoney/A.totalshare))+(low-(totalmoney/A.totalshare))*(low-(totalmoney/A.totalshare)))/((high-low)*(high-low)*4))) as value from {0} A join {4} B on B.sid='{0}' and A.big={1} and A.time >'{2}' and A.time<'{3}'", sid, big, start, end,INFO);
+            string sql = string.Format("select name,firstlevel,secondlevel,format(sqrt(sum(((buyshare-sellshare)/A.totalshare)*DATEDIFF(now(),time)*(((close-(totalmoney/A.totalshare))*(close-(totalmoney/A.totalshare))+(open-(totalmoney/A.totalshare))*(open-(totalmoney/A.totalshare))+(high-(totalmoney/A.totalshare))*(high-(totalmoney/A.totalshare))+(low-(totalmoney/A.totalshare))*(low-(totalmoney/A.totalshare)))/((high-low)*(high-low)*4)))),3) as value from {0} A join {4} B on B.sid='{0}' and A.big={1} and A.time >'{2}' and A.time<'{3}'", sid, big, start, end,INFO);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             if (ds == null)
                 return new AnalyzeData()
@@ -204,40 +225,7 @@ namespace big
 
 
         }
-        //public static AnalyzeData ComputeSingle(string sid, int big, DateTime start, DateTime end)
-        //{
-        //    //decimal value = 0;
-        //    string sql = string.Format("select  sum(((buyshare-sellshare)/totalshare)*DATEDIFF(now(),time)/(high/close)) as value from {0} where big={1} and time >'{2}' and time<'{3}'", sid, big, start, end);
-        //    DataSet ds = MySqlHelper.GetDataSet(sql);
-        //    if (ds == null)
-        //        return new AnalyzeData()
-        //        {
-        //            sid = sid,
-        //            value = 0
-        //        };
-        //    DataTable dt = ds.Tables[0];
-        //    string[] list = new string[dt.Rows.Count];
-        //    if (ds.Tables[0].Rows.Count > 0)
-        //    {
-        //        AnalyzeData cd = new AnalyzeData()
-        //        {
-        //            sid = sid,
-        //            value = Decimal.Parse(dt.Rows[0][0].ToString())
-        //        };
-        //        Console.WriteLine(cd.sid + "," + cd.value);
-        //        return cd;
-        //    }
-        //    else
-        //    {
-        //        return new AnalyzeData()
-        //        {
-        //            sid = sid,
-        //            value = 0
-        //        };
-        //    }
 
-
-        //}
         #endregion
         #region 插入更新
         /// <summary>
@@ -360,32 +348,18 @@ namespace big
         #region 查询api
         public static List<BasicData> QueryByMonth(string sid, int big, DateTime start, DateTime end)
         {
-            //IList<BasicData> list = new List<BasicData>();
-            //string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney, DATE_FORMAT(time ,'%X_%m') as tag from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end);
-            //DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-
-            //return BuildDataList(dt, "m", sid, big);
-
             return BuildDataList(sid, big, start, end, "%X_%m", "m");
 
         }
 
         public static List<BasicData> QueryByWeek(string sid, int big, DateTime start, DateTime end)
         {
-            //IList<BasicData> list = new List<BasicData>();
-            //string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'%X_%V') as tag from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end);
-            //DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            //return BuildDataList(dt, "w", sid, big);
-
             return BuildDataList(sid, big, start, end, "%X_%V", "w");
         }
 
 
         public static List<BasicData> QueryByDay(string sid, int big, DateTime start, DateTime end)
         {
-
             return BuildDataList(sid, big, start, end, "%X%m%d", "d");
         }
 
@@ -393,7 +367,8 @@ namespace big
         private static List<BasicData> BuildDataList(string sid, int big, DateTime start, DateTime end, string searchTag, string type)
         {
 
-            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,close,open,max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
+            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,close,open,max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end,searchTag);
+
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             List<BasicData> list = new List<BasicData>();
@@ -429,6 +404,7 @@ namespace big
                     incrementalTotalMoney = ProcessMoney(incrementalTotalMoney),
                     incrementalBuyMoney = ProcessMoney(incrementalBuyMoney),
                     incrementalSellMoney = ProcessMoney(incrementalSellMoney),
+
                     high = (Decimal)(dr["high"]),
                     low = (Decimal)(dr["low"]),
                     open = (Decimal)(dr["open"]),
@@ -545,7 +521,8 @@ namespace big
 
         public static List<InfoData> QueryInfoByIndustry2(string insutry, string industry2)
         {
-            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where firstlevel='{1}' and secondlevel='{2}' ", INFO, insutry, industry2);
+
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where firstlevel='{1}' and secondlevel='{2}' ", INFO, insutry,industry2);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             return BuildInfoData(ds.Tables[0]);
         }
@@ -689,3 +666,4 @@ namespace big
         }
     }
 }
+
