@@ -11,7 +11,7 @@
             var u = decodeURIComponent(window.location.href);
             var par = u.substring(u.lastIndexOf('?') + 1, u.length);
             var d = par.split('&');
-            var end_date = "", level = "1", start_date = "";
+            var end_date = "", level = "1", start_date = "",type="";
             for (var i = 0; i < d.length; i++) {
                 var keyValue = d[i].split('=');
                 var key = keyValue[0];
@@ -19,11 +19,12 @@
                 if (key == "start") start_date = value;
                 if (key == "end") end_date = value;
                 if (key == "level") level = value;
+                if (key == "type") type = value;
                 //alert('the key is:' + key);
                 //alert('the value is:' + value);
             }
 
-            var url = "/rest/rest/statistics?start=" + start_date + "&level=" + level + "&end=" + end_date;
+            var url = "/rest/rest/statistics?start=" + start_date + "&level=" + level + "&end=" + end_date+"&type="+type;
 
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {

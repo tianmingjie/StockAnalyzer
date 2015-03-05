@@ -19,15 +19,24 @@
                 var name = [];
                 var industry = [];
                 var value = [];
-
+                var industry_value = [];
                 $.ajaxSetup({ async: false });
-                var url = "/rest/rest/statistics?level=" + level + "&start=" + start;
-                var t = $.getJSON(url);
-                for (var i in t.responseJSON) {
-                    name[i] = t.responseJSON[i]["name"];
-                    value[i] = t.responseJSON[i]["value"];
+                var url = "/rest/rest/statistics?level=" + level + "&start=" + start+"&end=20150304";
+                var t = $.getJSON(url, function (data) {
+                    for (var i in data) {
+                        name[i] = data[i]["name"];
+                        value[i] = data[i]["value"];
                     }
+                });
 
+
+                var url = "/rest/rest/statistics?level=" + level + "&start=" + start + "&end=20150304&type=industry";
+                var t = $.getJSON(url, function (data) {
+                    for (var i in data) {
+                        industry[i] = data[i]["firstlevel"];
+                        industry_value[i] = data[i]["value"];
+                    }
+                });
 
                 $('#container').highcharts({
                         chart: {
@@ -88,6 +97,67 @@
 							color:'green'
                         }]
                     }); //high chart
+
+
+                $('#container2').highcharts({
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'analyze chart',
+                        x: -20 //center
+                    },
+                    subtitle: {
+                        text: '',
+                        x: -20
+                    },
+                    xAxis: {
+                        categories: industry
+                    },
+                    yAxis: [{
+                        title: {
+                            text: 'trade data'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    }, //first Y
+                    {
+
+                        title: {
+                            text: 'price'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }],
+                        opposite: true
+                    } //second Y
+
+                    ],
+                    tooltip: {
+                        valueSuffix: 'WY'
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'left',
+                        x: 120,
+                        verticalAlign: 'top',
+                        y: 100,
+                        floating: true,
+                        backgroundColor: '#FFFFFF'
+                    },
+                    series: [{
+                        name: 'value',
+                        yAxis: 0,
+                        type: 'column',
+                        data: industry_value,
+                        color: 'green'
+                    }]
+                }); //hig
 
                 }); //ajax
             });

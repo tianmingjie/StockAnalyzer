@@ -26,10 +26,10 @@ namespace big.entity
         public string secondlevel;
 
         [DataMember]
-        public DateTime lastupdate;
+        public string lastupdate;
 
         [DataMember]
-        public DateTime startdate;
+        public string startdate;
 
         [DataMember]
         public int rank=-1;

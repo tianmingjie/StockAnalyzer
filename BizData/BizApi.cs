@@ -48,7 +48,7 @@ namespace big
                   name = dr["name"].ToString(),
                   firstlevel = dr["firstlevel"].ToString(),
                   secondlevel = dr["secondlevel"].ToString(),
-                  lastupdate = selectDate,
+                  lastupdate = BizCommon.ParseToString(selectDate),
                   value = Decimal.Parse(dr["value"].ToString()),
                   rank = Int32.Parse(dr["rank"].ToString())
               };
@@ -70,7 +70,7 @@ namespace big
                 AnalyzeData bd = new AnalyzeData()
                 {
                     firstlevel = dr["firstlevel"].ToString(),
-                    lastupdate = selectDate,
+                    lastupdate = BizCommon.ParseToString(selectDate),
                     value = Decimal.Parse(dr["value"].ToString())
                 };
 
@@ -94,10 +94,12 @@ namespace big
                     name = dr["name"].ToString(),
                     firstlevel = dr["firstlevel"].ToString(),
                     secondlevel = dr["secondlevel"].ToString(),
-                    lastupdate = DateTime.Parse(dr["lastupdate"].ToString()),
+                    lastupdate = BizCommon.ParseToString(DateTime.Parse(dr["lastupdate"].ToString())),
+                    //lastupdate = dr["lastupdate"].ToString(),
                     value = Decimal.Parse(dr["value"].ToString()),
                     rank = Int32.Parse(dr["rank"].ToString()),
-                    startdate = DateTime.Parse(dr["startdate"].ToString()),
+                    //startdate = DateTime.Parse(dr["startdate"].ToString()),
+                    startdate = BizCommon.ParseToString(DateTime.Parse(dr["startdate"].ToString())),
 
                 };
 
@@ -121,10 +123,10 @@ namespace big
                     name = dr["name"].ToString(),
                     firstlevel = dr["firstlevel"].ToString(),
                     secondlevel = dr["secondlevel"].ToString(),
-                    lastupdate = DateTime.Parse(dr["lastupdate"].ToString()),
+                    lastupdate = BizCommon.ParseToString(DateTime.Parse(dr["lastupdate"].ToString())),
                     value = Decimal.Parse(dr["value"].ToString()),
                     rank = Int32.Parse(dr["rank"].ToString()),
-                    startdate = DateTime.Parse(dr["startdate"].ToString()),
+                    startdate = BizCommon.ParseToString(DateTime.Parse(dr["startdate"].ToString())),
                     level=level,
                     big = Int32.Parse(dr["big"].ToString())
                 };
@@ -140,25 +142,25 @@ namespace big
 
         public static void InsertAnalyzeDataAll(List<InfoData> id_list, DateTime start, DateTime end)
         {
-            List<AnalyzeData> list0 = new List<AnalyzeData>();
+            //List<AnalyzeData> list0 = new List<AnalyzeData>();
             List<AnalyzeData> list1 = new List<AnalyzeData>();
-            List<AnalyzeData> list2 = new List<AnalyzeData>();
+            //List<AnalyzeData> list2 = new List<AnalyzeData>();
 
             foreach (InfoData id in id_list)
             {
                 string[] bigs = id.list.Split(','); ;
-                list0.Add(ComputeSingle2(id.sid, 0, Int32.Parse(bigs[0]), start, end));
+                //list0.Add(ComputeSingle2(id.sid, 0, Int32.Parse(bigs[0]), start, end));
                 list1.Add(ComputeSingle2(id.sid, 1, Int32.Parse(bigs[1]), start, end));
-                list2.Add(ComputeSingle2(id.sid, 2, Int32.Parse(bigs[2]), start, end));
+                //list2.Add(ComputeSingle2(id.sid, 2, Int32.Parse(bigs[2]), start, end));
             }
 
             //sort
-            list0.Sort(new AnalyzeComparator());
+            //list0.Sort(new AnalyzeComparator());
             list1.Sort(new AnalyzeComparator());
-            list2.Sort(new AnalyzeComparator());
-            InsertAnalyzeData(list0, start, end, 0);
+            //list2.Sort(new AnalyzeComparator());
+            //InsertAnalyzeData(list0, start, end, 0);
             InsertAnalyzeData(list1, start, end, 1);
-            InsertAnalyzeData(list2, start, end, 2);
+            //InsertAnalyzeData(list2, start, end, 2);
         }
 
         public static void InsertAnalyzeData(List<AnalyzeData> list, DateTime start, DateTime end, int level)
