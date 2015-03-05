@@ -20,7 +20,10 @@
                 var weight = t.responseJSON["weight"];
                 $("#BigSelect").empty();
                 $("#BigSelect").append("<option>" + 500 * weight + "</option><option  selected='selected'>" + 1000 * weight + "</option><option>" + 2000 * weight + "</option>");
-                $("#name").text(t.responseJSON["name"]);
+                					var name=t.responseJSON["name"];
+					var namestring="<a href='http://stockpage.10jqka.com.cn/"+stock.substring(2)+"'>"+name+"</a>";
+					
+                    $("#name").html(namestring);
 
                 var first = t.responseJSON["firstlevel"];
                 var second = t.responseJSON["secondlevel"];
