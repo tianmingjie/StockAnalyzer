@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SotckAnalyzer", "StockAnalyzer\SotckAnalyzer.csproj", "{D301A688-C1EA-4168-9206-4D0F4379DE80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadData", "DownloadData\DownloadData.csproj", "{8E37DA8B-A01C-492A-B160-9ADAE343E638}"
@@ -28,6 +26,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest", "Rest\Rest.csproj", "{E9B9B532-23BB-4179-9163-586AC99948BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyze", "Analyze\Analyze.csproj", "{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoExt", "InfoExt\InfoExt.csproj", "{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -199,6 +199,18 @@ Global
 		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|x64.ActiveCfg = Release|Any CPU
 		{16A1E72D-F214-47DB-A3D0-59D441BBCCCD}.Release|x86.ActiveCfg = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|x64.ActiveCfg = Release|Any CPU
+		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
