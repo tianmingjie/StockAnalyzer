@@ -33,12 +33,13 @@ namespace big
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
         #region infoext
-        public void InsertInfoExt(InfoExtData ied)
+        public static void InsertInfoExt(InfoExtData ied)
         {
             string sql1 = String.Format("delete from {0} where sid='{1}' ", INFOEXT, ied.sid);
             MySqlHelper.ExecuteNonQuery(sql1);
 
             string sql = String.Format("insert into {0}values(sid,lastupdate,zongguben,liutonggu,yingyeshouruzengzhanglv,yingyeshouru,jinglirun,jinglirunzengzhanglv,meigushouyi,meigujingzichan,jingzichanshouyilv,meiguxianjinliu,meigugongjijin,meiguweifenpeilirun,shiyinglv,shijinglv)values('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}", INFOEXT, ied.sid, BizCommon.ParseToString(DateTime.Now), ied.zongguben, ied.liutonggu, ied.yingyeshouruzengzhanglv, ied.yingyeshouru, ied.jinglirun, ied.jinglirunzengzhanglv, ied.meigushouyi, ied.meigujingzichan, ied.jingzichanshouyilv, ied.meiguxianjinliu, ied.meigugongjijin, ied.meiguweifenpeilirun, ied.shiyinglv, ied.shijinglv);
+            MySqlHelper.ExecuteNonQuery(sql);
         }
         #endregion
         #region analyze
@@ -192,6 +193,18 @@ namespace big
                         ANALYZE, ad.sid, ad.value, ad.name, ad.firstlevel, ad.secondlevel, DateTime.Now.ToString("yyyy-MM-dd"), i, start.ToString("yyyy-MM-dd"), ad.big,ad.level);
                 MySqlHelper.ExecuteNonQuery(sql);
             }
+        }
+
+        public static List<AnalyzeData> ComputeAll(int level, DateTime start, DateTime end)
+        {
+            List<AnalyzeData> a_list = new List<AnalyzeData>();
+            List<InfoData> list = BizApi.QueryInfoAll();
+            foreach (InfoData id in list)
+            {
+                a_list.Add(ComputeSingle2(id.sid,level,(int)(id.weight*1000),start,end));
+            }
+            a_list.Sort(new AnalyzeComparator());
+            return a_list;
         }
 
         public static AnalyzeData ComputeSingle2(string sid,int level, int big, DateTime start, DateTime end)

@@ -35,6 +35,10 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\lib\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +58,10 @@
     <ProjectReference Include="..\BizData\BizData.csproj">
       <Project>{66c0b860-1c77-4e05-b6bb-4343290d7f2e}</Project>
       <Name>BizData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{8c100380-0414-43db-aa3b-32417c48c89f}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
