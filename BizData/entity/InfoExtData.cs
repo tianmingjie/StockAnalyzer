@@ -13,10 +13,12 @@ namespace big.entity
         [DataMember]
         public string sid;
         [DataMember]
+        public string lastupdate;
+
+        [DataMember]
         public decimal zongguben;
         [DataMember]
         public decimal liutonggu;
-
         [DataMember]
         public decimal yingyeshouruzengzhanglv;
         [DataMember]

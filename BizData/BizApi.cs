@@ -27,12 +27,20 @@ namespace big
         public static string CREATE_TABLE_STATUS = "createstatus";
 
         public static string INFO = "basicinfo";
-
+        public static string INFOEXT = "basicinfoext";
         public static string ANALYZE="analyzedata";
 
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
+        #region infoext
+        public void InsertInfoExt(InfoExtData ied)
+        {
+            string sql1 = String.Format("delete from {0} where sid='{1}' ", INFOEXT, ied.sid);
+            MySqlHelper.ExecuteNonQuery(sql1);
 
+            string sql = String.Format("insert into {0}values(sid,lastupdate,zongguben,liutonggu,yingyeshouruzengzhanglv,yingyeshouru,jinglirun,jinglirunzengzhanglv,meigushouyi,meigujingzichan,jingzichanshouyilv,meiguxianjinliu,meigugongjijin,meiguweifenpeilirun,shiyinglv,shijinglv)values('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}", INFOEXT, ied.sid, BizCommon.ParseToString(DateTime.Now), ied.zongguben, ied.liutonggu, ied.yingyeshouruzengzhanglv, ied.yingyeshouru, ied.jinglirun, ied.jinglirunzengzhanglv, ied.meigushouyi, ied.meigujingzichan, ied.jingzichanshouyilv, ied.meiguxianjinliu, ied.meigugongjijin, ied.meiguweifenpeilirun, ied.shiyinglv, ied.shijinglv);
+        }
+        #endregion
         #region analyze
 
         public static List<AnalyzeData> QueryAnalyzeStatisticsByName(DateTime selectDate,int level) {
