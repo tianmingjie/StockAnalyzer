@@ -14,42 +14,16 @@
 				$("#start").val(ss);
 			});
 			
-            $("#GoButton").click(function () {
-                var stock = $("#stock").val();
-                var url = "/rest/rest/info/id/" + stock;
-                $.ajaxSetup({ async: false });
-                var t = $.getJSON(url);
-                var weight = t.responseJSON["weight"];
-                $("#BigSelect").empty();
-                $("#BigSelect").append("<option>" + 500 * weight + "</option><option  selected='selected'>" + 1000 * weight + "</option><option>" + 2000 * weight + "</option>");
-                					var name=t.responseJSON["name"];
-                					var namestring = "<a href='http://quote.eastmoney.com/"+stock+".html'>" + name + "</a>";
-					
-                    $("#name").html(namestring);
+			var display_detail = 0;
 
-                var first = t.responseJSON["firstlevel"];
-                var second = t.responseJSON["secondlevel"];
-                var location = t.responseJSON["location"];
-                $('#industry1').attr('href', '/web/company.html?industry1=' + first);
-                $('#industry1').text(first);
-
-                $('#industry2').attr('href', '/web/company.html?industry1=' + first + '&industry2=' + second);
-                $('#industry2').text(second);
-
-                $('#location').attr('href', '/web/company.html?location=' + location);
-                $('#location').text(location);
-            });
-
-            $("#QueryButton").click(function () {
-                show();
-            });
+			$("#QueryButton").click(function () {
+			    show();
+			});
 
 
             var sid = "sid", big = "big";
             sid = chu_common.parsepara(sid);
             big = chu_common.parsepara(big);
-
-
             $("#stock").val(sid);
             $("#BigSelect").empty();
             $("#BigSelect").append("<option  selected='selected'>" + big + "</option>");
@@ -57,19 +31,15 @@
             show();
 
             function show() {
-                var seriesOptions,
-                      yAxisOptions = [],
-                      seriesCounter = 0,
-
-                      colors = Highcharts.getOptions().colors;
-
                 var stock = $("#stock").val();
                 var type = $("#TypeSelect  option:selected").text();
                 var big = $("#BigSelect  option:selected").text();
                 var start = $("#start").val();
-
                 chu_main_chart.showchart(stock, big, type, start);
-  
+                if (display_detail == 0) {
+                    chu_main_chart.showdetail(stock);
+                    display_detail = 1;
+                }
             };//show
             });//all
 
@@ -80,8 +50,7 @@
         <input id="stock" type="text" />
         <input id="start" type="text" value="20140101" />
         <select id="TypeSelect"><option>w</option><option>m</option><option>d</option></select>
-        <select id="BigSelect"><!--<option>2000</option><option>1000</option><option>500</option><option>3000</option><option>4000</option><option>750</option><option>1500</option>--></select>
-        <input id="GoButton" type="button" value="GetInfo" />
+        <select id="BigSelect"></select>
         <input id="QueryButton" type="button" value="Query" />
 
         <label id="name"></label>
@@ -93,6 +62,7 @@
 			<input type="radio" name="startdate" value="20140101" >20140101</input>
 			<input type="radio" name="startdate" value="20140601" >20140601</input>
 		</div>
+        <div id="finance"></div>
     </div>
 
     <div id="container" style="min-width:500px;height:300px"></div>

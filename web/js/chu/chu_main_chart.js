@@ -2,8 +2,56 @@
 
 function chu_main_chart() { }
 
+chu_main_chart.showdetail = function (stock) {
+    var url = "/rest/rest/info/id/" + stock;
+    $.ajaxSetup({ async: false });
+    var t = $.getJSON(url, function (data) {
+        var weight = data["weight"];
+        $("#BigSelect").empty();
+        $("#BigSelect").append("<option>" + 500 * weight + "</option><option  selected='selected'>" + 1000 * weight + "</option><option>" + 2000 * weight + "</option>");
+        var name = data["name"];
+        var namestring = "<a href='http://quote.eastmoney.com/" + stock + ".html'>" + name + "</a>";
+
+        $("#name").html(namestring);
+
+        var first = data["firstlevel"];
+        var second = data["secondlevel"];
+        var location = data["location"];
+        $('#industry1').attr('href', '/web/company.html?industry1=' + first);
+        $('#industry1').text(first);
+
+        $('#industry2').attr('href', '/web/company.html?industry1=' + first + '&industry2=' + second);
+        $('#industry2').text(second);
+
+        $('#location').attr('href', '/web/company.html?location=' + location);
+        $('#location').text(location);
+    });
+
+    chu_main_chart.showfinance(stock);
+};
+
+chu_main_chart.showfinance = function (stock) {
+    var url = "/rest/rest/infoext/id/" + stock;
+    var html = "";
+    $.ajaxSetup({ async: false });
+    var t = $.getJSON(url, function (data) {
+        html += " shiyinglv:" + data["shiyinglv"];
+        html += " shijinjinglv:" + data["shijinglv"];
+        html += " ROE:" + data["ROE"];
+        html += " meiguweifenpeilirun:" + data["meiguweifenpeilirun"];
+        html += " shourutongbi:" + data["shourutongbi"];
+        html += " jingzichantongbi:" + data["jingliruntongbi"];
+    });
+    $('#finance').text(html);
+}
 
 chu_main_chart.showchart = function (stock,big,type,start) {
+
+    var seriesOptions,
+    yAxisOptions = [],
+    seriesCounter = 0,
+    colors = Highcharts.getOptions().colors;
+				
     var tag = [];
     var totalshare = [];
     var sellshare = [];
@@ -16,18 +64,19 @@ chu_main_chart.showchart = function (stock,big,type,start) {
 
     $.ajaxSetup({ async: false });
     var url = "/rest/rest/query/id/" + stock + "?big=" + big + "&type=" + type + "&start=" + start;
-    var t = $.getJSON(url);
-    for (var i in t.responseJSON) {
-        tag[i] = t.responseJSON[i]["tag"];
-        totalshare[i] = t.responseJSON[i]["totalshare"];
-        sellshare[i] = t.responseJSON[i]["sellshare"];
-        buyshare[i] = t.responseJSON[i]["buyshare"];
-        incrementalBuyMoney[i] = t.responseJSON[i]["incrementalBuyMoney"];
-        incrementalSellMoney[i] = t.responseJSON[i]["incrementalSellMoney"];
-        diff[i] = incrementalBuyMoney[i] - incrementalSellMoney[i];
-        diff_share[i] = t.responseJSON[i]["incrementalBuyShare"] - t.responseJSON[i]["incrementalSellShare"];
-        close[i] = t.responseJSON[i]["close"];
-    }
+    var t = $.getJSON(url, function (data) {
+        for (var i in data) {
+            tag[i] = data[i]["tag"];
+            totalshare[i] = data[i]["totalshare"];
+            sellshare[i] = data[i]["sellshare"];
+            buyshare[i] = data[i]["buyshare"];
+            incrementalBuyMoney[i] = data[i]["incrementalBuyMoney"];
+            incrementalSellMoney[i] = data[i]["incrementalSellMoney"];
+            diff[i] = incrementalBuyMoney[i] - incrementalSellMoney[i];
+            diff_share[i] = data[i]["incrementalBuyShare"] - data[i]["incrementalSellShare"];
+            close[i] = data[i]["close"];
+        }
+    });
 
 
     seriesOptions = {
