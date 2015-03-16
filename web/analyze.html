@@ -4,22 +4,16 @@
     <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="js/highstock.js"></script>
     <script type="text/javascript" src="js/modules/exporting.js"></script>
+    <script type="text/javascript" src="js/chu/chu_common.js"></script>
     <script>
         $(function () {
 
             // http://localhost/rest/rest/analyze?end=20150304&level=1&start=20140901
-            var u = decodeURIComponent(window.location.href);
-            var par = u.substring(u.lastIndexOf('?') + 1, u.length);
-            var d = par.split('&');
-            var end_date = "", level = "1", start_date = "";
-            for (var i = 0; i < d.length; i++) {
-                var keyValue = d[i].split('=');
-                var key = keyValue[0];
-                var value = keyValue[1];
-                if (key == "start") start_date = value;
-                if (key == "end") end_date = value;
-                if (key == "level") level = value;
-            }
+
+            var end_date = "end", level = "level", start_date = "start";
+            end_date = chu_common.parsepara(end_date);
+            level = chu_common.parsepara(level);
+            start_date = chu_common.parsepara(start_date);
 
             var url = "/rest/rest/analyze?end=" + end_date + "&level=" + level + "&start=" + start_date;
             $.ajaxSetup({ async: false });

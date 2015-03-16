@@ -11,3 +11,18 @@ chu_common.formatdate = function(date) {
     var d = date.getDate();
     return y + this.add0(m) + this.add0(d);
 };
+
+chu_common.parsepara = function (key_var) {
+    var u = decodeURIComponent(window.location.href);
+    var par = u.substring(u.lastIndexOf('?') + 1, u.length);
+    var d = par.split('&');
+    var ret = "";
+    for (var i = 0; i < d.length; i++) {
+        var keyValue = d[i].split('=');
+        var key = keyValue[0];
+        var value = keyValue[1];
+        if (key == key_var) ret = value;
+
+    }
+    return ret;
+};
