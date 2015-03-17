@@ -14,6 +14,9 @@ namespace big.entity
         public string sid;
 
         [DataMember]
+        public string tag;
+
+        [DataMember]
         public decimal value;
 
         [DataMember]
@@ -26,7 +29,7 @@ namespace big.entity
         public string secondlevel;
 
         [DataMember]
-        public string lastupdate;
+        public string enddate;
 
         [DataMember]
         public string startdate;

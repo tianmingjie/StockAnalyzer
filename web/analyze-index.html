@@ -8,34 +8,37 @@
     <script>
         $(function () {
             var end = new Date();
-            var start = new Date();
-            start.setFullYear(2014);
-            start.setMonth(0);
-            start.setDate(1);
-            var s_start = chu_common.formatdate(start);
-            var s_end = chu_common.formatdate(end);
-            var url_default = "/web/analyze.html?start=" + s_start + "&end=" + s_end + "&level=1";
-            $("#logo").text("Start:" + s_start + "  End:" + s_end);
+            var tag = chu_common.formatdate(end);
+            var url_default = "/web/analyze.html?tag=" + tag + "&level=1&old=12";
+            
             $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1300></iframe>");
             $("#query").click(function () {
                 //$("#day1").remove();
-                var start1 = $("#startselect  option:selected").text();
+                var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-                var url_1 = "/web/analyze.html?start=" + start1 + "&end=" + s_end + "&level=" + level;
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level;
                 $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
             });
+
+            //$("#oldselect").mouseup(function () {
+            //    //$("#day1").remove();
+            //    var old = $("#oldselect  option:selected").text();
+            //    var level = $("#levelselect  option:selected").text();
+            //    //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+            //    var url_1 = "/web/analyze.html?old=" + old + "&level=" + level;
+            //    $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+            //});
         });
     </script>
 </head>
 <body>
 <div id="Container">
     <div id="Header">
-        <div><select id="startselect"> <option>20140101</option><option>20140601</option><option>20140901</option></select>
-            <select id="levelselect"> <option>1</option><option>2</option><option>0</option></select>
+        <div><select id="oldselect"> <option>12</option><option>3</option><option>6</option><option>24</option></select>
+            <select id="levelselect"> <option>1</option></select>
             <input type="button" id="query" value="query" />
         </div>
-        <div id="logo"></div>
     </div>
     <div id="Content">
         <div id="day1"></div>

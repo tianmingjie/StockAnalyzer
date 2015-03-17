@@ -123,34 +123,38 @@ namespace Rest
         }
 
 
-        [WebGet(UriTemplate = "analyze?level={level}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string level, string start, string end)
+        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string level,string tag, string old)
         {
             int level_val = 1;
-            DateTime start_date = new DateTime(2014, 1, 1);
-            DateTime end_date = DateTime.Now;
+            DateTime now = DateTime.Now;
+            int o = -12;
+            if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now);
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
-            if (!string.IsNullOrEmpty(start)) start_date = BizCommon.ParseToDate(start);
-            if (!string.IsNullOrEmpty(end)) end_date = BizCommon.ParseToDate(end);
+            if (!string.IsNullOrEmpty(old)) o = -Int32.Parse(old);
 
-            return BizApi.QueryAnalyzeData(end_date, start_date, level_val);
+            DateTime end_date = now.AddMonths(-1);
+            DateTime start_date = end_date.AddMonths(o);
+
+
+            return BizApi.QueryAnalyzeData(tag, start_date,end_date, level_val);
         }
 
 
-        [WebGet(UriTemplate = "statistics?level={level}&end={end}&type={type}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyzeStatisticsBy(string level, string end, string type)
+        [WebGet(UriTemplate = "statistics?level={level}&tag={tag}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyzeStatistics(string level, string tag, string type)
         {
             int level_val = 1;
-            DateTime end_date = DateTime.Now;
+            //DateTime end_date = DateTime.Now;
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
-            if (!string.IsNullOrEmpty(end)) end_date = BizCommon.ParseToDate(end);
+            if (!string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(DateTime.Now);
 
             if (string.IsNullOrEmpty(type))
-                return BizApi.QueryAnalyzeStatisticsByName(end_date, level_val);
+                return BizApi.QueryAnalyzeStatisticsByName(tag, level_val);
             if (type.Equals("name"))
-                return BizApi.QueryAnalyzeStatisticsByName(end_date, level_val);
+                return BizApi.QueryAnalyzeStatisticsByName(tag, level_val);
             if (type.Equals("industry"))
-                return BizApi.QueryAnalyzeStatisticsByIndustry(end_date, level_val);
+                return BizApi.QueryAnalyzeStatisticsByIndustry(tag, level_val);
             return null;
         }
 

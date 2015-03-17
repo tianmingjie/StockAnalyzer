@@ -10,12 +10,13 @@
 
             // http://localhost/rest/rest/analyze?end=20150304&level=1&start=20140901
 
-            var end_date = "end", level = "level", start_date = "start";
+            var end_date = "end", level = "level", start_date = "start", tag = "tag", old = "old";
+            tag = chu_common.parsepara(tag);
             end_date = chu_common.parsepara(end_date);
             level = chu_common.parsepara(level);
             start_date = chu_common.parsepara(start_date);
-
-            var url = "/rest/rest/analyze?end=" + end_date + "&level=" + level + "&start=" + start_date;
+            old = chu_common.parsepara(old);
+            var url = "/rest/rest/analyze?old=" + old + "&level=" + level + "&tag=" + tag;
             $.ajaxSetup({ async: false });
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {
@@ -36,8 +37,10 @@
                     var ind_link2 = "<a target='_parent' href='/web/company.html?industry1=" + ind1 + "&industry2=" + ind2 + "'>" + ind2 + "</a>";
                     newRow += "<td>" + ind_link2 + "</td>";
 
-                    var lastupdate = data[i]["lastupdate"];
+                    var enddate = data[i]["enddate"];
                     var startdate = data[i]["startdate"];
+
+                    $("#time").text("Start:" + startdate + "  End:" + enddate);
 
                     //newRow += "<td>" + start_date + "</td>";
                     //newRow += "<td>" + end_date + "</td>";
@@ -63,6 +66,7 @@
     </script>
 </head>
 <body>
+    <div id="time"></div>
     <div id="input">
         <table id="table1" border="1"><tr><th>id</th><th>名字</th><th>行业1</th><th>行业2</th><th>排名</th><th>得分</th><th>市盈率</th><th>市净率</th><th>净资产</th><th>收入同比增长(%)</th><th>净资产同比增长(%)</th><th>每股未分配利润</th><th>总股本</th><th>流通股</th></tr></table>
     </div>
