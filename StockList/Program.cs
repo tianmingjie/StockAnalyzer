@@ -31,7 +31,9 @@ namespace StockList
             //    Console.WriteLine(ad.sid + "," + ad.value + "," + ad.name + "," + ad.firstlevel + "," + ad.secondlevel);
             //BizApi.InsertInfoExt(new InfoData() { sid = "sh600000" });
 
-            InfoExtData ifd = BizApi.QueryInfoExtById("sh600000");
+            //InfoExtData ifd = BizApi.QueryInfoExtById("sh600000");
+
+            AnalyzeData ad = BizApi.ComputeSingle3("sh600000", 1, 1000, new DateTime(2015, 1, 1), new DateTime(2015, 3, 1));
             Console.WriteLine();
         }
 

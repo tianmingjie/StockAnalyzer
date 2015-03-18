@@ -326,6 +326,35 @@ namespace big
 
         }
 
+
+        public static AnalyzeData ComputeSingle3(string sid, int level, int big, DateTime start, DateTime end)
+        {
+            List<BasicData> bd_list = QueryBasicDataByRange(sid, start, end, "d", big);
+            decimal total_value=0;
+            foreach (BasicData bd in bd_list)
+            {
+                decimal avg = bd.totalmoney / (decimal)bd.totalshare;
+                double p0 = (bd.buyshare - bd.sellshare) / bd.totalshare;
+                int day = (end-bd.time).Days;
+                
+                decimal p =  ((bd.close - avg) * (bd.close - avg) + (bd.open - avg) * (bd.open - avg) + (bd.high - avg) * (bd.high - avg) + (bd.low - avg) * (bd.low - avg)) / ((bd.high - bd.low) * (bd.high - bd.low) * 4);
+                double p1 = Math.Sqrt((double)p);
+
+                total_value+=avg*day*(decimal)p1;
+            }
+
+            AnalyzeData cd = new AnalyzeData()
+                 {
+                     sid = sid,
+                     level = level,
+                     big = big,
+                     value = Math.Round(total_value,1)
+                 };
+         return cd;
+
+
+        }
+
         #endregion
         #region 插入更新
         /// <summary>
@@ -693,9 +722,9 @@ namespace big
 
         #region basicdata
         
-        public List<BasicData> QueryBasicDataByRange(string sid, DateTime start, DateTime end, string type, int big)
+        public static List<BasicData> QueryBasicDataByRange(string sid, DateTime start, DateTime end, string type, int big)
         {
-            string sql = string.Format("select sid,big,time,c_type,close,open,low,high,totalshare,totalmoney,buyshare,buymoney,sellshare,sellmoney from {0} where c_type='{1}' and  big={2} and time>='{3}' and time=<'{4}'", sid, type, big, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+            string sql = string.Format("select big,time,c_type,close,open,low,high,totalshare,totalmoney,buyshare,buymoney,sellshare,sellmoney from {0} where c_type='{1}' and  big={2} and time>='{3}' and time<='{4}'", sid, type, big, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
             return BuildBasicData(ds.Tables[0]);
@@ -709,7 +738,7 @@ namespace big
             {
                 BasicData ied = new BasicData()
                 {
-                    sid = dr["sid"].ToString(),
+                    //sid = dr["sid"].ToString(),
                     c_type = dr["c_type"].ToString(),
                     big = int.Parse(dr["big"].ToString()),
                     close = decimal.Parse(dr["close"].ToString()),
