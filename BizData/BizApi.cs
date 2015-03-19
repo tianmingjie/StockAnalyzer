@@ -326,29 +326,76 @@ namespace big
 
         }
 
-
-        public static AnalyzeData ComputeSingle3(string sid, int level, int big, DateTime start, DateTime end)
+        //算法3
+        public static List<AnalyzeData> ComputeAll_3()
         {
-            List<BasicData> bd_list = QueryBasicDataByRange(sid, start, end, "d", big);
+            List<InfoData> id_list = BizApi.QueryInfoAll();
+            List<AnalyzeData> list = new List<AnalyzeData>();
+            foreach (InfoData id in id_list)
+            {
+                list.Add(ComputeSingle3_1(id));
+            }
+
+            list.Sort(new AnalyzeComparator());
+
+
+            foreach (AnalyzeData ad in list)
+            {
+                Console.WriteLine(ad.sid + " " + ad.name + " " + ad.value);
+            }
+            return list;
+        }
+
+        //算法3
+        public static AnalyzeData ComputeSingle3_1(InfoData id)
+        {
+            DateTime now = DateTime.Now;
+            string tag = now.ToString("yyyyMMdd");
+            DateTime end = now.AddMonths(-1);
+            DateTime start = new DateTime();
+            start = end.AddMonths(-12);
+
+            //InfoData id=BizApi.QueryInfoById(sid);
+
+            AnalyzeData ad1 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), start, end);
+
+            AnalyzeData ad2 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), end, now);
+
+            ad1.value = Math.Round(ad1.value / ad2.value, 3);
+            return ad1;
+        }
+
+        //算法3
+        public static AnalyzeData ComputeSingle3(InfoData id, int level, int big, DateTime start, DateTime end)
+        {
+            List<BasicData> bd_list = QueryBasicDataByRange(id.sid, start, end, "d", big);
+            int count = bd_list.Count == 0 ? 1 : bd_list.Count;
             decimal total_value=0;
             foreach (BasicData bd in bd_list)
             {
+                if (bd.totalshare == 0) { count = count - 1; continue; }
                 decimal avg = bd.totalmoney / (decimal)bd.totalshare;
                 double p0 = (bd.buyshare - bd.sellshare) / bd.totalshare;
                 int day = (end-bd.time).Days;
-                
-                decimal p =  ((bd.close - avg) * (bd.close - avg) + (bd.open - avg) * (bd.open - avg) + (bd.high - avg) * (bd.high - avg) + (bd.low - avg) * (bd.low - avg)) / ((bd.high - bd.low) * (bd.high - bd.low) * 4);
+
+                //处理一下涨停跌停的股票
+                decimal index1 = bd.high == bd.low ? 1 : bd.high-bd.low;
+               
+                decimal p =  ((bd.close - avg) * (bd.close - avg) + (bd.open - avg) * (bd.open - avg) + (bd.high - avg) * (bd.high - avg) + (bd.low - avg) * (bd.low - avg)) / (index1*index1 * 4);
                 double p1 = Math.Sqrt((double)p);
 
                 total_value+=avg*day*(decimal)p1;
             }
 
+            //TBD停盘了
+            
             AnalyzeData cd = new AnalyzeData()
                  {
-                     sid = sid,
+                     sid = id.sid,
                      level = level,
                      big = big,
-                     value = Math.Round(total_value,1)
+                     value = Math.Round((decimal)(Math.Sqrt((double)(total_value/count))),1),
+                     name=id.name
                  };
          return cd;
 
