@@ -327,13 +327,13 @@ namespace big
         }
 
         //算法3
-        public static List<AnalyzeData> ComputeAll_3()
+        public static List<AnalyzeData> ComputeAll_3(int days,int months)
         {
             List<InfoData> id_list = BizApi.QueryInfoAll();
             List<AnalyzeData> list = new List<AnalyzeData>();
             foreach (InfoData id in id_list)
             {
-                list.Add(ComputeSingle3_1(id));
+                list.Add(ComputeSingle3_1(id,days,months));
             }
 
             list.Sort(new AnalyzeComparator());
@@ -347,29 +347,50 @@ namespace big
         }
 
         //算法3
-        public static AnalyzeData ComputeSingle3_1(InfoData id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="days_before">开始计算的天数</param>
+        /// <param name="months_before">提前多少个月</param>
+        /// <returns></returns>
+        public static AnalyzeData ComputeSingle3_1(InfoData id,int days_before,int months_before)
         {
-            DateTime now = DateTime.Now;
-            string tag = now.ToString("yyyyMMdd");
-            DateTime end = now.AddMonths(-1);
-            DateTime start = new DateTime();
-            start = end.AddMonths(-12);
+            try
+            {
+                DateTime now = DateTime.Now;
+                string tag = now.ToString("yyyyMMdd");
+                DateTime end = now.AddDays(days_before);
+                DateTime start = new DateTime();
+                start = end.AddMonths(months_before);
 
-            //InfoData id=BizApi.QueryInfoById(sid);
+                //InfoData id=BizApi.QueryInfoById(sid);
 
-            AnalyzeData ad1 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), start, end);
+                AnalyzeData ad1 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), start, end);
 
-            AnalyzeData ad2 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), end, now);
+                AnalyzeData ad2 = BizApi.ComputeSingle3(id, 1, (int)(id.weight * 1000), end, now);
 
-            ad1.value = Math.Round(ad1.value / ad2.value, 3);
-            return ad1;
+                ad1.value = Math.Round(ad1.value / ad2.value, 3);
+                return ad1;
+            }
+            catch
+            {
+                Console.WriteLine(id.sid + " analyze fail");
+            }
+
+            return new AnalyzeData()
+            {
+                sid = id.sid,
+                value = -1
+            };
         }
 
         //算法3
         public static AnalyzeData ComputeSingle3(InfoData id, int level, int big, DateTime start, DateTime end)
         {
             List<BasicData> bd_list = QueryBasicDataByRange(id.sid, start, end, "d", big);
-            int count = bd_list.Count == 0 ? 1 : bd_list.Count;
+            int count = bd_list.Count == 0 ? 10000 : bd_list.Count;
+
             decimal total_value=0;
             foreach (BasicData bd in bd_list)
             {

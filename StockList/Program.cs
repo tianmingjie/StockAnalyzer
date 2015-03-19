@@ -33,80 +33,10 @@ namespace StockList
 
             //InfoExtData ifd = BizApi.QueryInfoExtById("sh600000");
 
-            AnalyzeData ad = BizApi.ComputeSingle3("sh600000", 1, 1000, new DateTime(2015, 1, 1), new DateTime(2015, 3, 1));
+            //AnalyzeData ad = BizApi.ComputeSingle3("sh600000", 1, 1000, new DateTime(2015, 1, 1), new DateTime(2015, 3, 1));
+            BizApi.ComputeAll_3(int.Parse(args[0]), int.Parse(args[1]));
             Console.WriteLine();
         }
-
-
-        public static Dictionary<string,string> GenerateStockList()
-        {
-            Dictionary<string, string> dict = new Dictionary<string,string>();
-
-            
-            for (int i = 1600000; i < 1605000; i++)
-            {   
-                string name="";
-                if (InValidStock(TrimStock(i), out name))
-                {
-                    dict.Add("sh" + TrimStock(i), name);
-                }
-            }
-
-            for (int i = 1000000; i < 1004000; i++)
-            {
-                string name="";
-                if (InValidStock(TrimStock(i), out name))
-                {
-                    dict.Add("sz" + TrimStock(i), name);
-                }
-            }
-
-            for (int i = 1300000; i < 1301000; i++)
-            {
-                string name="";
-                if (InValidStock(TrimStock(i).ToString(), out name))
-                {
-                    dict.Add("sz" + TrimStock(i), name);
-                }
-            }
-            return dict;
-        }
-
-        public static string TrimStock(int stock)
-        {
-            return stock.ToString().Substring(1);
-        }
-
-        public static bool InValidStock(string stock,out string name)
-        {
-            name = "";
-            bool inValid=false;
-            WebClient wc = new WebClient();
-            Uri uri=new Uri("http://hq.sinajs.cn/list="+FormatStock(stock));
-            byte[] bytes = wc.DownloadData(uri);
-            string str = System.Text.Encoding.Default.GetString(bytes);
-            
-            if (!str.Contains("=\"\""))
-            {
-                inValid = true;
-                int a=str.IndexOf("\"");
-                int b=str.IndexOf(",");
-                name = str.Substring(a+1, b - a-1);
-                Console.WriteLine(stock+":"+name);
-            }
-            return inValid;
-        }
-
-
-
-        public static string FormatStock(string stock)
-        {
-            if (stock.StartsWith("sh") || stock.StartsWith("sz"))
-            {
-                return stock;
-            }
-            else
-            { return Int32.Parse(stock) > 599999 ? "sh" + stock : "sz" + stock; }
-        }
     }
+    
 }
