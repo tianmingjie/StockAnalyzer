@@ -1,4 +1,5 @@
 ﻿using big;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Analyze
         {
             DateTime now = DateTime.Now;
             string tag = now.ToString("yyyyMMdd");
-            DateTime end = now.AddMonths(-1);
+            DateTime end = now.AddDays(-Constant.DAYS_BEFORE);
             DateTime start = new DateTime();
             foreach (int i in a)
             {

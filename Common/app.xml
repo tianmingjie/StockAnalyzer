@@ -15,4 +15,6 @@
   <downloadthreadnum>1</downloadthreadnum>
   <downloadAndInsert>true</downloadAndInsert>
   <mysqlstring>Database='Test';Data Source='localhost';User Id='root';Password='admin';charset='utf8';pooling=true"</mysqlstring>
+
+  <daysbefore>15</daysbefore>
 </StockApp>
