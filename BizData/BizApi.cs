@@ -592,7 +592,7 @@ namespace big
         private static List<BasicData> BuildDataList(string sid, int big, DateTime start, DateTime end, string searchTag, string type)
         {
 
-            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,avg(close),avg(open),max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
+            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,avg(close) as close,avg(open) as open,max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
 
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];

@@ -60,6 +60,7 @@ chu_main_chart.showchart = function (stock,big,type,start) {
     var incrementalSellMoney = [];
     var diff = [];
     var diff_share = [];
+    var big_share_rate = [];
     var close = [];
 
     $.ajaxSetup({ async: false });
@@ -75,6 +76,8 @@ chu_main_chart.showchart = function (stock,big,type,start) {
             diff[i] = incrementalBuyMoney[i] - incrementalSellMoney[i];
             diff_share[i] = data[i]["incrementalBuyShare"] - data[i]["incrementalSellShare"];
             close[i] = data[i]["close"];
+            big_share_rate[i] = (sellshare[i] + buyshare[i]) / totalshare[i];
+            //big_share_rate[i] = big_share_rate[i].substr(0, 3);
         }
     });
 
@@ -216,12 +219,20 @@ chu_main_chart.showchart = function (stock,big,type,start) {
         }
         ,
          {
-             name: 'diff share',
+             name: 'big share rate',
              yAxis: 1,
-             data: diff_share,
+             data: big_share_rate,
              type: 'line',
              color: 'red'
          }
+
+//        {
+//        name: 'big share rate',
+//    yAxis: 1,
+//    data: diff_share,
+//    type: 'line',
+//    color: 'red'
+//}
         ]
     });//high chart 2
 };
