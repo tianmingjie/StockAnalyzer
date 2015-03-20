@@ -358,6 +358,7 @@ namespace big
         {
             try
             {
+
                 DateTime now = DateTime.Now;
                 string tag = now.ToString("yyyyMMdd");
                 DateTime end = now.AddDays(days_before);
@@ -389,6 +390,18 @@ namespace big
         public static AnalyzeData ComputeSingle3(InfoData id, int level, int big, DateTime start, DateTime end)
         {
             List<BasicData> bd_list = QueryBasicDataByRange(id.sid, start, end, "d", big);
+
+            if (bd_list.Count == 0)
+            {
+                return  new AnalyzeData()
+                 {
+                     sid = id.sid,
+                     level = level,
+                     big = big,
+                     value = -1,
+                     name=id.name
+                 };
+            }
             int count = bd_list.Count == 0 ? 10000 : bd_list.Count;
 
             decimal total_value=0;
