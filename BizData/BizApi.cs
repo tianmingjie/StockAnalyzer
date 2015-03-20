@@ -221,6 +221,21 @@ namespace big
 
             return list;
         }
+        public static string QueryAnalyzeDataValue(string sid,string tag, DateTime start, DateTime end, int level)
+        {
+            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and sid='{6}' order by rank", ANALYZE, Constant.TOP, tag, level, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"),sid);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                string a=dt.Rows[0]["rank"].ToString();
+                return a.Length==1?"0"+a:a;
+            }
+            else
+            {
+                return "--";
+            }
+        }
         public static void InsertAnalyzeData(string tag,DateTime start, DateTime end)
         {
             InsertAnalyzeDataAll(BizApi.QueryInfoAll(),tag, start, end);
@@ -577,7 +592,7 @@ namespace big
         private static List<BasicData> BuildDataList(string sid, int big, DateTime start, DateTime end, string searchTag, string type)
         {
 
-            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,close,open,max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
+            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,avg(close),avg(open),max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
 
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];

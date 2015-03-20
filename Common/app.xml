@@ -16,5 +16,5 @@
   <downloadAndInsert>true</downloadAndInsert>
   <mysqlstring>Database='Test';Data Source='localhost';User Id='root';Password='admin';charset='utf8';pooling=true"</mysqlstring>
 
-  <daysbefore>15</daysbefore>
+  <daysbefore>30</daysbefore>
 </StockApp>

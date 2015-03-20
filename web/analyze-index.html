@@ -9,7 +9,8 @@
         $(function () {
             var end = new Date();
             var tag = chu_common.formatdate(end);
-            var url_default = "/web/analyze.html?tag=" + tag + "&level=1&old=12";
+            var old = $("#oldselect  option:selected").text();
+            var url_default = "/web/analyze.html?tag=" + tag + "&level=1&old="+old;
             
             $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1300></iframe>");
             $("#query").click(function () {
@@ -35,7 +36,7 @@
 <body>
 <div id="Container">
     <div id="Header">
-        <div><select id="oldselect"> <option>12</option><option>3</option><option>6</option><option>24</option></select>
+        <div><select id="oldselect"> <option selected="selected">3</option><option>6</option><option>12</option><option>24</option></select>
             <select id="levelselect"> <option>1</option></select>
             <input type="button" id="query" value="query" />
         </div>

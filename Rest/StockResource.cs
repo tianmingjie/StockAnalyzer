@@ -123,13 +123,40 @@ namespace Rest
         }
 
 
+        [WebGet(UriTemplate = "analyzevalue?sid={sid}&level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryAnalyze1(string sid,string level, string tag, string old)
+        {
+            int level_val = 1;
+            DateTime now = DateTime.Now;
+            if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
+            if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
+            if (string.IsNullOrEmpty(old)) old = "3-6-12-24";
+
+            string vv = "";
+            string[] list = old.Split('-');
+            foreach (string v in list)
+            {
+
+                int o =-Int32.Parse(v);
+
+
+                DateTime end_date = now.AddMonths(-1);
+                DateTime start_date = end_date.AddMonths(o);
+
+
+                vv+= BizApi.QueryAnalyzeDataValue(sid, tag, start_date, end_date, level_val)+",";
+            }
+
+            return vv.Substring(0, vv.Length - 1); ;
+        }
+
         [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
         public List<AnalyzeData> QueryAnalyze(string level,string tag, string old)
         {
             int level_val = 1;
             DateTime now = DateTime.Now;
             int o = -12;
-            if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now);
+            if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
             if (!string.IsNullOrEmpty(old)) o = -Int32.Parse(old);
 

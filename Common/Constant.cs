@@ -77,6 +77,6 @@ namespace Common
         public static bool ONLY_TOP =  map["onlytop"].Equals("")?true: Boolean.Parse(map["onlytop"]);
 
         //分析提前天数
-        public static int DAYS_BEFORE = map["daysbefore"].Equals("") ? 15 : int.Parse(map["daysbefore"]);
+        public static int DAYS_BEFORE = map["daysbefore"].Equals("") ? 30: int.Parse(map["daysbefore"]);
     }
 }
