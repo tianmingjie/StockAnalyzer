@@ -12,6 +12,13 @@ chu_common.formatdate = function(date) {
     return y + this.add0(m) + this.add0(d);
 };
 
+chu_common.formatnumber = function (number, digit) {
+    var bb = Math.pow(10, digit);
+    var number = number * bb;
+    var number = Math.round(number) / bb;
+    return number;
+};
+
 chu_common.parsepara = function (key_var) {
     var u = decodeURIComponent(window.location.href);
     var par = u.substring(u.lastIndexOf('?') + 1, u.length);

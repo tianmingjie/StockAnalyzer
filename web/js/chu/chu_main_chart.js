@@ -77,7 +77,8 @@ chu_main_chart.showchart = function (stock,big,type,start) {
             diff_share[i] = data[i]["incrementalBuyShare"] - data[i]["incrementalSellShare"];
             close[i] = data[i]["close"];
             big_share_rate[i] = (sellshare[i] + buyshare[i]) / totalshare[i];
-            //big_share_rate[i] = big_share_rate[i].substr(0, 3);
+            big_share_rate[i] = chu_common.formatnumber(big_share_rate[i],3);
+			
         }
     });
 

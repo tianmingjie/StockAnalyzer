@@ -52,6 +52,20 @@ namespace Rest
             return list;
         }
 
+        [WebGet(UriTemplate = "latestprice/id/{id}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryLatestPrice(string id)
+        {
+            return BizApi.QueryLatestPrice(id);
+        }
+
+        [WebGet(UriTemplate = "maxmin/id/{id}?range={range}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryMaxMin(string id,string range)
+        {
+            int r = 24;
+            if (string.IsNullOrEmpty(range)) r = int.Parse(range);
+            return BizApi.QueryMaxMinPriceByRange(id,r);
+        }
+
         [WebGet(UriTemplate = "line/id/{id}?type={type}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
         public IList<LineData> QueryLineData(string id, string type, string start, string end)
         {

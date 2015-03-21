@@ -68,6 +68,24 @@
                         newRow += "<td>" + data1["zongguben"] + "</td>";
                         newRow += "<td>" + data1["liutonggu"] + "</td>";
                     });
+
+                    var url_2 = "/rest/rest/latestprice/id/" + sid;
+                    $.ajaxSetup({ async: false });
+                    $.getJSON(url_2, function (data) {
+                        newRow += "<td>" + data + "</td>";
+                    });
+                    var url_3 = "/rest/rest/maxmin/id/" + sid + "?range=12";
+                    $.ajaxSetup({ async: false });
+                    $.getJSON(url_3, function (data) {
+                        newRow += "<td>" + data + "</td>";
+
+                    });
+                    //var url_4 = "/rest/rest/maxmin/id/" + sid + "?range=24";
+                    //$.ajaxSetup({ async: false });
+                    //$.getJSON(url_4, function (data) {
+                    //    newRow += "<td>" + data + "</td>";
+
+                    //});
                     $("#table1 tr:last").after(newRow);
                 }
             });
@@ -78,7 +96,7 @@
 <body>
     <div id="time"></div>
     <div id="input">
-        <table id="table1" border="1"><tr><th>id</th><th>名字</th><th>行业1</th><th>行业2</th><th>24,12,6,3</th><th>得分</th><th>市盈率</th><th>市净率</th><th>净资产</th><th>收入同比(%)</th><th>净资产同比(%)</th><th>每股未分配利润</th><th>总股本</th><th>流通股</th></tr></table>
+        <table id="table1" border="1"><tr><th>id</th><th>名字</th><th>行业1</th><th>行业2</th><th>24,12,6,3</th><th>得分</th><th>市盈率</th><th>市净率</th><th>净资产</th><th>收入<br>同比(%)</th><th>净资产<br>同比(%)</th><th>每股未<br>分配利润</th><th>总股本</th><th>流通股</th><th>当前<br>股价</th><th>12月<br>最值</th></tr></table>
     </div>
 
     <a id="industry1" href=""></a>

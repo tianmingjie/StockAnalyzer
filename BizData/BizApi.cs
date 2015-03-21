@@ -907,6 +907,30 @@ namespace big
             return list;
         }
         #endregion
+
+        #region query price
+        public static string QueryLatestPrice(string sid)
+        {
+
+
+            string sql = string.Format("select  close from {0} order by id desc limit 1", sid);
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return ds.Tables[0].Rows[0]["close"].ToString();
+        }
+
+
+        public static string QueryMaxMinPriceByRange(string sid,int months)
+        {
+
+            DateTime now =DateTime.Now;
+            DateTime start=now.AddMonths(-months);
+            string sql = string.Format("select  max(close) as high,min(close) as low from {0} where time>'{1}' and time <'{2}'", sid,start.ToString("yyyy-MM-dd"),now.ToString("yyyy-MM-dd"));
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            //DataTable dt = ds.Tables[0];
+            return ds.Tables[0].Rows[0]["low"].ToString()+"-"+ds.Tables[0].Rows[0]["high"].ToString();
+        }
+        #endregion
     }
 
 
