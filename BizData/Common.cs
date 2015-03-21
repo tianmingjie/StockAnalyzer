@@ -26,5 +26,18 @@ namespace big
         {
             return sid.Length == 8 ? sid.Substring(2, 6) : sid;
         }
+
+        public static string ProcessWeekend(string tag)
+        {
+            DateTime current = ParseToDate(tag);
+            if (current.DayOfWeek == DayOfWeek.Saturday)
+            {
+                current=current.AddDays(-1);
+            }
+            if(current.DayOfWeek==DayOfWeek.Sunday){
+                current = current.AddDays(-2);
+            }
+            return ParseToString(current);
+        }
     }
 }

@@ -126,6 +126,7 @@ namespace Rest
         [WebGet(UriTemplate = "analyzevalue?sid={sid}&level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryAnalyze1(string sid,string level, string tag, string old)
         {
+            tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
             DateTime now = DateTime.Now;
             if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
@@ -153,6 +154,7 @@ namespace Rest
         [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
         public List<AnalyzeData> QueryAnalyze(string level,string tag, string old)
         {
+            tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
             DateTime now = DateTime.Now;
             int o = -12;
@@ -171,6 +173,7 @@ namespace Rest
         [WebGet(UriTemplate = "statistics?level={level}&tag={tag}&type={type}", ResponseFormat = WebMessageFormat.Json)]
         public List<AnalyzeData> QueryAnalyzeStatistics(string level, string tag, string type)
         {
+            tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
             //DateTime end_date = DateTime.Now;
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
@@ -197,6 +200,6 @@ namespace Rest
             return BizCommon.ParseToString(BizApi.QueryExtractLastUpdate(id));
         }
 
-
+        
     }
 }
