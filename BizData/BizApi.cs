@@ -528,7 +528,7 @@ namespace big
             else
             {
                 string sql =
-                    string.Format("update {0} set name='{2}',lastupdate={3},totalshare={4},top10total={5},floatshare={6},top10float={7},list='{8}',weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13}) where sid='{1}'", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
+                    string.Format("update {0} set name='{2}',lastupdate='{3}',totalshare={4},top10total={5},floatshare={6},top10float={7},list='{8}',weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13} where sid='{1}'", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
                 MySqlHelper.ExecuteNonQuery(sql);
             }
         }
