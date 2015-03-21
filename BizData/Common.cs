@@ -29,6 +29,7 @@ namespace big
 
         public static string ProcessWeekend(string tag)
         {
+            if (string.IsNullOrEmpty(tag)) return string.Empty;
             DateTime current = ParseToDate(tag);
             if (current.DayOfWeek == DayOfWeek.Saturday)
             {
@@ -38,6 +39,11 @@ namespace big
                 current = current.AddDays(-2);
             }
             return ParseToString(current);
+        }
+
+        public static string ProcessSQLString(DateTime dt)
+        {
+            return dt.ToString("yyyy-MM-dd");
         }
     }
 }

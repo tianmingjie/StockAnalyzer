@@ -52,10 +52,11 @@ namespace Rest
             return list;
         }
 
-        [WebGet(UriTemplate = "latestprice/id/{id}", ResponseFormat = WebMessageFormat.Json)]
-        public string QueryLatestPrice(string id)
+        [WebGet(UriTemplate = "latestprice/id/{id}?tag={tag}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryLatestPrice(string id,string tag)
         {
-            return BizApi.QueryLatestPrice(id);
+            tag = BizCommon.ProcessWeekend(tag);
+            return BizApi.QueryLatestPrice(id,tag);
         }
 
         [WebGet(UriTemplate = "maxmin/id/{id}?range={range}", ResponseFormat = WebMessageFormat.Json)]

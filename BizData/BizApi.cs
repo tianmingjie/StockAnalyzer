@@ -60,7 +60,7 @@ namespace big
                 {
                     InfoExtData ied = new InfoExtData();
                     ied.sid = dr["sid"].ToString();
-                    ied.lastupdate = DateTime.Parse(dr["lastupdate"].ToString()).ToString("yyyy-MM-dd");
+                    ied.lastupdate = BizCommon.ProcessSQLString(DateTime.Parse(dr["lastupdate"].ToString()));
                     ied.shouyi = decimal.Parse(dr["shouyi"].ToString());
                     ied.shiyinglv = decimal.Parse(dr["shiyinglv"].ToString());
                     ied.jingzichan = decimal.Parse(dr["jingzichan"].ToString());
@@ -78,7 +78,7 @@ namespace big
                     ied.zongzhi = decimal.Parse(dr["zongzhi"].ToString());
                     ied.liuzhi = decimal.Parse(dr["liuzhi"].ToString());
                     ied.meiguweifenpeilirun = decimal.Parse(dr["meiguweifenpeilirun"].ToString());
-                    ied.shangshishijian = DateTime.Parse(dr["shangshishijian"].ToString()).ToString("yyyy-MM-dd");
+                    ied.shangshishijian = BizCommon.ProcessSQLString(DateTime.Parse(dr["shangshishijian"].ToString()));
                     list.Add(ied);
                 }
             }
@@ -195,7 +195,7 @@ namespace big
         }
         public static List<AnalyzeData> QueryAnalyzeData(string tag, DateTime start, DateTime end, int level)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             List<AnalyzeData> list = new List<AnalyzeData>();
@@ -223,7 +223,7 @@ namespace big
         }
         public static string QueryAnalyzeDataValue(string sid,string tag, DateTime start, DateTime end, int level)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and sid='{6}' order by rank", ANALYZE, Constant.TOP, tag, level, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"),sid);
+            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and sid='{6}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), sid);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -268,7 +268,7 @@ namespace big
         {
             //int index=50;
 
-            string sql1 = String.Format("delete from {0} where tag='{1}' and level={2} and startdate='{3}' and enddate='{4}'", ANALYZE, tag,level,start.ToString("yyyy-MM-dd"),end.ToString("yyyy-MM-dd"));
+            string sql1 = String.Format("delete from {0} where tag='{1}' and level={2} and startdate='{3}' and enddate='{4}'", ANALYZE, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
             MySqlHelper.ExecuteNonQuery(sql1);
 
             //List<AnalyzeData> list = ComputeAll(id_list,start, end);
@@ -282,7 +282,7 @@ namespace big
 
                 string sql = String.Format(
                 "INSERT INTO {0}(sid,value,tag,name,firstlevel,secondlevel,enddate,rank,startdate,big,level)VALUES('{1}',{2},'{3}','{4}','{5}','{6}','{7}',{8},'{9}',{10},{11})",
-                        ANALYZE, ad.sid, ad.value,tag, ad.name, ad.firstlevel, ad.secondlevel, end.ToString("yyyy-MM-dd"), i, start.ToString("yyyy-MM-dd"), ad.big, ad.level);
+                        ANALYZE, ad.sid, ad.value, tag, ad.name, ad.firstlevel, ad.secondlevel, BizCommon.ProcessSQLString(end), i, BizCommon.ProcessSQLString(start), ad.big, ad.level);
                 MySqlHelper.ExecuteNonQuery(sql);
             }
         }
@@ -520,7 +520,7 @@ namespace big
             if (info == 0)
             {
                 string sql =
-                    string.Format("insert {0}(sid,name,lastupdate,totalshare,top10total,floatshare,top10float,list,weight,firstlevel,secondlevel,location,valid) value('{1}','{2}','{3}',{4},{5},{6},{7},'{8}',{9},'{10}','{11}','{12}',{13})", INFO, id.sid, id.name, DateTime.Now.ToString("yyyy-MM-dd"), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
+                    string.Format("insert {0}(sid,name,lastupdate,totalshare,top10total,floatshare,top10float,list,weight,firstlevel,secondlevel,location,valid) value('{1}','{2}','{3}',{4},{5},{6},{7},'{8}',{9},'{10}','{11}','{12}',{13})", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
 
                 MySqlHelper.ExecuteNonQuery(sql);
                 info = 1;
@@ -528,7 +528,7 @@ namespace big
             else
             {
                 string sql =
-                    string.Format("update {0} set name='{2}',lastupdate={3},totalshare={4},top10total={5},floatshare={6},top10float={7},list='{8}',weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13}) where sid='{1}'", INFO, id.sid, id.name, DateTime.Now.ToString("yyyy-MM-dd"), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
+                    string.Format("update {0} set name='{2}',lastupdate={3},totalshare={4},top10total={5},floatshare={6},top10float={7},list='{8}',weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13}) where sid='{1}'", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
                 MySqlHelper.ExecuteNonQuery(sql);
             }
         }
@@ -820,7 +820,7 @@ namespace big
         
         public static List<BasicData> QueryBasicDataByRange(string sid, DateTime start, DateTime end, string type, int big)
         {
-            string sql = string.Format("select big,time,c_type,close,open,low,high,totalshare,totalmoney,buyshare,buymoney,sellshare,sellmoney from {0} where c_type='{1}' and  big={2} and time>='{3}' and time<='{4}'", sid, type, big, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+            string sql = string.Format("select big,time,c_type,close,open,low,high,totalshare,totalmoney,buyshare,buymoney,sellshare,sellmoney from {0} where c_type='{1}' and  big={2} and time>='{3}' and time<='{4}'", sid, type, big, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
             return BuildBasicData(ds.Tables[0]);
@@ -909,23 +909,32 @@ namespace big
         #endregion
 
         #region query price
-        public static string QueryLatestPrice(string sid)
+
+        public static string QueryLatestPrice(string sid,string tag)
         {
-
-
-            string sql = string.Format("select  close from {0} order by id desc limit 1", sid);
+            string time = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag));
+            string sql="";
+            if(string.IsNullOrEmpty(tag)){
+                sql = string.Format("select  close from {0} order by id desc limit 1", sid);
+            } else{
+                sql = string.Format("select  close from {0} where time='{1}' order by id desc limit 1", sid,time);
+            }
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
-            return ds.Tables[0].Rows[0]["close"].ToString();
+            DataTable dt = ds.Tables[0];
+            if(dt.Rows.Count==0){
+                return "--";
+            } else{
+                return ds.Tables[0].Rows[0]["close"].ToString();
+            }
         }
-
 
         public static string QueryMaxMinPriceByRange(string sid,int months)
         {
 
             DateTime now =DateTime.Now;
             DateTime start=now.AddMonths(-months);
-            string sql = string.Format("select  max(close) as high,min(close) as low from {0} where time>'{1}' and time <'{2}'", sid,start.ToString("yyyy-MM-dd"),now.ToString("yyyy-MM-dd"));
+            string sql = string.Format("select  max(close) as high,min(close) as low from {0} where time>'{1}' and time <'{2}'", sid, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(now));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
             return ds.Tables[0].Rows[0]["low"].ToString()+"-"+ds.Tables[0].Rows[0]["high"].ToString();

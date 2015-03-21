@@ -34,7 +34,9 @@ namespace StockList
             //InfoExtData ifd = BizApi.QueryInfoExtById("sh600000");
 
             //AnalyzeData ad = BizApi.ComputeSingle3("sh600000", 1, 1000, new DateTime(2015, 1, 1), new DateTime(2015, 3, 1));
-            BizApi.ComputeAll_3(int.Parse(args[0]), int.Parse(args[1]));
+            //BizApi.ComputeAll_3(int.Parse(args[0]), int.Parse(args[1]));
+            Console.WriteLine(BizApi.QueryLatestPrice("sh600272","20150319"));
+            Console.WriteLine(BizApi.QueryMaxMinPriceByRange("sh600272",24));
             Console.WriteLine();
         }
     }

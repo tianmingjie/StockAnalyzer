@@ -69,7 +69,7 @@
                         newRow += "<td>" + data1["liutonggu"] + "</td>";
                     });
 
-                    var url_2 = "/rest/rest/latestprice/id/" + sid;
+                    var url_2 = "/rest/rest/latestprice/id/" + sid+"?tag="+tag;
                     $.ajaxSetup({ async: false });
                     $.getJSON(url_2, function (data) {
                         newRow += "<td>" + data + "</td>";
