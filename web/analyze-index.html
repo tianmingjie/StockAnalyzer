@@ -12,13 +12,13 @@
             var old = $("#oldselect  option:selected").text();
             var url_default = "/web/analyze.html?tag=" + tag + "&level=1&old="+old;
             
-            $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1300></iframe>");
+            $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350></iframe>");
             $("#query").click(function () {
                 //$("#day1").remove();
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level;
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level+"&tag="+tag;
                 $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
             });
 
