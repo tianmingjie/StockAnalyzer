@@ -15,17 +15,15 @@ namespace Info
     {
         public static void Main(string[] args)
         {
-            //string stock = "sz000166";
+            //string stock = "sz000333";
             //InfoData id = BuildInfo(stock);
             //Console.WriteLine(id);
-            //BizApi.InsertInfo(id);
-            //GetInfo(stock);
-            //GetShares(stock);
-            IList<InfoData> list=GetList();
-            foreach (InfoData id in list)
-            {
-                BizApi.InsertInfo(id);
-            }
+            // BizApi.InsertInfo(id);
+             IList<InfoData> list = GetList();
+             foreach (InfoData id in list)
+             {
+                 BizApi.InsertInfo(id);
+             }
         }
 
         public static IList<InfoData> GetList()
@@ -83,73 +81,10 @@ namespace Info
                     id.name = name.EndsWith(",")?name.Substring(0,name.Length-1):name;
                     id=BuildBasicInfo(id);
                     id = BuildShare(id);
+                    Console.WriteLine("build complete: " + sid);
                 }
-                Console.WriteLine("build complete: " + sid);
+                
             return id;
-        }
-
-        public static Dictionary<string, string> GetInfo(string stock)
-        {
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-
-            WebClient client = new WebClient();
-            // Stream data = client.OpenRead(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", stock));
-            // StreamReader reader = new StreamReader(data);
-            //string s = reader.ReadToEnd();
-            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", stock));
-
-            string content = System.Text.Encoding.UTF8.GetString(page);
-            //string content = "成交额：1.62 亿元";
-
-            Dictionary<string, string> source = new Dictionary<string, string>();
-            source.Add("location", @"所属地域：");
-            source.Add("industry", @"所属行业：");
-            //source.Add("name", @"公司名称：");
-            string[] match = { @"所属地域：", @"所属行业：", @"公司名称：" };
-
-            foreach (String a in source.Keys)
-            {
-                Regex re = new Regex(source[a] + "</strong><span>(.*)</span>");
-                MatchCollection matches = re.Matches(content);
-                string value = matches.Count > 0 ? matches[0].Groups[1].Value : "empty";
-
-                dic.Add(a, value);
-            }
-
-            return dic;
-        }
-        public static Dictionary<string, string> GetShares(string stock)
-        {
-
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-            WebClient client = new WebClient();
-            // Stream data = client.OpenRead(string.Format("http://stockpage.10jqka.com.cn/{0}/company/", stock));
-            // StreamReader reader = new StreamReader(data);
-            //string s = reader.ReadToEnd();
-            byte[] page = client.DownloadData(string.Format("http://stockpage.10jqka.com.cn/{0}/holder/", stock));
-
-            string content = System.Text.Encoding.UTF8.GetString(page);
-            //string content = "成交额：1.62 亿元";
-
-            string[] match = { @"前十大流通股东累计持有：<em>(.*)</em>万股", @"累计占流通股比：<em>(.*)%</em>", @"前十大股东累计持有：<em>(.*)</em>万股", @"累计占总股本比：<em>(.*)%</em>" };
-
-            string[] values = new string[match.Length];
-            for (int i = 0; i < match.Length; i++)
-            {
-                Regex re = new Regex(match[i]);
-                MatchCollection matches = re.Matches(content);
-                values[i] = matches.Count > 0 ? matches[0].Groups[1].Value : "empty";
-            }
-
-            decimal floatshare = (Decimal.Parse(values[0]) / Decimal.Parse(values[1]) * 100);
-            dic.Add("floatshare", floatshare.ToString("0"));
-            dic.Add("totalshare", (Decimal.Parse(values[2]) / Decimal.Parse(values[3]) * 100).ToString("0"));
-            dic.Add("top10float", values[1]);
-            dic.Add("top10total", values[3]);
-            decimal w=GetWeight(floatshare);
-            dic.Add("weight", w.ToString("0"));
-            dic.Add("list", string.Format("{0},{1},{2}", 500 * w, 1000 * w, 2000 * w));
-            return dic;
         }
 
         public static InfoData BuildBasicInfo(InfoData id)
@@ -174,10 +109,20 @@ namespace Info
             Regex re1 = new Regex(match[1] + "</strong><span>(.*)</span>");
             MatchCollection matches1 = re1.Matches(content);
             string value1 = matches1.Count > 0 ? matches1[0].Groups[1].Value : "empty";
-            string[] list = value1.Split('—');
+            if (value1.Equals("-"))
+            {
+                string[] list = value1.Split('—');
 
-            id.firstlevel = string.IsNullOrEmpty(list[0]) ? "" : list[0].Trim() ;
-            id.secondlevel = string.IsNullOrEmpty(list[1]) ? "" : list[1].Trim();
+                id.firstlevel = "";
+                id.secondlevel = "";
+            }
+            else
+            {
+                string[] list = value1.Split('—');
+
+                id.firstlevel = string.IsNullOrEmpty(list[0]) ? "" : list[0].Trim();
+                id.secondlevel = string.IsNullOrEmpty(list[1]) ? "" : list[1].Trim();
+            }
             return id;
         }
         public static InfoData BuildShare(InfoData id)
@@ -211,6 +156,8 @@ namespace Info
             id.top10total = Decimal.Parse(values[1]);
             id.top10float = Decimal.Parse(values[3]);
             id.weight = GetWeight(floatshare);
+            int w =(int) Math.Round(id.weight * 10);
+            id.list = string.Format("{0},{1},{2}", 50 * w, 100 * w, 200 * w);
             if (id.totalshare == 100f || id.floatshare == 100f)
             {
                 id.valid = 0;
@@ -230,7 +177,7 @@ namespace Info
         public static decimal GetWeight(decimal val)
         {
             if (val < 100000) return 1;
-            else if (val > 500000) return 2.5M;
+            else if (val > 500000) return 2M;
             else return 1.5M;
         }
 
