@@ -10,13 +10,15 @@
 
             // http://localhost/rest/rest/analyze?end=20150304&level=1&start=20140901
 
-            var end_date = "end", level = "level", start_date = "start", tag = "tag", old = "old";
+            var end_date = "end", level = "level", start_date = "start", tag = "tag", old = "old",daybefore="daybefore";
             tag = chu_common.parsepara(tag);
             end_date = chu_common.parsepara(end_date);
             level = chu_common.parsepara(level);
             start_date = chu_common.parsepara(start_date);
             old = chu_common.parsepara(old);
-            var url = "/rest/rest/analyze?old=" + old + "&level=" + level + "&tag=" + tag;
+            daybefore = chu_common.parsepara(daybefore);
+
+            var url = "/rest/rest/analyze?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=" + daybefore;
             $.ajaxSetup({ async: false });
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {
@@ -46,7 +48,7 @@
                     //newRow += "<td>" + end_date + "</td>";
                     
 
-                    var y = "/rest/rest/analyzevalue?old=24-12-6-3&level=" + level + "&tag=" + tag + "&sid=" + sid;
+                    var y = "/rest/rest/analyzevalue?old=24-12-6-3&level=" + level + "&tag=" + tag + "&sid=" + sid + "&daybefore=" + daybefore;
                     var rankk = "";
                     $.ajaxSetup({ async: false });
                             $.getJSON(y, function (data2) {

@@ -10,7 +10,7 @@
             var end = new Date();
             var tag = chu_common.formatdate(end);
             var old = $("#oldselect  option:selected").text();
-            var url_default = "/web/analyze.html?tag=" + tag + "&level=1&old="+old;
+            var url_default = "/web/analyze.html?tag=" + tag + "&level=0&old=" + old + "&daybefore=0";
             
             $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350></iframe>");
             $("#query").click(function () {
@@ -18,10 +18,19 @@
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level+"&tag="+tag;
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level+"&tag="+tag+"&daybefore=0";
                 $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
             });
 
+            //30日前
+            $("#query1").click(function () {
+                //$("#day1").remove();
+                var old = $("#oldselect  option:selected").text();
+                var level = $("#levelselect  option:selected").text();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag+"&daybefore=30";
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+            });
             //$("#oldselect").mouseup(function () {
             //    //$("#day1").remove();
             //    var old = $("#oldselect  option:selected").text();
@@ -36,9 +45,10 @@
 <body>
 <div id="Container">
     <div id="Header">
-        <div><select id="oldselect"> <option selected="selected">3</option><option>6</option><option>12</option><option>24</option></select>
-            <select id="levelselect"> <option>1</option></select>
-            <input type="button" id="query" value="query" />
+        <div><select id="oldselect"> <option selected="selected">3</option><option>6</option><option>12</option><option>24</option></select>月前
+            <select id="levelselect"> <option>0</option></select>
+            <input type="button" id="query" value="当日计算" />
+            <input type="button" id="query1" value="30日前计算" />
         </div>
     </div>
     <div id="Content">

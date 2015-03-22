@@ -9,6 +9,7 @@ using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
 using BizCommon = big.BizCommon;
+using Common;
 
 namespace Rest
 {
@@ -138,13 +139,15 @@ namespace Rest
         }
 
 
-        [WebGet(UriTemplate = "analyzevalue?sid={sid}&level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
-        public string QueryAnalyze1(string sid,string level, string tag, string old)
+        [WebGet(UriTemplate = "analyzevalue?sid={sid}&level={level}&tag={tag}&old={old}&daybefore={daybefore}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryAnalyze1(string sid,string level, string tag, string old,string daybefore)
         {
             tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
             DateTime now = DateTime.Now;
+            int i_daybeofre = 0;
             if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
+            if (string.IsNullOrEmpty(daybefore)) i_daybeofre =0; else i_daybeofre = int.Parse(daybefore);
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
             if (string.IsNullOrEmpty(old)) old = "3-6-12-24";
 
@@ -156,7 +159,7 @@ namespace Rest
                 int o =-Int32.Parse(v);
 
 
-                DateTime end_date = now.AddMonths(-1);
+                DateTime end_date = now.AddDays(-i_daybeofre);
                 DateTime start_date = end_date.AddMonths(o);
 
 
@@ -166,18 +169,20 @@ namespace Rest
             return vv.Substring(0, vv.Length - 1); ;
         }
 
-        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string level,string tag, string old)
+        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}&daybefore={daybefore}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string level, string tag, string old, string daybefore)
         {
             tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
             DateTime now = DateTime.Now;
+            int days_before = Constant.DAYS_BEFORE;
             int o = -12;
             if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
+            if (!string.IsNullOrEmpty(daybefore)) days_before = Int32.Parse(daybefore);
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
             if (!string.IsNullOrEmpty(old)) o = -Int32.Parse(old);
 
-            DateTime end_date = now.AddMonths(-1);
+            DateTime end_date = now.AddDays((double)(-days_before));
             DateTime start_date = end_date.AddMonths(o);
 
 

@@ -12,28 +12,26 @@ namespace Analyze
     {
         public static void Main(string[] args)
         {
+            int day_before = 0;
             if (args.Length == 0)
             {
-                int[] list=new int[] { 3, 6, 12,24 };
-                exec(list);
+                day_before = -Constant.DAYS_BEFORE;
             }
             else
             {
-                string[] strlist = args[0].Split(',');
-                int[] list=new int[strlist.Length];
-                for(int i=0;i<strlist.Length;i++){
-                    list[i]=int.Parse(strlist[i]);
-                }
-                exec(list);
+                day_before = int.Parse(args[0]);
             }
-            
 
+            int[] list = new int[] { 3, 6, 12, 24 };
+            exec(list, day_before);
         }
-        public static void exec(int[] a)
+
+
+        public static void exec(int[] a, int day_before)
         {
             DateTime now = DateTime.Now;
             string tag = now.ToString("yyyyMMdd");
-            DateTime end = now.AddDays(-Constant.DAYS_BEFORE);
+            DateTime end = now.AddDays(day_before);
             DateTime start = new DateTime();
             foreach (int i in a)
             {

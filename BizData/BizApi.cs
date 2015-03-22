@@ -251,7 +251,7 @@ namespace big
             {
                 string[] bigs = id.list.Split(','); ;
                 //list0.Add(ComputeSingle2(id.sid, 0, Int32.Parse(bigs[0]), start, end));
-                list1.Add(ComputeSingle2(id.sid, 1, Int32.Parse(bigs[1]), start, end));
+                list1.Add(ComputeSingle2(id.sid, Constant.ANALYZE_LEVEL, Int32.Parse(bigs[Constant.ANALYZE_LEVEL]), start, end));
                 //list2.Add(ComputeSingle2(id.sid, 2, Int32.Parse(bigs[2]), start, end));
             }
 
@@ -260,7 +260,7 @@ namespace big
             list1.Sort(new AnalyzeComparator());
             //list2.Sort(new AnalyzeComparator());
             //InsertAnalyzeData(list0, start, end, 0);
-            InsertAnalyzeData(list1,tag, start, end, 1);
+            InsertAnalyzeData(list1,tag, start, end, Constant.ANALYZE_LEVEL);
             //InsertAnalyzeData(list2, start, end, 2);
         }
 
