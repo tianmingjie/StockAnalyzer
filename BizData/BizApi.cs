@@ -924,7 +924,17 @@ namespace big
             //DataTable dt = ds.Tables[0];
             DataTable dt = ds.Tables[0];
             if(dt.Rows.Count==0){
-                return "--";
+                //取前一天的收盘价
+                string time1 = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag).AddDays(-1));
+                string sql1 = string.Format("select  close from {0} where time='{1}' order by id desc limit 1", sid, time1);
+                DataSet ds1 = MySqlHelper.GetDataSet(sql1);
+                //DataTable dt = ds.Tables[0];
+                DataTable dt1 = ds1.Tables[0];
+                if(dt1.Rows.Count==0) {
+                    return "--";
+                } else{
+                    ds1.Tables[0].Rows[0]["close"].ToString();
+                }
             } else{
                 return ds.Tables[0].Rows[0]["close"].ToString();
             }
@@ -935,7 +945,7 @@ namespace big
 
             DateTime now =DateTime.Now;
             DateTime start=now.AddMonths(-months);
-            string sql = string.Format("select  max(close) as high,min(close) as low from {0} where time>'{1}' and time <'{2}'", sid, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(now));
+            string sql = string.Format("select  max(high) as high,min(low) as low from {0} where time>'{1}' and time <'{2}'", sid, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(now));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
             return ds.Tables[0].Rows[0]["low"].ToString()+"-"+ds.Tables[0].Rows[0]["high"].ToString();
