@@ -912,11 +912,12 @@ namespace big
 
         public static string QueryLatestPrice(string sid,string tag)
         {
-            string time = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag));
+            
             string sql="";
             if(string.IsNullOrEmpty(tag)){
                 sql = string.Format("select  close from {0} order by id desc limit 1", sid);
             } else{
+                string time = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag));
                 sql = string.Format("select  close from {0} where time='{1}' order by id desc limit 1", sid,time);
             }
             DataSet ds = MySqlHelper.GetDataSet(sql);
