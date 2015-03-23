@@ -527,8 +527,9 @@ namespace big
             }
             else
             {
+                //不能更新列表
                 string sql =
-                    string.Format("update {0} set name='{2}',lastupdate='{3}',totalshare={4},top10total={5},floatshare={6},top10float={7},list='{8}',weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13} where sid='{1}'", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.list, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
+                    string.Format("update {0} set name='{2}',lastupdate='{3}',totalshare={4},top10total={5},floatshare={6},top10float={7},weight={9},firstlevel='{10}',secondlevel='{11}',location='{12}',valid={13} where sid='{1}'", INFO, id.sid, id.name, BizCommon.ProcessSQLString(DateTime.Now), id.totalshare, id.top10total, id.floatshare, id.top10float, id.weight, id.firstlevel, id.secondlevel, id.location, id.valid);
                 MySqlHelper.ExecuteNonQuery(sql);
             }
         }
@@ -592,7 +593,7 @@ namespace big
         private static List<BasicData> BuildDataList(string sid, int big, DateTime start, DateTime end, string searchTag, string type)
         {
 
-            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,avg(close) as close,avg(open) as open,max(high) as high,min(low) as low from {0} where big={1} and time >'{2}' and time<'{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
+            string sql = string.Format("select sum(buyshare) as buyshare,sum(buymoney) as buymoney,sum(sellshare) as sellshare,sum(sellmoney) as sellmoney,sum(totalshare) as totalshare,sum(totalmoney) as totalmoney,DATE_FORMAT(time ,'{4}') as tag,avg(close) as close,avg(open) as open,max(high) as high,min(low) as low from {0} where big={1} and time >='{2}' and time<='{3}' GROUP BY tag ORDER BY tag", sid, big, start, end, searchTag);
 
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
@@ -860,7 +861,7 @@ namespace big
         #region k-line
         public static List<LineData> QueryLineByDay(string sid, DateTime start, DateTime end)
         {
-            string sql = string.Format("select open,close,high,low,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time >'{1}' and time<'{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,high,low,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             return BuildLineData(dt);
@@ -870,7 +871,7 @@ namespace big
         {
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
-            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%V') as tag from {0} where time >'{1}' and time<'{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%V') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             return BuildLineData(dt);
@@ -880,7 +881,7 @@ namespace big
         {
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
-            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%m') as tag from {0} where time >'{1}' and time<'{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%m') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             return BuildLineData(dt);
@@ -938,6 +939,7 @@ namespace big
             } else{
                 return ds.Tables[0].Rows[0]["close"].ToString();
             }
+            return "--";
         }
 
         public static string QueryMaxMinPriceByRange(string sid,int months)
@@ -945,7 +947,7 @@ namespace big
 
             DateTime now =DateTime.Now;
             DateTime start=now.AddMonths(-months);
-            string sql = string.Format("select  max(high) as high,min(low) as low from {0} where time>'{1}' and time <'{2}'", sid, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(now));
+            string sql = string.Format("select  max(high) as high,min(low) as low from {0} where time>='{1}' and time <='{2}'", sid, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(now));
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
             return ds.Tables[0].Rows[0]["low"].ToString()+"-"+ds.Tables[0].Rows[0]["high"].ToString();
