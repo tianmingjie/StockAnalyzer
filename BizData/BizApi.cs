@@ -46,13 +46,13 @@ namespace big
         public static InfoExtData QueryInfoExtById(string sid)
         {
             string sql = string.Format("select sid,lastupdate,shouyi,shiyinglv,jingzichan,shijinglv,shouru,shourutongbi,jinglirun,jingliruntongbi,maolilv,jinglilv,ROE,fuzhailv,zongguben, liutonggu,zongzhi,liuzhi,meiguweifenpeilirun,shangshishijian from {0} where sid='{1}' ", INFOEXT, sid);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            return BuildInfoExtData(ds.Tables[0])[0];
+            return BuildInfoExtData(sql)[0];
         }
 
-        public static List<InfoExtData> BuildInfoExtData(DataTable dt)
+        public static List<InfoExtData> BuildInfoExtData(string sql)
         {
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
             List<InfoExtData> list = new List<InfoExtData>();
             if (dt.Rows.Count > 0)
             {
@@ -167,35 +167,24 @@ namespace big
 
         public static List<AnalyzeData> QueryAnalyzeData(string tag, int level)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} order by rank", ANALYZE, Constant.TOP, tag, level);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            DataTable dt = ds.Tables[0];
-            List<AnalyzeData> list = new List<AnalyzeData>();
-            foreach (DataRow dr in dt.Rows)
-            {
-                AnalyzeData bd = new AnalyzeData()
-                {
-                    sid = dr["sid"].ToString(),
-                    tag=tag,
-                    name = dr["name"].ToString(),
-                    firstlevel = dr["firstlevel"].ToString(),
-                    secondlevel = dr["secondlevel"].ToString(),
-                    enddate = BizCommon.ParseToString(DateTime.Parse(dr["enddate"].ToString())),
-                    value = Decimal.Parse(dr["value"].ToString()),
-                    rank = Int32.Parse(dr["rank"].ToString()),
-                    startdate = BizCommon.ParseToString(DateTime.Parse(dr["startdate"].ToString())),
-                    level = level,
-                    big = Int32.Parse(dr["big"].ToString())
-                };
-
-                list.Add(bd);
-            }
-
-            return list;
+            string sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} order by rank", ANALYZE, Constant.TOP, tag, level);
+            return BuildAnalyzeData(sql);
         }
+
         public static List<AnalyzeData> QueryAnalyzeData(string tag, DateTime start, DateTime end, int level)
         {
-            string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+            string sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+            return BuildAnalyzeData(sql);
+        }
+
+        public static List<AnalyzeData> QueryAnalyzeDataByFilter(string tag, DateTime start, DateTime end, int level,decimal share,decimal shourutongbi,decimal jingzichan,string firstlevel)
+        {
+            string sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+            return BuildAnalyzeData(sql);
+        }
+
+        public static List<AnalyzeData> BuildAnalyzeData(string sql)
+        {
             DataSet ds = MySqlHelper.GetDataSet(sql);
             DataTable dt = ds.Tables[0];
             List<AnalyzeData> list = new List<AnalyzeData>();
@@ -204,7 +193,7 @@ namespace big
                 AnalyzeData bd = new AnalyzeData()
                 {
                     sid = dr["sid"].ToString(),
-                    tag = tag,
+                    tag = dr["tag"].ToString(),
                     name = dr["name"].ToString(),
                     firstlevel = dr["firstlevel"].ToString(),
                     secondlevel = dr["secondlevel"].ToString(),
@@ -212,7 +201,7 @@ namespace big
                     value = Decimal.Parse(dr["value"].ToString()),
                     rank = Int32.Parse(dr["rank"].ToString()),
                     startdate = BizCommon.ParseToString(DateTime.Parse(dr["startdate"].ToString())),
-                    level = level,
+                    level = Int32.Parse(dr["level"].ToString()),
                     big = Int32.Parse(dr["big"].ToString())
                 };
 
@@ -221,6 +210,7 @@ namespace big
 
             return list;
         }
+
         public static string QueryAnalyzeDataValue(string sid,string tag, DateTime start, DateTime end, int level)
         {
             string sql = string.Format("select sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and sid='{6}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), sid);
@@ -726,32 +716,27 @@ namespace big
         {
             InfoData id = new InfoData();
             string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} order by sid", INFO);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            return BuildInfoData(ds.Tables[0]);
+            return BuildInfoData(sql);
         }
 
         public static InfoData QueryInfoById(string sid)
         {
             string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where sid='{1}' ", INFO, sid);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            return BuildInfoData(ds.Tables[0])[0];
+
+            return BuildInfoData(sql)[0];
         }
 
         public static List<InfoData> QueryInfoByIndustry(string insutry)
         {
             string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where firstlevel='{1}' ", INFO, insutry);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            return BuildInfoData(ds.Tables[0]);
+            return BuildInfoData(sql);
         }
 
         public static List<InfoData> QueryInfoByIndustry2(string insutry, string industry2)
         {
 
             string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where firstlevel='{1}' and secondlevel='{2}' ", INFO, insutry, industry2);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            return BuildInfoData(ds.Tables[0]);
+            return BuildInfoData(sql);
         }
 
 
@@ -778,9 +763,7 @@ namespace big
         public static List<InfoData> QueryInfoByLocation(string location)
         {
             string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0} where location='{1}' ", INFO, location);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            return BuildInfoData(ds.Tables[0]);
+            return BuildInfoData(sql);
         }
 
         //public static List<InfoData> QueryInfoByLocation(string location)
@@ -791,8 +774,10 @@ namespace big
         //    return BuildInfoData(ds.Tables[0]);
         //}
 
-        public static List<InfoData> BuildInfoData(DataTable dt)
+        public static List<InfoData> BuildInfoData(string sql)
         {
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
             List<InfoData> list = new List<InfoData>();
             if (dt.Rows.Count > 0)
             {
@@ -822,13 +807,13 @@ namespace big
         public static List<BasicData> QueryBasicDataByRange(string sid, DateTime start, DateTime end, string type, int big)
         {
             string sql = string.Format("select big,time,c_type,close,open,low,high,totalshare,totalmoney,buyshare,buymoney,sellshare,sellmoney from {0} where c_type='{1}' and  big={2} and time>='{3}' and time<='{4}'", sid, type, big, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            //DataTable dt = ds.Tables[0];
-            return BuildBasicData(ds.Tables[0]);
+            return BuildBasicData(sql);
         }
 
-        public static List<BasicData> BuildBasicData(DataTable dt)
+        public static List<BasicData> BuildBasicData(string sql)
         {
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
             List<BasicData> list = new List<BasicData>();
 
             foreach (DataRow dr in dt.Rows)
@@ -862,9 +847,7 @@ namespace big
         public static List<LineData> QueryLineByDay(string sid, DateTime start, DateTime end)
         {
             string sql = string.Format("select open,close,high,low,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            DataTable dt = ds.Tables[0];
-            return BuildLineData(dt);
+            return BuildLineData(sql);
         }
 
         public static List<LineData> QueryLineByWeek(string sid, DateTime start, DateTime end)
@@ -872,9 +855,7 @@ namespace big
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
             string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%V') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            DataTable dt = ds.Tables[0];
-            return BuildLineData(dt);
+            return BuildLineData(sql);
         }
 
         public static List<LineData> QueryLineByMonth(string sid, DateTime start, DateTime end)
@@ -882,13 +863,13 @@ namespace big
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
             string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%m') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
-            DataSet ds = MySqlHelper.GetDataSet(sql);
-            DataTable dt = ds.Tables[0];
-            return BuildLineData(dt);
+            return BuildLineData(sql);
         }
 
-        private static List<LineData> BuildLineData(DataTable dt)
+        private static List<LineData> BuildLineData(string sql)
         {
+            DataSet ds = MySqlHelper.GetDataSet(sql);
+            DataTable dt = ds.Tables[0];
             List<LineData> list = new List<LineData>();
             foreach (DataRow dr in dt.Rows)
             {

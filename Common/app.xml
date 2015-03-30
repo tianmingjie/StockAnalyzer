@@ -8,7 +8,7 @@
   <analyzeStartDate>2014-01-01</analyzeStartDate>
   <analyeChartDir>D:\stock\store\chart</analyeChartDir>
   <clean>true</clean>
-  <top>50</top>
+  <top>5000</top>
   <onlytop>true</onlytop>
   <bigDeal>500</bigDeal>
   <downloadAll>0</downloadAll>
