@@ -55,5 +55,7 @@ namespace big.entity
         public decimal high;
         [DataMember]
         public decimal low;
+        [DataMember]
+        public string extstring1;
     }
 }

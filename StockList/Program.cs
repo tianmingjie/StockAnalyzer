@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Import;
 
 namespace StockList
 {
@@ -35,8 +36,10 @@ namespace StockList
 
             //AnalyzeData ad = BizApi.ComputeSingle3("sh600000", 1, 1000, new DateTime(2015, 1, 1), new DateTime(2015, 3, 1));
             //BizApi.ComputeAll_3(int.Parse(args[0]), int.Parse(args[1]));
-            Console.WriteLine(BizApi.QueryLatestPrice("sh600272","20150319"));
-            Console.WriteLine(BizApi.QueryMaxMinPriceByRange("sh600272",24));
+            //Console.WriteLine(BizApi.QueryLatestPrice("sh600272","20150319"));
+            //Console.WriteLine(BizApi.QueryMaxMinPriceByRange("sh600272",24));
+
+            List<BasicData> list = ImportRawData.ReadCsvFile(@"D:\stock\store\data\sh600687\sh600687_2015-01-23.csv", "sh600687", new decimal[] { 1000,3000 }, DateTime.MinValue);
             Console.WriteLine();
         }
     }

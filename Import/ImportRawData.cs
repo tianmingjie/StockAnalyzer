@@ -231,6 +231,8 @@ namespace Import
             //处理过了就忽略
             if (t < lastupdate.AddDays(1)) return null;
 
+            Dictionary<decimal, string> haha = new Dictionary<decimal, string>();
+
             for (int j = 0; j < bigs.Length; j++)
             {
                 array[j] = new BasicData();
@@ -238,6 +240,7 @@ namespace Import
                 array[j].time = t;
                 array[j].sid = sid;
                 array[j].c_type = "d";
+                haha[bigs[j]] = "";
             }
 
             // open the file "data.csv" which is a CSV file with headers
@@ -248,12 +251,15 @@ namespace Import
                 decimal current;
 
                 decimal open = 0, close = 0, high = 0, low = 0;
+                string extstring = "";
+
 
                 foreach (String[] record in hi)
                 {
                     string price_str = record[1];
                     string share_str = record[3];
                     string type_str = record[5];
+                    string time_str = record[0];
                     try
                     {
 
@@ -288,21 +294,26 @@ namespace Import
 
                             if (Int32.Parse(share_str) >= bigs[k])
                             {
-
+                                Console.WriteLine(time_str + ": " + share + " " + type_str);
                                 if (type_str == "S")
                                 {
+                                    haha[bigs[k]] += "-" + p(share) + p1(time_str) + p2(current, open);
                                     array[k].sellshare += share;
                                     array[k].sellmoney += Decimal.Multiply(price, (Decimal)share);
                                 }
                                 if (type_str == "B")
                                 {
+                                    haha[bigs[k]] += "+" + p(share) + p1(time_str) + p2(current, open);
                                     array[k].buyshare += share;
                                     array[k].buymoney += Decimal.Multiply(price, (Decimal)share);
                                 }
+
+                                array[k].extstring1 = haha[bigs[k]];
                             }
                         }
                     }
-                    catch {
+                    catch
+                    {
                         StockLog.Log.Error(fileName + " import fail");
                     }
                 }
@@ -312,6 +323,50 @@ namespace Import
                 list.Add(array[j]);
             }
             return list;
+        }
+
+        public static string p(double bb)
+        {
+            int aa = (int)Math.Floor(bb / 100);
+
+            if (aa < 10) return "00" + aa.ToString();
+            else if (aa < 100) return "0" + aa.ToString();
+            else return aa.ToString();
+
+        }
+
+        public static string p2(decimal open, decimal current)
+        {
+            decimal cc = (current - open) / open * 100;
+
+            int bb = (int)Math.Floor(cc);
+
+            if (bb > 0)
+            {
+                return bb < 10 ? "10" + bb : "1" + bb;
+            }
+            else
+            {
+                return -bb < 10 ? "00" + (-bb) : "0" + (-bb);
+            }
+        }
+        public static string p1(string time)
+        {
+            TimeSpan ts = TimeSpan.Parse(time);
+            TimeSpan start = new TimeSpan(9, 25, 00);
+            TimeSpan noon = new TimeSpan(11, 30, 01);
+            TimeSpan noon1 = new TimeSpan(13, 00, 00);
+            TimeSpan end = new TimeSpan(15, 00, 01);
+            if (ts < noon)
+            {
+                int a = (ts - start).Minutes;
+                return p((double)a * 100);
+            }
+            else
+            {
+                int a1 = (end - ts).Minutes + 120;
+                return p((double)a1 * 100);
+            }
         }
 
         public static List<BasicData> ReadCsvFolder(string folder, string sid, decimal[] bigs, DateTime lastupdate)

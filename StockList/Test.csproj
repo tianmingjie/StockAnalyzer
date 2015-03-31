@@ -59,6 +59,14 @@
       <Project>{8c100380-0414-43db-aa3b-32417c48c89f}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DownloadData\DownloadData.csproj">
+      <Project>{8e37da8b-a01c-492a-b160-9adae343e638}</Project>
+      <Name>DownloadData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Import\Import.csproj">
+      <Project>{34b4cec5-b675-4bb9-ad79-b5f3ef9ce8e9}</Project>
+      <Name>Import</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rest\Rest.csproj">
       <Project>{e9b9b532-23bb-4179-9163-586ac99948be}</Project>
       <Name>Rest</Name>
