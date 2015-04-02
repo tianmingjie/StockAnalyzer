@@ -13,3 +13,6 @@ http://localhost/rest/rest/statistics?type=name&end=20150304&level=1
 http://localhost/rest/rest/statistics?start=20140101&end=20150304&level=1
 
 http://localhost/web/analyze-statistics.html?start=20140101&level=1&end=20150304
+
+
+http://my.oschina.net/u/209016/blog/79000
