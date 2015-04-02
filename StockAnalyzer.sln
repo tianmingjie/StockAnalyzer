@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyze", "Analyze\Analyze.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoExt", "InfoExt\InfoExt.csproj", "{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rzrq", "Rzrq\Rzrq.csproj", "{26FAC8F7-0E62-4FD6-AACC-F35608966098}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|x64.ActiveCfg = Release|Any CPU
 		{79F0ED0E-12AD-48F2-9B28-F932EEDC296D}.Release|x86.ActiveCfg = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|x64.ActiveCfg = Release|Any CPU
+		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

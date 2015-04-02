@@ -30,8 +30,21 @@ namespace big
         public static string INFOEXT = "basicinfoext";
         public static string ANALYZE = "analyzedata";
 
+        public static string RZRQ = "rzrq";
+
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
+        #region rzrq
+        public static void InsertRzrq(RzrqData rd)
+        {
+            string sql1 = String.Format("delete from {0} where sid='{1}' and time='{2}' ", RZRQ, rd.sid,BizCommon.ProcessSQLString(rd.time));
+            MySqlHelper.ExecuteNonQuery(sql1);
+
+            string sql = String.Format("insert into {0}(time,sid,name,rongziyue,rongzimairue,rongzichanghuane,rongquanyue,rongquanmaichuliang,rongquanchanghuanliang)values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9})", RZRQ, BizCommon.ProcessSQLString(rd.time), rd.sid, rd.name, rd.rongziyue, rd.rongzimairue, rd.rongzichanghuane, rd.rongquanyue,rd.rongquanmaichuliang, rd.rongquanchanghuanliang);
+            MySqlHelper.ExecuteNonQuery(sql);
+            Console.WriteLine(rd.sid + " rzrq inserted.");
+        }
+        #endregion
         #region infoext
         public static void InsertInfoExt(InfoExtData ied)
         {
