@@ -22,20 +22,23 @@ namespace Analyze
                 day_before = int.Parse(args[0]);
             }
 
-            int[] list = new int[] { 3, 6, 12, 24 };
-            exec(list, day_before);
+            //int[] list = new int[] { 3, 6, 12, 24 };
+            exec(day_before);
         }
 
 
-        public static void exec(int[] a, int day_before)
+        public static void exec(int day_before)
         {
             DateTime now = DateTime.Now;
             string tag = now.ToString("yyyyMMdd");
             DateTime end = now.AddDays(day_before);
             DateTime start = new DateTime();
-            foreach (int i in a)
+            string[] list = Constant.ANALYZE_TIME.Split('-');
+
+            BizApi.DeleteAnalyzeData(tag);
+            foreach (string i in list)
             {
-                start = end.AddMonths(-i);
+                start = end.AddMonths(-int.Parse(i));
                 BizApi.InsertAnalyzeData(tag, start, end);
             }
         }

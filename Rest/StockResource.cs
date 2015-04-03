@@ -149,7 +149,7 @@ namespace Rest
             if (string.IsNullOrEmpty(tag)) tag = BizCommon.ParseToString(now); else now = BizCommon.ParseToDate(tag);
             if (string.IsNullOrEmpty(daybefore)) i_daybeofre =0; else i_daybeofre = int.Parse(daybefore);
             if (!string.IsNullOrEmpty(level)) level_val = Int32.Parse(level);
-            if (string.IsNullOrEmpty(old)) old = "3-6-12-24";
+            if (string.IsNullOrEmpty(old)) old = Constant.ANALYZE_TIME;
 
             string vv = "";
             string[] list = old.Split('-');
@@ -168,9 +168,14 @@ namespace Rest
 
             return vv.Substring(0, vv.Length - 1); ;
         }
-
-        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}&daybefore={daybefore}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string level, string tag, string old, string daybefore)
+        [WebGet(UriTemplate = "analyzevalue1", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryAnalyze2()
+        {
+            return Constant.ANALYZE_TIME;
+        }
+        
+        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}&daybefore={daybefore}&industry={industry}&location={location}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string level, string tag, string old, string daybefore,string industry,string location)
         {
             tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
@@ -186,7 +191,7 @@ namespace Rest
             DateTime start_date = end_date.AddMonths(o);
 
 
-            return BizApi.QueryAnalyzeData(tag, start_date,end_date, level_val);
+            return BizApi.QueryAnalyzeData(tag, start_date, end_date, level_val, industry,location);
         }
 
 

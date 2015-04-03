@@ -184,9 +184,20 @@ namespace big
             return BuildAnalyzeData(sql);
         }
 
-        public static List<AnalyzeData> QueryAnalyzeData(string tag, DateTime start, DateTime end, int level)
+        public static List<AnalyzeData> QueryAnalyzeData(string tag, DateTime start, DateTime end, int level,string industry,string location)
         {
-            string sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' order by rank", ANALYZE, Constant.TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+            string sql="";
+            if (string.IsNullOrEmpty(industry) && string.IsNullOrEmpty(location))
+            {
+                sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where  tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}'  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(industry))
+                    sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and firstlevel='{6}' order by rank  limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), industry);
+                else if (!string.IsNullOrEmpty(location))
+                    sql = string.Format("select A.tag as tag,A.level as level,A.sid as sid,A.name as name,A.value as value,A.firstlevel firstlevel,A.secondlevel as secondlevel,A.enddate as enddate,A.rank as rank,A.startdate as startdate,A.big as big from {0} A join {6} B  on A.sid=B.sid  and tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}' and location='{7}'  order by rank  limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), INFO, location);
+            }
             return BuildAnalyzeData(sql);
         }
 
@@ -232,12 +243,19 @@ namespace big
             if (dt.Rows.Count > 0)
             {
                 string a=dt.Rows[0]["rank"].ToString();
-                return a.Length==1?"0"+a:a;
+                return P(a);
             }
             else
             {
-                return "--";
+                return "----";
             }
+        }
+        public static string  P(string a){
+            string hh = "";
+            for(int i=0;i<4-a.Length;i++)
+                hh="0"+hh;
+
+            return hh + a; 
         }
         public static void InsertAnalyzeData(string tag,DateTime start, DateTime end)
         {
@@ -267,13 +285,14 @@ namespace big
             //InsertAnalyzeData(list2, start, end, 2);
         }
 
+        public static void DeleteAnalyzeData(string tag)
+        {
+            string sql1 = String.Format("delete from {0} where tag='{1}' and level={2} ", ANALYZE, tag, Constant.ANALYZE_LEVEL);
+            MySqlHelper.ExecuteNonQuery(sql1);
+        }
         public static void InsertAnalyzeData(List<AnalyzeData> list,string tag, DateTime start, DateTime end, int level)
         {
             //int index=50;
-
-            string sql1 = String.Format("delete from {0} where tag='{1}' and level={2} and startdate='{3}' and enddate='{4}'", ANALYZE, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
-            MySqlHelper.ExecuteNonQuery(sql1);
-
             //List<AnalyzeData> list = ComputeAll(id_list,start, end);
             for (int i = 0; i < list.Count; i++)
             {
@@ -281,12 +300,15 @@ namespace big
                 {
                     if (i > (Constant.TOP - 1)) break;
                 }
+                
                 AnalyzeData ad = list[i];
-
-                string sql = String.Format(
-                "INSERT INTO {0}(sid,value,tag,name,firstlevel,secondlevel,enddate,rank,startdate,big,level)VALUES('{1}',{2},'{3}','{4}','{5}','{6}','{7}',{8},'{9}',{10},{11})",
-                        ANALYZE, ad.sid, ad.value, tag, ad.name, ad.firstlevel, ad.secondlevel, BizCommon.ProcessSQLString(end), i, BizCommon.ProcessSQLString(start), ad.big, ad.level);
-                MySqlHelper.ExecuteNonQuery(sql);
+                if (ad.value > 0)
+                {
+                    string sql = String.Format(
+                    "INSERT INTO {0}(sid,value,tag,name,firstlevel,secondlevel,enddate,rank,startdate,big,level)VALUES('{1}',{2},'{3}','{4}','{5}','{6}','{7}',{8},'{9}',{10},{11})",
+                            ANALYZE, ad.sid, ad.value, tag, ad.name, ad.firstlevel, ad.secondlevel, BizCommon.ProcessSQLString(end), i, BizCommon.ProcessSQLString(start), ad.big, ad.level);
+                    MySqlHelper.ExecuteNonQuery(sql);
+                }
             }
         }
 
@@ -755,7 +777,7 @@ namespace big
 
         public static string[] QueryAllLocation()
         {
-            string sql = string.Format("select distinct location as location from {0}", INFO);
+            string sql = string.Format("select distinct location as location from {0} where location!=''", INFO);
             DataSet ds = MySqlHelper.GetDataSet(sql);
 
             DataTable dt = ds.Tables[0];

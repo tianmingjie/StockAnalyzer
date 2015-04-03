@@ -76,9 +76,13 @@ namespace Common
         public static int TOP = map["top"].Equals("") ? 50 : Int32.Parse(map["top"]);
         public static bool ONLY_TOP =  map["onlytop"].Equals("")?true: Boolean.Parse(map["onlytop"]);
 
+        public static int QUERY_TOP = map["querytop"].Equals("")?50: int.Parse(map["querytop"]);
+
         //分析提前天数
         public static int DAYS_BEFORE = map["daysbefore"].Equals("") ? 30: int.Parse(map["daysbefore"]);
 
         public static int ANALYZE_LEVEL = 0;
+
+        public static string ANALYZE_TIME = map["analyzetime"].Equals("") ? "24-12-6-3" : map["analyzetime"];
     }
 }

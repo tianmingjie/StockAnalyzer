@@ -8,7 +8,8 @@
   <analyzeStartDate>2014-01-01</analyzeStartDate>
   <analyeChartDir>D:\stock\store\chart</analyeChartDir>
   <clean>true</clean>
-  <top>5000</top>
+  <top>2200</top>
+  <querytop>50</querytop>
   <onlytop>true</onlytop>
   <bigDeal>500</bigDeal>
   <downloadAll>0</downloadAll>
@@ -16,5 +17,8 @@
   <downloadAndInsert>true</downloadAndInsert>
   <mysqlstring>Database='Test';Data Source='localhost';User Id='root';Password='admin';charset='utf8';pooling=true"</mysqlstring>
 
-  <daysbefore>30</daysbefore>
+  <daysbefore>0</daysbefore>
+
+  <analyzetime>24-12-6-3</analyzetime>
+
 </StockApp>
