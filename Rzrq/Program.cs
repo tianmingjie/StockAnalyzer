@@ -18,21 +18,31 @@ namespace Rzrq
         {
 
             List<RzrqData> list = new List<RzrqData>();
+            string dt = DateTime.Now.ToString("yyyy-MM-dd");
             //http://data.eastmoney.com/rzrq/sh.html
-            string url = string.Format("http://data.eastmoney.com/rzrq/sh.html");
+            string url = string.Format("http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?tradedate="+dt);
             WebClient client = new WebClient();
             byte[] gg = client.DownloadData(url);
-            string haha = System.Text.Encoding.GetEncoding("gb2312").GetString(gg);
+            string jj = System.Text.Encoding.GetEncoding("gb2312").GetString(gg);
 
-            string start_str = "defjson:{pages:1,data:";
-            int start = haha.IndexOf(start_str)+start_str.Length;
-            int end = haha.IndexOf("beforedisplay:function");
+
+            TextReader stream = new StringReader(jj);
+            HtmlDocument document = new HtmlDocument();
+            document.Load(stream);
+
+            HtmlNode rootNode = document.DocumentNode;
+            HtmlNodeCollection c = rootNode.SelectNodes("//table[@id='dataTable']");
+
+            string haha = c[1].InnerText.Replace("\n", ",").Replace(" ", "").Replace(",,,,", "|").Replace("|,", "|");
+            string start_str = "|1";
+            int start = haha.IndexOf(start_str)+start_str.Length-1;
+            int end = haha.LastIndexOf(",,,");
             string aa = haha.Substring(start, end - start);
-            aa = aa.Trim();
-            aa=aa.Substring(2, aa.Length - 6);
 
-            aa=aa.Replace("\",\"","-");
-            string[] cc = aa.Split('-');
+            string[] cc = aa.Split('|');
+
+
+            //股票代码	股票名称	余额(元)	买入额(元)	偿还额(元)	余量金额(元)	余量(股)	卖出量(股)	偿还量(股)	融券余额(元)
 
             //510010,融资融券_沪证,治理ETF,44315624,2015/4/1 0:00:00,114417(rongquanchanghuangliang),474500(rongquanmaichuliang),5136454.851(rongquanyue),4283949,2293344(rongzichanghuane),943569(rongzimairue),0,49452079(rongziyue)
             foreach (string bb in cc)
@@ -42,15 +52,15 @@ namespace Rzrq
                 {
                     list.Add(new RzrqData()
                     {
-                        sid=StockUtil.FormatStock(dd[0]),
+                        sid=StockUtil.FormatStock(dd[1]),
                         name=dd[2],
-                        time=DateTime.Parse(dd[4]),
-                        rongquanchanghuanliang=decimal.Parse(dd[5]),
-                        rongquanmaichuliang=decimal.Parse(dd[6]),
-                        rongquanyue=decimal.Parse(dd[7]),
-                        rongzichanghuane=decimal.Parse(dd[9]),
-                        rongzimairue=decimal.Parse(dd[10]),
-                        rongziyue=decimal.Parse(dd[12])
+                        rongziyue = p(dd[3]),
+                        rongzimairue = p(dd[4]),
+                        rongzichanghuane=p(dd[5]),        
+                        time=DateTime.Parse(dt),
+                        rongquanyue = p(dd[6]),
+                        rongquanmaichuliang = p(dd[7]),
+                        rongquanchanghuanliang=p(dd[8])
                     });
                 }
             }
@@ -68,6 +78,11 @@ namespace Rzrq
                 big.BizApi.InsertRzrq(rd);
             }
             Console.WriteLine();
+        }
+
+        public static decimal p(string str)
+        {
+            return str == "--" ? 0 : decimal.Parse(str);
         }
     }
 }

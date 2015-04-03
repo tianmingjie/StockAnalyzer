@@ -11,46 +11,91 @@
             var tag = chu_common.formatdate(end);
             var old = $("#oldselect  option:selected").text();
             var url_default = "/web/analyze.html?tag=" + tag + "&level=0&old=" + old + "&daybefore=0";
-            
+            var level = $("#levelselect  option:selected").text();
+
             $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350></iframe>");
-            $("#query").click(function () {
+
+
+            $("#oldselect").change(function () {
+                $("#IndustrySelect").val("");
+                $("#LocationSelect").val("");
+                //$("#day1").remove();
+                var old = $("#oldselect  option:selected").text();
+                
+                var industry = $("#IndustrySelect  option:selected").text();
+                var location = $("#LocationSelect  option:selected").text();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry + "&location=" + location;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+            });
+
+
+
+            var url = "/rest/rest/info/all?type=I";
+            $.ajaxSetup({ async: false });
+            $.getJSON(url, function (data) {
+                $("#IndustrySelect").empty();
+                $("#IndustrySelect").append("<option></option>");
+                for (var i in data) {
+                    $("#IndustrySelect").append("<option>" + data[i] + "</option>");
+                }
+            });
+
+            var url_1 = "/rest/rest/info/all?type=L";
+            $.ajaxSetup({ async: false });
+            $.getJSON(url_1, function (data) {
+                $("#LocationSelect").empty();
+                $("#LocationSelect").append("<option></option>");
+                for (var i in data) {
+                    $("#LocationSelect").append("<option>" + data[i] + "</option>");
+                }
+            });
+
+            $("#LocationSelect").change(function () {
+                $("#IndustrySelect").val("");
                 //$("#day1").remove();
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
+                var location = $("#LocationSelect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level+"&tag="+tag+"&daybefore=0";
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&&location=" + location;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+            });
+
+            $("#IndustrySelect").change(function () {
+                $("#LocationSelect").val("");
+                //$("#day1").remove();
+                var old = $("#oldselect  option:selected").text();
+                var level = $("#levelselect  option:selected").text();
+                var industry = $("#IndustrySelect  option:selected").text();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry;
                 $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
             });
 
             //30日前
-            $("#query1").click(function () {
-                //$("#day1").remove();
-                var old = $("#oldselect  option:selected").text();
-                var level = $("#levelselect  option:selected").text();
-                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag+"&daybefore=30";
-                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
-            });
-            //$("#oldselect").mouseup(function () {
+            //$("#query1").click(function () {
             //    //$("#day1").remove();
             //    var old = $("#oldselect  option:selected").text();
             //    var level = $("#levelselect  option:selected").text();
+            //    var industry = $("#IndustrySelect  option:selected").text();
+            //    var location = $("#LocationSelect  option:selected").text();
             //    //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
-            //    var url_1 = "/web/analyze.html?old=" + old + "&level=" + level;
+            //    var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry+"&location="+location;
             //    $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
             //});
         });
     </script>
 </head>
 <body>
-<div id="Container">
-    <div id="Header">
-        <div><select id="oldselect"> <option >3</option><option>6</option><option selected="selected">12</option><option>24</option></select>月前
+
+<!--    <div>-->
+            <select id="oldselect"> <option selected="selected">3</option><option>6</option><option>12</option><option>24</option></select>月前
             <select id="levelselect"> <option>0</option></select>
-            <input type="button" id="query" value="当日计算" />
-            <input type="button" id="query1" value="30日前计算" />
-        </div>
-    </div>
+            <!--<input type="button" id="query" value="当日计算" />-->
+<!--            <input type="button" id="query1" value="30日前计算" />-->
+            行业:<select id="IndustrySelect" ><option>0</option></select> <label>区域:</label> <select id="LocationSelect"><option>0</option></select>
+<!--    </div>-->
     <div id="Content">
         <div id="day1"></div>
     </div>
