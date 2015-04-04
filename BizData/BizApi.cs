@@ -35,12 +35,19 @@ namespace big
         //public static DateTime DEFAULT_LASTUPDATE = new DateTime(2014, 1, 1);
 
         #region rzrq
+
+        public static List<InfoData> QueryInfoRzrq()
+        {
+            string sql = string.Format("select sid,name,lastupdate,totalshare,floatshare,location,firstlevel,secondlevel,weight,list from {0}  where sid in (select sid from {1}) order by sid", INFO, RZRQ);
+            return BuildInfoData(sql);
+        }
+
         public static void InsertRzrq(RzrqData rd)
         {
             string sql1 = String.Format("delete from {0} where sid='{1}' and time='{2}' ", RZRQ, rd.sid,BizCommon.ProcessSQLString(rd.time));
             MySqlHelper.ExecuteNonQuery(sql1);
 
-            string sql = String.Format("insert into {0}(time,sid,name,rongziyue,rongzimairue,rongzichanghuane,rongquanyue,rongquanmaichuliang,rongquanchanghuanliang)values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9})", RZRQ, BizCommon.ProcessSQLString(rd.time), rd.sid, rd.name, rd.rongziyue, rd.rongzimairue, rd.rongzichanghuane, rd.rongquanyue,rd.rongquanmaichuliang, rd.rongquanchanghuanliang);
+            string sql = String.Format("insert into {0}(time,sid,name,rongziyue,rongzimairue,rongzichanghuane,rongquanyuliangjine,rongquanyuliang,rongquanchanghuanliang,rongquanmaichuliang,rongquanyue)values('{1}','{2}','{3}',{4},{5},{6},{7},{8},{9},{10},{11})", RZRQ, BizCommon.ProcessSQLString(rd.time), rd.sid, rd.name, rd.rongziyue, rd.rongzimairue, rd.rongzichanghuane, rd.rongquanyuliangjine, rd.rongquanyuliang, rd.rongquanchanghuanliang, rd.rongquanmaichuliang, rd.rongquanyue);
             MySqlHelper.ExecuteNonQuery(sql);
             Console.WriteLine(rd.sid + " rzrq inserted.");
         }
@@ -879,9 +886,18 @@ namespace big
         #endregion
 
         #region k-line
+
+        public static List<LineData> QueryLineByLimit(string sid, int limit)
+        {
+            string sql = string.Format("select open,close,high,low, totalshare,totalmoney, DATE_FORMAT(time ,'%X%m%d') as tag from {0}  GROUP BY tag  order by time desc limit {1}", sid,limit);
+            List<LineData> list= BuildLineData(sql);
+            list.Reverse();
+            return list;
+        }
+
         public static List<LineData> QueryLineByDay(string sid, DateTime start, DateTime end)
         {
-            string sql = string.Format("select open,close,high,low,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,high,low, totalshare,totalmoney,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             return BuildLineData(sql);
         }
 
@@ -889,7 +905,7 @@ namespace big
         {
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
-            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%V') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,max(high) as high,min(low) as low, totalshare,totalmoney,DATE_FORMAT(time ,'%X_%V') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             return BuildLineData(sql);
         }
 
@@ -897,7 +913,7 @@ namespace big
         {
             //这里只能取到第一天的信息
             //TODO: 取区间的开始和最后值
-            string sql = string.Format("select open,close,max(high) as high,min(low) as low,DATE_FORMAT(time ,'%X_%m') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
+            string sql = string.Format("select open,close,max(high) as high,min(low) as low, totalshare,totalmoney,DATE_FORMAT(time ,'%X_%m') as tag from {0} where time >='{1}' and time<='{2}' GROUP BY tag ORDER BY tag", sid, start, end);
             return BuildLineData(sql);
         }
 
@@ -915,12 +931,15 @@ namespace big
                     close = (Decimal)(dr["close"]),
                     high = (Decimal)dr["high"],
                     low = (Decimal)(dr["low"]),
-                    tag = (string)dr["tag"]
+                    tag = (string)dr["tag"],
+                    totalshare = (Double)(dr["totalshare"]),
+                    totalmoney = (Double)(dr["totalmoney"])
                 };
 
                 list.Add(bd);
             }
 
+            //list.Reverse();
             return list;
         }
         #endregion

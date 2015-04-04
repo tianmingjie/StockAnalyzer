@@ -10,6 +10,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using BizCommon = big.BizCommon;
 using Common;
+using System.ComponentModel;
 
 namespace Rest
 {
@@ -74,7 +75,7 @@ namespace Rest
             DateTime endDate, startDate;
             IList<LineData> list;
             if (string.IsNullOrEmpty(end)) endDate = DateTime.Now; else endDate = BizCommon.ParseToDate(end);
-            if (string.IsNullOrEmpty(type)) type = "w";
+            if (string.IsNullOrEmpty(type)) type = "d";
             if (string.IsNullOrEmpty(start)) startDate = new DateTime(2014, 1, 1); else startDate = BizCommon.ParseToDate(start);
 
             switch (type)
@@ -85,8 +86,11 @@ namespace Rest
                 case "d":
                     list = BizApi.QueryLineByDay(id, startDate, endDate);
                     break;
-                default:
+                case "w":
                     list = BizApi.QueryLineByWeek(id, startDate, endDate);
+                    break;
+                default:
+                    list = BizApi.QueryLineByDay(id, startDate, endDate);
                     break;
             }
 
@@ -119,13 +123,23 @@ namespace Rest
             }
 
         }
+        
+        [WebGet(UriTemplate = "info/rzrq", ResponseFormat = WebMessageFormat.Json) ]
+        [Description("融资融券股票列表")]
+        public List<InfoData> QueryInfoByRzrq()
+        {
+            return BizApi.QueryInfoRzrq() ;
+        }
 
+       
         [WebGet(UriTemplate = "info/industry1/{industry1}", ResponseFormat = WebMessageFormat.Json)]
+        [Description("按照行业查询股票")]
         public List<InfoData> QueryInfoByIndutry(string industry1)
         {
             return BizApi.QueryInfoByIndustry(industry1);
         }
 
+        [Description("按照二级行业进行查询")]
         [WebGet(UriTemplate = "info/industry1/{industry1}/industry2/{industry2}", ResponseFormat = WebMessageFormat.Json)]
         public List<InfoData> QueryInfoByIndutry2(string industry1, string industry2)
         {
@@ -138,7 +152,7 @@ namespace Rest
             return BizApi.QueryInfoByLocation(location);
         }
 
-
+        [Description("查询股票的排名,sid-股票代码,level-0,tag-时间戳,old-提前几个月的数据，目前是24-12-6-3,daybefore-提前几天开始计算，默认是０")]
         [WebGet(UriTemplate = "analyzevalue?sid={sid}&level={level}&tag={tag}&old={old}&daybefore={daybefore}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryAnalyze1(string sid,string level, string tag, string old,string daybefore)
         {

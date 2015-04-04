@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoExt", "InfoExt\InfoExt.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rzrq", "Rzrq\Rzrq.csproj", "{26FAC8F7-0E62-4FD6-AACC-F35608966098}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzeRzrq", "AnalyzeRzrq\AnalyzeRzrq.csproj", "{2D569098-BCD2-476B-B816-AF6E4361B033}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,18 @@ Global
 		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|x64.ActiveCfg = Release|Any CPU
 		{26FAC8F7-0E62-4FD6-AACC-F35608966098}.Release|x86.ActiveCfg = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D569098-BCD2-476B-B816-AF6E4361B033}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

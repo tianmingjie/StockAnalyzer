@@ -22,5 +22,11 @@ namespace big.entity
         public decimal high;
         [DataMember]
         public decimal low;
+
+        [DataMember]
+        public double totalshare;
+
+        [DataMember]
+        public double totalmoney;
     }
 }

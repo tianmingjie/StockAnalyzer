@@ -21,6 +21,7 @@ namespace Rzrq
             string dt = DateTime.Now.ToString("yyyy-MM-dd");
             //http://data.eastmoney.com/rzrq/sh.html
             string url = string.Format("http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml?tradedate="+dt);
+            //string url = string.Format("http://vip.stock.finance.sina.com.cn/q/go.php/vInvestConsult/kind/rzrq/index.phtml");
             WebClient client = new WebClient();
             byte[] gg = client.DownloadData(url);
             string jj = System.Text.Encoding.GetEncoding("gb2312").GetString(gg);
@@ -33,7 +34,14 @@ namespace Rzrq
             HtmlNode rootNode = document.DocumentNode;
             HtmlNodeCollection c = rootNode.SelectNodes("//table[@id='dataTable']");
 
-            string haha = c[1].InnerText.Replace("\n", ",").Replace(" ", "").Replace(",,,,", "|").Replace("|,", "|");
+            string haha = c[1].InnerText;
+            haha = haha.Replace(",", "");
+            haha=haha.Replace("\n", ",");
+            haha=haha.Replace(" ", "");
+            haha = haha.Replace(",,,,", "|");
+            haha=haha.Replace("|,", "|");
+            if (haha.Length < 1000) return; 
+
             string start_str = "|1";
             int start = haha.IndexOf(start_str)+start_str.Length-1;
             int end = haha.LastIndexOf(",,,");
@@ -48,7 +56,7 @@ namespace Rzrq
             foreach (string bb in cc)
             {
                 string[] dd = bb.Split(',');
-                if (dd.Length == 13 && dd[0]!=""&& !dd[0].StartsWith("5"))
+                if (!dd[1].StartsWith("5"))
                 {
                     list.Add(new RzrqData()
                     {
@@ -58,9 +66,11 @@ namespace Rzrq
                         rongzimairue = p(dd[4]),
                         rongzichanghuane=p(dd[5]),        
                         time=DateTime.Parse(dt),
-                        rongquanyue = p(dd[6]),
-                        rongquanmaichuliang = p(dd[7]),
-                        rongquanchanghuanliang=p(dd[8])
+                        rongquanyuliangjine = p(dd[6]),
+                        rongquanyuliang = p(dd[7]),
+                        rongquanmaichuliang = p(dd[8]),
+                        rongquanchanghuanliang=p(dd[9]),
+                        rongquanyue = p(dd[10])                     
                     });
                 }
             }

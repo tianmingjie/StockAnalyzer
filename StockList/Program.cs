@@ -19,7 +19,7 @@ namespace StockList
             //List<InfoData> list = BizApi.QueryInfoByIndustry2("金融服务","银行");
 
             //BizApi.InsertAnalyzeData(new DateTime(2014,1,1),DateTime.Now);
-            //List<InfoData> list = BizApi.QueryInfoAll();
+            //List<InfoData> list = BizApi.QueryRzrq();
             ////decimal[] list = BizApi.QueryExtractList("sh600000");
             //List<AnalyzeData> list1 = BizApi.QueryAnalyzeData(DateTime.Now);
 
@@ -39,7 +39,9 @@ namespace StockList
             //Console.WriteLine(BizApi.QueryLatestPrice("sh600272","20150319"));
             //Console.WriteLine(BizApi.QueryMaxMinPriceByRange("sh600272",24));
 
-            List<BasicData> list = ImportRawData.ReadCsvFile(@"D:\stock\store\data\sh600687\sh600687_2015-01-23.csv", "sh600687", new decimal[] { 1000,3000 }, DateTime.MinValue);
+            //List<BasicData> list = ImportRawData.ReadCsvFile(@"D:\stock\store\data\sh600687\sh600687_2015-01-23.csv", "sh600687", new decimal[] { 1000,3000 }, DateTime.MinValue);
+
+            List<LineData> list = BizApi.QueryLineByLimit("sh600687", 30);
             Console.WriteLine();
         }
     }

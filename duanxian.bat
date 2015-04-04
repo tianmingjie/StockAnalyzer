@@ -1,0 +1,1 @@
+G:\github\StockAnalyzer\AnalyzeRzrq\bin\Debug\AnalyzeRzrq.exe >G:\github\StockAnalyzer\duanxin.log

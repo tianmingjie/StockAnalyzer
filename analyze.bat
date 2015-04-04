@@ -6,6 +6,6 @@ time /t >> %log%
 analyze.exe 0 >> %log%
 REM analyze.exe -30 >> %log%
 
-date /t >> %log%
-time /t >> %log%
+REM date /t >> %log%
+REM time /t >> %log%
 echo ==================== >>  %log%

@@ -17,5 +17,7 @@ namespace big.entity
         public decimal rongquanyue;
         public decimal rongquanmaichuliang;
         public decimal rongquanchanghuanliang;
+        public decimal rongquanyuliangjine;
+        public decimal rongquanyuliang;
     }
 }
