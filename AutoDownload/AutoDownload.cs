@@ -64,8 +64,6 @@ namespace AutoDownload
 
         public static void DownloadSingle(string sid)
         {
-            string path = Constant.ROOT_FOLDER + sid;
-            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
             string startDate = BizApi.QueryExtractLastUpdate(sid).AddDays(1).ToString("yyyy-MM-dd");
             string endDate = StockUtil.FormatDate(DateTime.Now);

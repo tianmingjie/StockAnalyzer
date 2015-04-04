@@ -137,27 +137,26 @@ namespace DownloadData
         }
 
 
-        //download from one csv file
-        public static void DownloadDataToCsvByReaderFromCsvFile(string csvFile, string startDate, string endDate)
-        {
-            List<string> list = Common.StockUtil.ParseListFromCsvFile(csvFile);
-            foreach (string stock in list)
-            {
-                if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
+        ////download from one csv file
+        //public static void DownloadDataToCsvByReaderFromCsvFile(string csvFile, string startDate, string endDate)
+        //{
+        //    List<string> list = Common.StockUtil.ParseListFromCsvFile(csvFile);
+        //    foreach (string stock in list)
+        //    {
+        //        if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
-                for (DateTime dateTime = DateTime.Parse(startDate);
-                     dateTime <= DateTime.Parse(endDate);
-                     dateTime += TimeSpan.FromDays(1))
-                {
-                    if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
-                        DownloadDataToCsvByReader(stock, StockUtil.FormatDate(dateTime.Date));
-                }
-            }
-        }
+        //        for (DateTime dateTime = DateTime.Parse(startDate);
+        //             dateTime <= DateTime.Parse(endDate);
+        //             dateTime += TimeSpan.FromDays(1))
+        //        {
+        //            if (!(dateTime.Date.DayOfWeek == DayOfWeek.Saturday || dateTime.Date.DayOfWeek == DayOfWeek.Sunday))
+        //                DownloadDataToCsvByReader(stock, StockUtil.FormatDate(dateTime.Date));
+        //        }
+        //    }
+        //}
 
         public static string DownloadDataToCsvByReader(string stock, string startDate, string endDate)
         {
-            if (!Directory.Exists(Constant.ROOT_FOLDER + stock)) Directory.CreateDirectory(Constant.ROOT_FOLDER + stock);
 
             for (DateTime dateTime = DateTime.Parse(startDate);
                  dateTime <= DateTime.Parse(endDate);
