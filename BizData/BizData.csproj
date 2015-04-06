@@ -64,6 +64,7 @@
     <Compile Include="BizApi.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="entity\AnalyzeData.cs" />
+    <Compile Include="entity\BigData.cs" />
     <Compile Include="entity\InfoExtData1.cs" />
     <Compile Include="entity\InfoExtData.cs" />
     <Compile Include="entity\InfoData.cs" />

@@ -13,7 +13,7 @@
             var url_default = "/web/analyze.html?tag=" + tag + "&level=0&old=" + old + "&daybefore=0";
             var level = $("#levelselect  option:selected").text();
 
-            $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350></iframe>");
+            $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350 frameborder=0 ></iframe>");
 
 
             $("#oldselect").change(function () {
@@ -26,7 +26,7 @@
                 var location = $("#LocationSelect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
                 var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry + "&location=" + location;
-                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
 
@@ -59,7 +59,7 @@
                 var location = $("#LocationSelect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
                 var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&&location=" + location;
-                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
             $("#IndustrySelect").change(function () {
@@ -70,7 +70,19 @@
                 var industry = $("#IndustrySelect  option:selected").text();
                 //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
                 var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry;
-                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
+            });
+
+            $("#TypeSelect").change(function () {
+                //$("#LocationSelect").val("");
+                //$("#IndustrySelect").val("");
+                //$("#day1").remove();
+                var old = $("#oldselect  option:selected").text();
+                var level = $("#levelselect  option:selected").text();
+                var type = $("#TypeSelect  option:selected").val();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&type=" + type;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
             //30日前
@@ -82,7 +94,7 @@
             //    var location = $("#LocationSelect  option:selected").text();
             //    //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
             //    var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry+"&location="+location;
-            //    $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1300></iframe>");
+            //    $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500></iframe>");
             //});
         });
     </script>
@@ -94,7 +106,17 @@
             <select id="levelselect"> <option>0</option></select>
             <!--<input type="button" id="query" value="当日计算" />-->
 <!--            <input type="button" id="query1" value="30日前计算" />-->
-            行业:<select id="IndustrySelect" ><option>0</option></select> <label>区域:</label> <select id="LocationSelect"><option>0</option></select>
+            行业:<select id="IndustrySelect" ><option>0</option></select> 
+            区域:<select id="LocationSelect"><option>0</option></select>
+			类型:<select id="TypeSelect">
+                <option></option>
+                <option value="CYB">创业板</option>
+                <option value="ZXB">中小板(小于3亿）</option>
+                <option value="ZB">大盘股（大于20亿）</option>
+                <option value="SH">上海</option>
+                <option value="SZ">深圳</option>
+
+			   </select>
 <!--    </div>-->
     <div id="Content">
         <div id="day1"></div>

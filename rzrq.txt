@@ -1,1 +1,12 @@
 参考图形：600755 2014-10-24到2014-11-23
+
+
+笑傲江湖 2015/4/6 18:07:12
+getStockInfo?date=20140301&stockno=600001
+
+date必填，stockno可选，不填就是全部
+
+笑傲江湖 2015/4/6 18:07:27
+返回如下格式：
+stockno-date-open-close-high-low-totalmoney-totalnum-outnum-innum,   
+open-close-high-low-totalmoney-totalnum-outnum-innum,  

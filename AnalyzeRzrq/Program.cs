@@ -20,7 +20,7 @@ namespace AnalyzeRzrq
         public static decimal adjust = 0.02M;
 
         //下跌缩量６０％
-        public static decimal xiedie_suoliang = 0.7M;
+        public static decimal xiedie_suoliang = 0.6M;
 
         //下跌的时候，最低比最高跌幅
         public static decimal xiadie_diefu = 0.05M;
@@ -28,7 +28,7 @@ namespace AnalyzeRzrq
         //下跌调整天数
         public static int xiadie_tiaozhengtianshu = 10;
 
-        public static DateTime start = new DateTime(2015, 03, 03);
+        public static DateTime start = new DateTime(2015, 02, 03);
         public static DateTime end = new DateTime(2015, 04, 03);
 
         public static void Main(string[] args)
@@ -48,8 +48,8 @@ namespace AnalyzeRzrq
                 }
                 catch
                 {
-                    Console.WriteLine(id.sid + " failed");
-                    throw;
+                    //Console.WriteLine(id.sid + " failed");
+                    //throw;
                 }
             }
 
@@ -73,15 +73,15 @@ namespace AnalyzeRzrq
             LineData vally2 = GetLowValley2(list, peekindexclose, out valleyindexlow2);
 
             //如果时间太短，调整不够
-            if (peekindexclose < valleyindexclose || peekindexclose > valleyindexlow2) return false;
-            if (peekindexclose - valleyindexclose < 3 || valleyindexlow2 - peekindexclose < 3) return false;
+            //if (peekindexclose < valleyindexclose || peekindexclose > valleyindexlow2) return false;
+            //if (peekindexclose - valleyindexclose < 3 || valleyindexlow2 - peekindexclose < 3) return false;
 
             bool shangzhang = judgeShangzhang(list, peekindexclose, valleyindexclose);
 
             bool xiadie = judgeXiajiang(list, peekindexclose, valleyindexlow2);
 
             bool liangneng = judgeSuoliang(list, peekindexclose, valleyindexclose);
-
+            Console.WriteLine("上涨，下跌，缩量"+shangzhang+","+xiadie+","+ liangneng);
             return shangzhang && xiadie && liangneng;
         }
         /// <summary>
@@ -109,9 +109,9 @@ namespace AnalyzeRzrq
             int b4 = (valleyindexlow2 - peekindexclose) <=xiadie_tiaozhengtianshu ? 1 : 0;
 
             //最低点比前一天还低
-            int b5 = valley2.low < list[valleyindexlow2 - 1].low ? 1 : 0;
+            //int b5 = valley2.low < list[valleyindexlow2 - 1].low ? 1 : 0;
 
-            return (b1 + b2 + b3 + b4 + b5) > 3;
+            return (b1 + b2 + b3 + b4 ) > 3;
         }
 
         /// <summary>
@@ -125,18 +125,36 @@ namespace AnalyzeRzrq
         public static bool judgeSuoliang(List<LineData> list, int peekindexclose, int valleyindexclose)
         {
             //下跌的时候，缩量50%
+
+            //TODO:如果涨停，缩量，需要去掉
             double totalshare_peek = 0;
             double totalshare_valley = 0;
-            for (int i = 0; i <= peekindexclose; i++)
-            {
-                totalshare_peek += list[i].totalshare;
-            }
+
+            double avg_share_valley = 0;
+            double avg_share_peek = 0;
+            int index_valley = 0;
             for (int i = peekindexclose + 1; i < list.Count; i++)
             {
                 totalshare_valley += list[i].totalshare;
-            }
 
-            return ((decimal)(totalshare_valley / totalshare_peek)) < xiedie_suoliang;
+                index_valley++;
+            }
+            avg_share_valley = totalshare_valley / index_valley;
+
+
+            int index_peek = 0;
+            for (int i = 0; i <= peekindexclose; i++)
+            {
+                if ((decimal)((list[i].close - list[i - 1].close) / list[i - 1].close) > 0.098M)
+                {
+                    if (list[i].totalshare <= avg_share_valley) continue;
+                }
+                totalshare_peek += list[i].totalshare;
+                index_peek++;
+            }
+            avg_share_peek = totalshare_peek / index_peek;
+
+            return ((decimal)(avg_share_valley / avg_share_peek)) < xiedie_suoliang;
         }
 
         /// <summary>

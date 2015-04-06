@@ -27,23 +27,25 @@ chu_main_chart.showdetail = function (stock) {
         $('#location').text(location);
     });
 
-    chu_main_chart.showfinance(stock);
+    //chu_main_chart.showfinance(stock);
+		//$('#finance').load('/web/finance.html?sid=' + stock);
+    $("#finance").html("<iframe src=/web/finance.html?sid=" + stock + " width=1200 height=35 frameborder=0></iframe>");
 };
 
-chu_main_chart.showfinance = function (stock) {
-    var url = "/rest/rest/infoext/id/" + stock;
-    var html = "";
-    $.ajaxSetup({ async: false });
-    var t = $.getJSON(url, function (data) {
-        html += " shiyinglv:" + data["shiyinglv"];
-        html += " shijinjinglv:" + data["shijinglv"];
-        html += " ROE:" + data["ROE"];
-        html += " meiguweifenpeilirun:" + data["meiguweifenpeilirun"];
-        html += " shourutongbi:" + data["shourutongbi"];
-        html += " jingzichantongbi:" + data["jingliruntongbi"];
-    });
-    $('#finance').text(html);
-}
+//chu_main_chart.showfinance = function (stock) {
+//    var url = "/rest/rest/infoext/id/" + stock;
+//    var html = "";
+//    $.ajaxSetup({ async: false });
+//    var t = $.getJSON(url, function (data) {
+//        html += " shiyinglv:" + data["shiyinglv"];
+//        html += " shijinjinglv:" + data["shijinglv"];
+//        html += " ROE:" + data["ROE"];
+//        html += " meiguweifenpeilirun:" + data["meiguweifenpeilirun"];
+//        html += " shourutongbi:" + data["shourutongbi"];
+//        html += " jingzichantongbi:" + data["jingliruntongbi"];
+//    });
+//    $('#finance').text(html);
+//}
 
 chu_main_chart.showchart = function (stock,big,type,start) {
 

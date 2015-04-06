@@ -56,6 +56,6 @@ namespace big.entity
         [DataMember]
         public decimal low;
         [DataMember]
-        public string extstring1;
+        public string bigdetail;
     }
 }

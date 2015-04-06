@@ -10,7 +10,7 @@
 
             // http://localhost/rest/rest/analyze?end=20150304&level=1&start=20140901
 
-            var end_date = "end", level = "level", start_date = "start", tag = "tag", old = "old",daybefore="daybefore",industry="industry",location="location";
+            var end_date = "end", level = "level", start_date = "start", tag = "tag", old = "old",daybefore="daybefore",industry="industry",location="location",type="type";
             tag = chu_common.parsepara(tag);
             end_date = chu_common.parsepara(end_date);
             level = chu_common.parsepara(level);
@@ -19,10 +19,11 @@
             daybefore = chu_common.parsepara(daybefore);
             industry = chu_common.parsepara(industry);
             location = chu_common.parsepara(location);
+            type = chu_common.parsepara(type);
 
 
 
-            var url = "/rest/rest/analyze?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=" + daybefore+"&industry=" + industry+"&location="+location;;
+            var url = "/rest/rest/analyze?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=" + daybefore+"&industry=" + industry+"&location="+location+"&type="+type;
             $.ajaxSetup({ async: false });
             var t = $.getJSON(url, function (data) {
                 for (var i in data) {

@@ -1,0 +1,36 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="js/highstock.js"></script>
+    <script type="text/javascript" src="js/modules/exporting.js"></script>
+    <script type="text/javascript" src="js/chu/chu_common.js"></script>
+    <script>
+        $(function () {
+            var sid = "sid";
+            sid = chu_common.parsepara(sid);
+
+            var url = "/rest/rest/infoext/id/" + sid;
+            var html = "";
+            $.ajaxSetup({ async: false });
+            var t = $.getJSON(url, function (data) {
+                html += " 市盈率:" + data["shiyinglv"];
+                html += " 市净率:" + data["shijinglv"];
+                html += " ROE:" + data["ROE"];
+                html += " 每股未分配利润:" + data["meiguweifenpeilirun"] + "元";
+                html += " 收入同比:" + data["shourutongbi"]+"%";
+                html += " 净资产同比:" + data["jingliruntongbi"] + "%";
+                html += " 总股本:" + data["zongguben"];
+                html += " 流通股:" + data["liutonggu"];
+            });
+            $('#finance').text(html);
+
+        });
+
+    </script>
+</head>
+<body>
+    <div id="finance"></div>
+    
+</body>
+</html>

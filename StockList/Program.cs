@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Import;
+using Common;
 
 namespace StockList
 {
@@ -41,9 +42,31 @@ namespace StockList
 
             //List<BasicData> list = ImportRawData.ReadCsvFile(@"D:\stock\store\data\sh600687\sh600687_2015-01-23.csv", "sh600687", new decimal[] { 1000,3000 }, DateTime.MinValue);
 
-            List<LineData> list = BizApi.QueryLineByLimit("sh600687", 30);
+            //List<LineData> list = BizApi.QueryLineByLimit("sh600687", 30);
+
+
+            //Console.WriteLine(MyBase64.CompressNumber(999999999999999999L));
+            //Console.WriteLine(MyBase64.UnCompressNumber("I0OgMJB"));
+            //Console.WriteLine(MyBase64.UnCompressNumber("z8TlHFk"));
+
+            //Console.WriteLine(MyBase64.UnCompressNumber("z8TlHFk"));
+            List<InfoData> list = BizApi.QueryInfoAll();
+            foreach (InfoData id in list)
+            {
+                try
+                {
+                    BizApi.AddBigDetail(id.sid);
+                    Console.WriteLine(id.sid + " succeed to add bigdetail");
+                }
+                catch
+                {
+                    Console.WriteLine(id.sid + " already to add bigdetail--------");
+                }
+            }
             Console.WriteLine();
         }
     }
-    
+
+ 
+  
 }

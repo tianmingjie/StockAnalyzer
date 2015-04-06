@@ -23,10 +23,6 @@
                 var type = $("#TypeSelect  option:selected").text();
                 var big = $("#BigSelect  option:selected").text();
                 var start = $("#start").val();
-                //if (display_detail == 0) {
-                //    chu_main_chart.showdetail(stock);
-                //    display_detail = 1;
-                //}
                 chu_main_chart.showchart(stock, big, type, start);
                 
                 }); //ajax

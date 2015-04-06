@@ -308,7 +308,7 @@ namespace Import
                                     array[k].buymoney += Decimal.Multiply(price, (Decimal)share);
                                 }
 
-                                array[k].extstring1 = haha[bigs[k]];
+                                array[k].bigdetail = haha[bigs[k]];
                             }
                         }
                     }

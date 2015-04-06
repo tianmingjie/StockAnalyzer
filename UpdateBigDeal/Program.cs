@@ -16,7 +16,20 @@ namespace UpdateBigDeal
     {
         public static void Main(string[] args)
         {
-            DownloadData("sz000153", new DateTime(2015, 4, 3).ToString("yyyy-MM-dd"), new DateTime(2015, 4, 3).ToString("yyyy-MM-dd"));
+            DateTime start = new DateTime(2014, 1, 1);
+            DateTime end = new DateTime(2015, 4, 3);
+
+            //DownloadData("sh600017", start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+
+            List<InfoData> list = BizApi.QueryInfoAll();
+            //List<InfoData> list = new List<InfoData>() { BizApi.QueryInfoById("sh600157") };
+            foreach (InfoData id in list)
+            {
+                DownloadData(id.sid, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+                Console.WriteLine(id.sid + " done=====================================");
+            }
+
+            Console.WriteLine();
         }
 
         public static string DownloadData(string stock, string startDate, string endDate)
@@ -51,7 +64,7 @@ namespace UpdateBigDeal
                 }
                 else
                 {
-                    StockLog.Log.Debug("None: " + stock + "-" + date);
+                    //StockLog.Log.Debug("None: " + stock + "-" + date);
                 }
             }
             catch
@@ -69,28 +82,56 @@ namespace UpdateBigDeal
             StockLog.Log.Debug(sid + " start ");
             DateTime beginning = DateTime.Now;
             //BizApi.CreateDataTable(sid);
-            string file = sid + "_" + date;
-            try
-            {
+            //try
+            //{
                 //decimal weight = BizApi.QueryWeight(sid);
-                decimal[] extractlist = BizApi.QueryExtractList(sid);
+                //decimal[] extractlist = BizApi.QueryExtractList(sid);
+                decimal[] extractlist = new decimal[4];
+                extractlist[0] = 0;
+                extractlist[1] = 500;
+                extractlist[2] = 1000;
+                extractlist[3] = 2000;
+
                 DateTime lastupdate = DateTime.MinValue;//BizApi.QueryExtractLastUpdate(sid);
 
                 List<BasicData> list = ReadCsvByReader(sid, date, reader, extractlist, lastupdate);
 
                 foreach (BasicData bd in list)
                 {
-                    //Console.WriteLine(bd.time+" "+bd.sellshare);
-                    //BizApi.InsertBasicData(bd);
+                    if (bd.big == 0)
+                    {
+                        try
+                        {
+                            BizApi.InsertBasicData(bd);
+                        }
+                        catch
+                        {
+                            StockLog.Log.Error(sid + " " + bd.time + " insert fail");
+                        }
+                        //Console.WriteLine(sid + " insert " + bd.time + " " + bd.big);
+                    }
+                    else
+                    {
+                        //Console.WriteLine(sid + " update " + bd.time + " " + bd.big);
+
+                        try
+                        {
+                            BizApi.UpdateBasicDataForBigDeal(bd);
+                        }
+                        catch
+                        {
+                            StockLog.Log.Error(sid +" "+ bd.time + " update fail");
+                        }
+                    }
                 }
                 TimeSpan end = DateTime.Now - beginning;
 
-                StockLog.Log.Debug(file + " complete at " + end);
-            }
-            catch
-            {
-                StockLog.Log.Error(file + " import fail");
-            }
+                //StockLog.Log.Debug(sid + " complete at " + end);
+            //}
+            //catch
+            //{
+            //    StockLog.Log.Error(sid + " import fail");
+            //}
 
         }
 
@@ -98,9 +139,9 @@ namespace UpdateBigDeal
         {
             int index = 0;
 
-            //bigs=null;
-            //bigs=new decimal[1];
-            //bigs[0]=2000M;
+            //bigs = null;
+            //bigs = new decimal[1];
+            //bigs[0] = 1000M;
             List<BasicData> list = new List<BasicData>();
             BasicData[] array = new BasicData[bigs.Length];
 
@@ -111,7 +152,7 @@ namespace UpdateBigDeal
             //处理过了就忽略
             if (t < lastupdate.AddDays(1)) return null;
 
-            Dictionary<decimal, string> haha = new Dictionary<decimal, string>();
+            Dictionary<decimal, string> temp = new Dictionary<decimal, string>();
 
             for (int j = 0; j < bigs.Length; j++)
             {
@@ -120,7 +161,7 @@ namespace UpdateBigDeal
                 array[j].time = t;
                 array[j].sid = sid;
                 array[j].c_type = "d";
-                haha[bigs[j]] = "";
+                temp[bigs[j]] = "";
             }
 
             // open the file "data.csv" which is a CSV file with headers
@@ -136,7 +177,9 @@ namespace UpdateBigDeal
 
                 foreach (String[] record in hi)
                 {
+
                     string price_str = record[1];
+                    string change_str = record[2];
                     string share_str = record[3];
                     string type_str = record[5];
                     string time_str = record[0];
@@ -174,25 +217,46 @@ namespace UpdateBigDeal
 
                             if (Int32.Parse(share_str) >= bigs[k])
                             {
-                               //11位编码编码，
-                                //第一位买单1卖单0,后三位股数（百手）
-                                //后三位时间数（相对于9：25的分钟数）
-                                //后4位位股价（1正0负，后两位是相对开盘的百分比
-                                Console.WriteLine(time_str + ": " + share + " " + type_str);
+                                //15位编码编码，
+                                //第1位买单1卖单0
+                                //后3位股数（百手）
+                                //后3位时间数（相对于9：25的分钟数）
+                                //后4位位股价（1正0负，后三位是相对开盘的万分比
+                                //后4位，股价变化(1正0负，后3位是万分比）
+                                //Console.WriteLine(time_str + ": " + share + " " + type_str);
+
+                                string code = "";
                                 if (type_str == "S")
                                 {
-                                    haha[bigs[k]] += "-" + p(share) + p1(time_str) + p2(current, open);
+                                    //string code = "-" + MyBase64.CompressNumber(long.Parse(p(share) + p1(time_str) + p2(current, open)));
+                                    if (bigs[k] > 0)
+                                    {
+                                        code = p(share) + p1(time_str) + RateToOpen(current, open) + RateToBefore(decimal.Parse(change_str), current);
+                                        code = MyBase64.CompressNumber(long.Parse(code));
+                                        code = "-" + code;
+                                        temp[bigs[k]] += code;
+                                    }
                                     array[k].sellshare += share;
                                     array[k].sellmoney += Decimal.Multiply(price, (Decimal)share);
                                 }
                                 if (type_str == "B")
                                 {
-                                    haha[bigs[k]] += "+" + p(share) + p1(time_str) + p2(current, open);
+                                    if (bigs[k] > 0)
+                                    {
+                                        //string code = "-" + MyBase64.CompressNumber(long.Parse(p(share) + p1(time_str) + p2(current, open)));
+                                        code = p(share) + p1(time_str) + RateToOpen(current, open) + RateToBefore(decimal.Parse(change_str), current);
+                                        //Console.WriteLine(code);
+                                        code = MyBase64.CompressNumber(long.Parse(code));
+                                        code = "+" + code;
+                                        temp[bigs[k]] += code;
+                                    }
                                     array[k].buyshare += share;
                                     array[k].buymoney += Decimal.Multiply(price, (Decimal)share);
                                 }
 
-                                array[k].extstring1 = haha[bigs[k]];
+                                array[k].bigdetail = temp[bigs[k]];
+
+                                //Console.WriteLine(array[k].bigdetail);
                             }
                         }
                     }
@@ -209,7 +273,78 @@ namespace UpdateBigDeal
             return list;
         }
 
-        
+        public static List<BigData> Parse(string sid, string time, string bigdeal)
+        {
+            List<BigData> list = new List<BigData>();
+
+            bigdeal = bigdeal.Replace("-", ",-").Replace("+", ",+");
+
+            bigdeal = bigdeal.StartsWith(",") ? bigdeal.Substring(1, bigdeal.Length - 1) : bigdeal;
+            string[] bigs = bigdeal.Split(',');
+            foreach (string b in bigs)
+            {
+                string type = b.StartsWith("+") ? "B" : "S";
+
+                string code = MyBase64.UnCompressNumber(b.Substring(1, b.Length - 1)).ToString();
+
+                for (int j = 0; j < (14 - code.Length); j++)
+                {
+                    code = "0" + code;
+                }
+
+                list.Add(
+                    new BigData()
+                    {
+                        sid = sid,
+                        shares = int.Parse(code.Substring(0, 3)),
+                        minutes = int.Parse(code.Substring(3, 3)),
+                        rateToOpen = int.Parse(code.Substring(6, 4).StartsWith("0") ? "-" + code.Substring(7, 3) : code.Substring(7, 3)),
+                        rateToChange = int.Parse(code.Substring(10, 4).StartsWith("0") ? "-" + code.Substring(11, 3) : code.Substring(11, 3)),
+                        time = BizCommon.ParseToDate(time),
+                        type = type
+                    });
+
+
+            }
+
+            return list;
+
+        }
+        /// <summary>
+        /// 股票变化. 万分比，四位，1为正，0是负
+        /// </summary>
+        /// <param name="change"></param>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public static string RateToBefore(decimal change, decimal current)
+        {
+            //集合竞价
+            if (current == change) return "9999";
+
+            int rate = (int)Math.Floor(change / (current - change) * 10000);
+
+            //一单涨停，设为999；
+            if (rate >= 1000) rate = 999;
+            if (rate <= -1000) rate = -999;
+
+            string ret = "";
+            if (rate > 0)
+            {
+                if (rate < 10) ret = "100" + rate;
+                if (rate > 10 && rate < 100) ret = "10" + rate;
+                if (rate > 99 && rate < 1000) ret = "1" + rate;
+            }
+            else
+            {
+
+                if (-rate < 10) ret = "000" + (-rate);
+                if (-rate > 9 && -rate < 99) ret = "00" + (-rate);
+                if (-rate > 99 && -rate < 1000) ret = "0" + (-rate);
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// 股数编码，3位，百手
         /// </summary>
@@ -226,31 +361,35 @@ namespace UpdateBigDeal
         }
 
         /// <summary>
-        /// 处理股价百分比，4位第一位是1正，0负，后面三位相对于开盘价的百分比
+        /// 处理股价百分比，4位第一位是1正，0负，后面三位相对于开盘价的千分比
         /// </summary>
         /// <param name="open"></param>
         /// <param name="current"></param>
         /// <returns></returns>
-        public static string p2(decimal open, decimal current)
+        public static string RateToOpen(decimal current, decimal open)
         {
-            decimal cc = (current - open) / open * 1000;
+            decimal cc = (current - open) / open * 10000;
 
-            int bb = (int)Math.Floor(cc);
-           
+            int rate = (int)Math.Floor(cc);
+            //涨停，设为999；
+            if (rate >= 1000) rate = 999;
+            if (rate <= -1000) rate = -999;
 
-            if (bb > 0)
+            string ret = "";
+            if (rate > 0)
             {
-                if (bb < 10) return "100" + bb;
-                if (bb >= 10 &&bb<100) return "10"+ bb;
-                return "1"+bb;
-
+                if (rate < 10) ret = "100" + rate;
+                if (rate > 9 && rate < 100) ret = "10" + rate;
+                if (rate > 99 && rate < 1000) ret = "1" + rate;
             }
             else
             {
-                if (-bb < 10) return "000" +(-bb);
-                if (-bb >= 10 && -bb < 100) return "00"+(-bb);
-                return "0" + (-bb);
+
+                if (-rate < 10) ret = "000" + (-rate);
+                if (-rate > 10 && -rate < 99) ret = "00" + (-rate);
+                if (-rate > 99 && -rate < 1000) ret = "0" + (-rate);
             }
+            return ret;
         }
 
         /// <summary>
@@ -267,8 +406,8 @@ namespace UpdateBigDeal
             TimeSpan end = new TimeSpan(15, 00, 01);
             if (ts < noon)
             {
-                int a = (ts - start).Minutes;
-                return p((double)a * 100);
+                double a = (ts - start).TotalMinutes;
+                return p(a * 100);
             }
             else
             {

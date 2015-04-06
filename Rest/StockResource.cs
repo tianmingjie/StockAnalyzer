@@ -69,6 +69,13 @@ namespace Rest
             return BizApi.QueryMaxMinPriceByRange(id,r);
         }
 
+
+        [WebGet(UriTemplate = "getStockData?date={date}&stockno={stockno}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        public string QueryLineDataForQingyou(string date, string stockno, string type)
+        {
+            return BizApi.QueryStockDataForQingyou(BizCommon.ParseToDate(date), stockno, type);
+        }
+
         [WebGet(UriTemplate = "line/id/{id}?type={type}&start={start}&end={end}", ResponseFormat = WebMessageFormat.Json)]
         public IList<LineData> QueryLineData(string id, string type, string start, string end)
         {
@@ -188,8 +195,8 @@ namespace Rest
             return Constant.ANALYZE_TIME;
         }
         
-        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}&daybefore={daybefore}&industry={industry}&location={location}", ResponseFormat = WebMessageFormat.Json)]
-        public List<AnalyzeData> QueryAnalyze(string level, string tag, string old, string daybefore,string industry,string location)
+        [WebGet(UriTemplate = "analyze?level={level}&tag={tag}&old={old}&daybefore={daybefore}&industry={industry}&location={location}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        public List<AnalyzeData> QueryAnalyze(string level, string tag, string old, string daybefore,string industry,string location,string type)
         {
             tag = BizCommon.ProcessWeekend(tag);
             int level_val = 1;
@@ -205,7 +212,7 @@ namespace Rest
             DateTime start_date = end_date.AddMonths(o);
 
 
-            return BizApi.QueryAnalyzeData(tag, start_date, end_date, level_val, industry,location);
+            return BizApi.QueryAnalyzeData(tag, start_date, end_date, level_val, industry,location,type);
         }
 
 

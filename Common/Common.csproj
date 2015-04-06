@@ -61,6 +61,7 @@
     <Compile Include="DateUtil.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="IStockModule.cs" />
+    <Compile Include="MyBase64.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockException.cs" />
     <Compile Include="StockInfo.cs" />
