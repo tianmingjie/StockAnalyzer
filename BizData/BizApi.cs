@@ -39,12 +39,12 @@ namespace big
         private static string QueryStockDataForQingyou(DateTime start, string sid)
         {
             string ret = "";
-            string sql = string.Format("select open,close,high,low, totalshare,totalmoney,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time ='{1}' and big=500", sid, BizCommon.ProcessSQLString(start));
+            string sql = string.Format("select open,close,high,low, totalshare,totalmoney,buyshare,sellshare,DATE_FORMAT(time ,'%X%m%d') as tag from {0} where time ='{1}' and big=0", sid, BizCommon.ProcessSQLString(start));
             List<LineData> list = BuildLineDataForQingyou(sql);
             if (list.Count == 0) return sid+"-------";
             LineData ld = list[0];
 
-            ret = sid + "-" + ld.tag + "-" + ld.open + "-" + ld.close + "-" + ld.high + "-" + ld.totalmoney + "-" + ld.totalshare + "-0-0" + ",";
+            ret = sid + "-" + ld.tag + "-" + ld.open + "-" + ld.close + "-" + ld.high + "-" + ld.totalmoney + "-" + ld.totalshare + "-"+ld.buyshare+"-" +ld.sellshare+ ",";
 
             return ret.Substring(0, ret.Length - 1);
             
@@ -97,7 +97,9 @@ namespace big
                     low = (Decimal)(dr["low"]),
                     tag = (string)dr["tag"],
                     totalshare = (Double)(dr["totalshare"]),
-                    totalmoney = (Double)(dr["totalmoney"])
+                    totalmoney = (Double)(dr["totalmoney"]),
+                    buyshare = (Double)(dr["buyshare"]),
+                    sellshare = (Double)(dr["sellshare"])
                 };
 
                 list.Add(bd);
@@ -111,7 +113,8 @@ namespace big
         #region update SQL
         public static void AddBigDetail(string sid)
         {
-            string sql2 = String.Format("ALTER TABLE {0} ADD COLUMN bigdetail VARCHAR(10000) NULL AFTER low", sid);
+            //string sql2 = String.Format("ALTER TABLE {0} ADD COLUMN bigdetail VARCHAR(10000) NULL AFTER low", sid);
+            string sql2=String.Format("ALTER TABLE {0} CHANGE COLUMN bigdetail bigdetail TEXT NULL DEFAULT NULL",sid);
             UpdateSQL(sql2, sid);
         }
         public static void UpdateSQL(string sql, string sid)
@@ -129,6 +132,12 @@ namespace big
             {
                 string sql1 = String.Format("update  {0} set bigdetail='{1}' where time='{2}' and big={3} ", bd.sid, bd.bigdetail, bd.time, bd.big);
                 MySqlHelper.ExecuteNonQuery(sql1);
+            }
+            else
+            {
+                InsertBasicData(bd);
+                //string sql1 = String.Format("update  {0} set bigdetail='{1}' where time='{2}' and big={3} ", bd.sid, bd.bigdetail, bd.time, bd.big);
+                //MySqlHelper.ExecuteNonQuery(sql1);
             }
 
             string sql2 = string.Format("update {0} set extupdate='{1}' where sid='{2}'", EXTRACT_TABLE_STATUS, bd.time, bd.sid);
@@ -685,8 +694,8 @@ namespace big
             
             //CreateDataTable(sid);
             string sql = String.Format(
-                "INSERT INTO {0}(time,c_type,big,buyshare,buymoney,sellshare,sellmoney,totalshare,totalmoney,open,close,high,low)VALUES('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13})",
-                        sid, bd.time, bd.c_type, bd.big, bd.buyshare, bd.buymoney, bd.sellshare, bd.sellmoney, bd.totalshare, bd.totalmoney, bd.open, bd.close, bd.high, bd.low);
+                "INSERT INTO {0}(time,c_type,big,buyshare,buymoney,sellshare,sellmoney,totalshare,totalmoney,open,close,high,low,bigdetail)VALUES('{1}','{2}',{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},'{14}')",
+                        sid, bd.time, bd.c_type, bd.big, bd.buyshare, bd.buymoney, bd.sellshare, bd.sellmoney, bd.totalshare, bd.totalmoney, bd.open, bd.close, bd.high, bd.low,bd.bigdetail);
             MySqlHelper.ExecuteNonQuery(sql);
             UpdateExtractStatus(bd);
         }

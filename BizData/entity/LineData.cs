@@ -28,5 +28,11 @@ namespace big.entity
 
         [DataMember]
         public double totalmoney;
+
+        [DataMember]
+        public double buyshare;
+
+        [DataMember]
+        public double sellshare;
     }
 }
