@@ -20,7 +20,7 @@ namespace DownloadData
                 startDate = "2014-01-01";
             }
             string endDate = StockUtil.FormatDate(DateTime.Now);
-            DataDownload.DownloadDataToCsv(info.stock, startDate, endDate);
+            //DataDownload.DownloadDataToCsv(info.stock, startDate, endDate);
             StockUtil.UpdateDownloadTimeStamp(info.stock, endDate);
             StockLog.Log.Info(info.stock + " updated " + startDate + " " + endDate);
             

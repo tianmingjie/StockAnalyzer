@@ -17,41 +17,55 @@ namespace Import
 
     public class ImportRawData
     {
-        public static void Import(string folder)
+
+        public static void ImportFileByReader(string sid, string date, TextReader reader)
         {
+            //string sid = file.Substring(file.LastIndexOf("\\") + 1);
+            StockLog.Log.Debug(sid + " start ");
+            DateTime beginning = DateTime.Now;
+            //BizApi.CreateDataTable(sid);
+            //try
+            //{
+            //decimal weight = BizApi.QueryWeight(sid);
+            decimal[] ext_list = BizApi.QueryExtractList(sid);
+            decimal[] extractlist = new decimal[ext_list.Length + 1];
 
-            string[] folders = Directory.GetDirectories(folder);
-            for (int i = 0; i < folders.Length; i++)
+            for (int i = 0; i < ext_list.Length; i++)
             {
-                string sid = folders[i].Substring(folders[i].LastIndexOf("\\") + 1);
-                StockLog.Log.Debug(sid + " start ");
-                DateTime beginning = DateTime.Now;
-                BizApi.CreateDataTable(sid);
-
-                try
+                extractlist[i] = ext_list[i];
+            }
+            extractlist[ext_list.Length] = 0;
+            //decimal[] extractlist = new decimal[4];
+            //extractlist[0] = 0;
+            //extractlist[1] = 500;
+            //extractlist[2] = 1000;
+            //extractlist[3] = 2000;
+            try
+            {
+                if (sid == "sh600048")
                 {
-                    //decimal weight = BizApi.QueryWeight(sid);
-                    decimal[] extractlist = BizApi.QueryExtractList(sid);
-                    DateTime lastupdate = BizApi.QueryExtractLastUpdate(sid);
-                    StockLog.Log.Debug(" last update is: " + lastupdate);
-                    List<BasicData> list = ReadCsvFolder(folders[i], sid, extractlist, lastupdate);
+                    StockLog.Log.Debug(sid + " complete at ");
+                }
+                DateTime lastupdate = BizApi.QueryExtractLastUpdate(sid);
 
-                    foreach (BasicData bd in list)
-                    {
-                        //Console.WriteLine(bd.time+" "+bd.sellshare);
-                        BizApi.InsertBasicData(bd);
-                    }
-                    TimeSpan end = DateTime.Now - beginning;
-                    StockLog.Log.Debug(sid + " complete at " + end);
+                List<BasicData> list = ReadCsvByReader(sid, date, reader, extractlist, lastupdate);
+
+                foreach (BasicData bd in list)
+                {
+
+                    BizApi.InsertBasicData(bd);
                 }
-                catch {
-                    StockLog.Log.Error(sid + " import fail");
-                }
+                TimeSpan end = DateTime.Now - beginning;
+
+                StockLog.Log.Debug(sid + " complete at " + end);
+            }
+            catch
+            {
+                StockLog.Log.Error(sid + " import fail");
             }
 
         }
-
-        public static void ImportFileByReader(string sid, string date,TextReader reader)
+        public static void ImportFileByReaderOld(string sid, string date, TextReader reader)
         {
             //string sid = file.Substring(file.LastIndexOf("\\") + 1);
             StockLog.Log.Debug(sid + " start ");
@@ -75,45 +89,15 @@ namespace Import
 
                 StockLog.Log.Debug(file + " complete at " + end);
             }
-            catch {
-                StockLog.Log.Error(file + " import fail"); 
-            }
-
-        }
-
-
-        public static void ImportFile(string sid, string file)
-        {
-            //string sid = file.Substring(file.LastIndexOf("\\") + 1);
-            StockLog.Log.Debug(sid + " start ");
-            DateTime beginning = DateTime.Now;
-            BizApi.CreateDataTable(sid);
-
-            try
-            {
-                //decimal weight = BizApi.QueryWeight(sid);
-                 decimal[] extractlist = BizApi.QueryExtractList(sid);
-                DateTime lastupdate = BizApi.QueryExtractLastUpdate(sid);
-
-                List<BasicData> list = ReadCsvFile(file, sid,  extractlist, lastupdate);
-
-                foreach (BasicData bd in list)
-                {
-                    //Console.WriteLine(bd.time+" "+bd.sellshare);
-                    BizApi.InsertBasicData(bd);
-                }
-                TimeSpan end = DateTime.Now - beginning;
-                StockLog.Log.Debug(file + " complete at " + end);
-            }
             catch
             {
                 StockLog.Log.Error(file + " import fail");
             }
-        
+
         }
 
 
-        public static List<BasicData> ReadCsvByReader(string sid, string date, TextReader stream, decimal[] bigs, DateTime lastupdate)
+        public static List<BasicData> ReadCsvByReaderOld(string sid, string date, TextReader stream, decimal[] bigs, DateTime lastupdate)
         {
             int index = 0;
 
@@ -200,7 +184,7 @@ namespace Import
                     }
                     catch
                     {
-                        StockLog.Log.Error(sid+"_"+date + " import fail");
+                        StockLog.Log.Error(sid + "_" + date + " import fail");
                     }
                 }
             }
@@ -210,28 +194,33 @@ namespace Import
             }
             return list;
         }
-
-        public static List<BasicData> ReadCsvFile(string fileName, string sid, decimal[] bigs, DateTime lastupdate)
+        /// <summary>
+        /// 保存大单的具体情况
+        /// </summary>
+        /// <param name="sid"></param>
+        /// <param name="date"></param>
+        /// <param name="stream"></param>
+        /// <param name="bigs"></param>
+        /// <param name="lastupdate"></param>
+        /// <returns></returns>
+        public static List<BasicData> ReadCsvByReader(string sid, string date, TextReader stream, decimal[] bigs, DateTime lastupdate)
         {
             int index = 0;
 
+            //bigs = null;
+            //bigs = new decimal[1];
+            //bigs[0] = 1000M;
             List<BasicData> list = new List<BasicData>();
             BasicData[] array = new BasicData[bigs.Length];
 
-
-            FileInfo f = new FileInfo(fileName);
-            //如果文件不存在就返回null
-            if (!f.Exists) return null;
-
-            //String fileName = "sz000830_2012-09-03.csv";
-            //string sid = f.Name.Substring(0, 8);
-            string time = f.Name.Substring(9, 10);
+            if (date.Length != 10) throw new Exception("time format is wrong -" + date);
+            string time = date;
             DateTime t = new DateTime(Int32.Parse(time.Substring(0, 4)), Int32.Parse(time.Substring(5, 2)), Int32.Parse(time.Substring(8, 2)));
 
             //处理过了就忽略
             if (t < lastupdate.AddDays(1)) return null;
 
-            Dictionary<decimal, string> haha = new Dictionary<decimal, string>();
+            Dictionary<decimal, string> temp = new Dictionary<decimal, string>();
 
             for (int j = 0; j < bigs.Length; j++)
             {
@@ -240,11 +229,11 @@ namespace Import
                 array[j].time = t;
                 array[j].sid = sid;
                 array[j].c_type = "d";
-                haha[bigs[j]] = "";
+                temp[bigs[j]] = "";
             }
 
             // open the file "data.csv" which is a CSV file with headers
-            using (CsvReader csv = new CsvReader(new StreamReader(fileName), true))
+            using (CsvReader csv = new CsvReader(stream, true))
             {  //颠倒记录
                 IEnumerable<string[]> hi = csv.Reverse<string[]>();
 
@@ -256,7 +245,9 @@ namespace Import
 
                 foreach (String[] record in hi)
                 {
+
                     string price_str = record[1];
+                    string change_str = record[2];
                     string share_str = record[3];
                     string type_str = record[5];
                     string time_str = record[0];
@@ -294,27 +285,52 @@ namespace Import
 
                             if (Int32.Parse(share_str) >= bigs[k])
                             {
-                                Console.WriteLine(time_str + ": " + share + " " + type_str);
+                                //15位编码编码，
+                                //第1位买单1卖单0
+                                //后3位股数（百手）
+                                //后3位时间数（相对于9：25的分钟数）
+                                //后4位位股价（1正0负，后三位是相对开盘的万分比
+                                //后4位，股价变化(1正0负，后3位是万分比）
+                                //Console.WriteLine(time_str + ": " + share + " " + type_str);
+
+                                string code = "";
                                 if (type_str == "S")
                                 {
-                                    haha[bigs[k]] += "-" + p(share) + p1(time_str) + p2(current, open);
+                                    //string code = "-" + MyBase64.CompressNumber(long.Parse(p(share) + p1(time_str) + p2(current, open)));
+                                    if (bigs[k] > 0)
+                                    {
+                                        code = p(share) + p1(time_str) + RateToOpen(current, open) + RateToBefore(decimal.Parse(change_str), current);
+                                        code = MyBase64.CompressNumber(long.Parse(code));
+                                        code = "-" + code;
+                                        temp[bigs[k]] += code;
+                                    }
                                     array[k].sellshare += share;
                                     array[k].sellmoney += Decimal.Multiply(price, (Decimal)share);
                                 }
                                 if (type_str == "B")
                                 {
-                                    haha[bigs[k]] += "+" + p(share) + p1(time_str) + p2(current, open);
+                                    if (bigs[k] > 0)
+                                    {
+                                        //string code = "-" + MyBase64.CompressNumber(long.Parse(p(share) + p1(time_str) + p2(current, open)));
+                                        code = p(share) + p1(time_str) + RateToOpen(current, open) + RateToBefore(decimal.Parse(change_str), current);
+                                        //Console.WriteLine(code);
+                                        code = MyBase64.CompressNumber(long.Parse(code));
+                                        code = "+" + code;
+                                        temp[bigs[k]] += code;
+                                    }
                                     array[k].buyshare += share;
                                     array[k].buymoney += Decimal.Multiply(price, (Decimal)share);
                                 }
 
-                                array[k].bigdetail = haha[bigs[k]];
+                                array[k].bigdetail = temp[bigs[k]];
+
+                                //Console.WriteLine(array[k].bigdetail);
                             }
                         }
                     }
                     catch
                     {
-                        StockLog.Log.Error(fileName + " import fail");
+                        StockLog.Log.Error(sid + " import fail");
                     }
                 }
             }
@@ -325,6 +341,83 @@ namespace Import
             return list;
         }
 
+        public static List<BigData> Parse(string sid, string time, string bigdeal)
+        {
+            List<BigData> list = new List<BigData>();
+
+            bigdeal = bigdeal.Replace("-", ",-").Replace("+", ",+");
+
+            bigdeal = bigdeal.StartsWith(",") ? bigdeal.Substring(1, bigdeal.Length - 1) : bigdeal;
+            string[] bigs = bigdeal.Split(',');
+            foreach (string b in bigs)
+            {
+                string type = b.StartsWith("+") ? "B" : "S";
+
+                string code = MyBase64.UnCompressNumber(b.Substring(1, b.Length - 1)).ToString();
+
+                for (int j = 0; j < (14 - code.Length); j++)
+                {
+                    code = "0" + code;
+                }
+
+                list.Add(
+                    new BigData()
+                    {
+                        sid = sid,
+                        shares = int.Parse(code.Substring(0, 3)),
+                        minutes = int.Parse(code.Substring(3, 3)),
+                        rateToOpen = int.Parse(code.Substring(6, 4).StartsWith("0") ? "-" + code.Substring(7, 3) : code.Substring(7, 3)),
+                        rateToChange = int.Parse(code.Substring(10, 4).StartsWith("0") ? "-" + code.Substring(11, 3) : code.Substring(11, 3)),
+                        time = BizCommon.ParseToDate(time),
+                        type = type
+                    });
+
+
+            }
+
+            return list;
+
+        }
+        /// <summary>
+        /// 股票变化. 万分比，四位，1为正，0是负
+        /// </summary>
+        /// <param name="change"></param>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public static string RateToBefore(decimal change, decimal current)
+        {
+            //集合竞价
+            if (current == change) return "9999";
+
+            int rate = (int)Math.Floor(change / (current - change) * 10000);
+
+            //一单涨停，设为999；
+            if (rate >= 1000) rate = 999;
+            if (rate <= -1000) rate = -999;
+
+            string ret = "";
+            if (rate > 0)
+            {
+                if (rate < 10) ret = "100" + rate;
+                if (rate > 10 && rate < 100) ret = "10" + rate;
+                if (rate > 99 && rate < 1000) ret = "1" + rate;
+            }
+            else
+            {
+
+                if (-rate < 10) ret = "000" + (-rate);
+                if (-rate > 9 && -rate < 99) ret = "00" + (-rate);
+                if (-rate > 99 && -rate < 1000) ret = "0" + (-rate);
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 股数编码，3位，百手
+        /// </summary>
+        /// <param name="bb"></param>
+        /// <returns></returns>
         public static string p(double bb)
         {
             int aa = (int)Math.Floor(bb / 100);
@@ -335,21 +428,43 @@ namespace Import
 
         }
 
-        public static string p2(decimal open, decimal current)
+        /// <summary>
+        /// 处理股价百分比，4位第一位是1正，0负，后面三位相对于开盘价的千分比
+        /// </summary>
+        /// <param name="open"></param>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public static string RateToOpen(decimal current, decimal open)
         {
-            decimal cc = (current - open) / open * 100;
+            decimal cc = (current - open) / open * 10000;
 
-            int bb = (int)Math.Floor(cc);
+            int rate = (int)Math.Floor(cc);
+            //涨停，设为999；
+            if (rate >= 1000) rate = 999;
+            if (rate <= -1000) rate = -999;
 
-            if (bb > 0)
+            string ret = "";
+            if (rate > 0)
             {
-                return bb < 10 ? "10" + bb : "1" + bb;
+                if (rate < 10) ret = "100" + rate;
+                if (rate > 9 && rate < 100) ret = "10" + rate;
+                if (rate > 99 && rate < 1000) ret = "1" + rate;
             }
             else
             {
-                return -bb < 10 ? "00" + (-bb) : "0" + (-bb);
+
+                if (-rate < 10) ret = "000" + (-rate);
+                if (-rate > 10 && -rate < 99) ret = "00" + (-rate);
+                if (-rate > 99 && -rate < 1000) ret = "0" + (-rate);
             }
+            return ret;
         }
+
+        /// <summary>
+        /// 处理时间，也是3位，相对于9：25分的分钟数
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public static string p1(string time)
         {
             TimeSpan ts = TimeSpan.Parse(time);
@@ -359,32 +474,35 @@ namespace Import
             TimeSpan end = new TimeSpan(15, 00, 01);
             if (ts < noon)
             {
-                int a = (ts - start).Minutes;
-                return p((double)a * 100);
+                double a = (ts - start).TotalMinutes;
+                return p(a * 100);
             }
             else
             {
-                int a1 = (end - ts).Minutes + 120;
-                return p((double)a1 * 100);
+                double a1 = (ts - noon1).TotalMinutes + 125;
+                return p(a1 * 100);
             }
         }
 
-        public static List<BasicData> ReadCsvFolder(string folder, string sid, decimal[] bigs, DateTime lastupdate)
+        /// <summary>
+        /// 处理中文字符，减少文件大小
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string ReplaceChinese(string data)
         {
-            if (!Directory.Exists(folder)) throw new Exception(folder + " not exist!!!");
-
-            List<BasicData> list = new List<BasicData>();
-
-            foreach (string file in Directory.GetFiles(folder))
-            {
-                if (file.EndsWith(".csv"))
-                {
-                    List<BasicData> tmp = ReadCsvFile(file, sid, bigs, lastupdate);
-                    if (tmp != null)
-                        list = list.Concat(tmp).ToList();
-                }
-            }
-            return list;
+            data = data.Replace('\t', ',');
+            data = data.Replace("买盘", "B");
+            data = data.Replace("卖盘", "S");
+            data = data.Replace("中性盘", "Z");
+            data = data.Replace("--", "0");
+            data = data.Replace("成交时间", "time");
+            data = data.Replace("成交价", "price");
+            data = data.Replace("价格变动", "change");
+            data = data.Replace("成交量(手)", "share");
+            data = data.Replace("成交额(元)", "money");
+            data = data.Replace("性质", "type");
+            return data;
         }
 
     }

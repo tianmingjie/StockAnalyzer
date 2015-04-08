@@ -70,7 +70,7 @@ namespace Rest
         }
 
 
-        [WebGet(UriTemplate = "getStockData?date={date}&stockno={stockno}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "getData?date={date}&stockno={stockno}&type={type}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryLineDataForQingyou(string date, string stockno, string type)
         {
             return BizApi.QueryStockDataForQingyou(BizCommon.ParseToDate(date), stockno, type);
@@ -213,6 +213,33 @@ namespace Rest
 
 
             return BizApi.QueryAnalyzeData(tag, start_date, end_date, level_val, industry,location,type);
+        }
+
+        [WebGet(UriTemplate = "analyze1?level={level}&tag={tag}&old={old}&daybefore={daybefore}&industry={industry}&location={location}&type={type}", ResponseFormat = WebMessageFormat.Json)]
+        [Description("type-CYB,ZB,SZ,SH")]
+        public List<AnalyzeData> QueryAnalyzeRetry(string level, string tag, string old, string daybefore, string industry, string location, string type)
+        {
+            DateTime now = DateTime.Now;
+            List<AnalyzeData> list = new List<AnalyzeData>();
+            int retry = 0;
+            while (true && retry < 10)
+            {
+                
+                DateTime end_date = now.AddDays((double)(-Int32.Parse(daybefore)));
+                DateTime start_date = end_date.AddMonths(-Int32.Parse(old));
+
+                list=BizApi.QueryAnalyzeData(tag, start_date, end_date, Int32.Parse(level), industry, location, type);
+                if (list.Count == 0)
+                {
+                    retry++;
+                    now = now.AddDays(-retry);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return list;
         }
 
 

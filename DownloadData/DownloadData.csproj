@@ -49,8 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataDownload.cs" />
-    <Compile Include="Download.cs" />
-    <Compile Include="DownloadModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

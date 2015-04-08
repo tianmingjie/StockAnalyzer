@@ -44,7 +44,7 @@ namespace big
             if (list.Count == 0) return sid+"-------";
             LineData ld = list[0];
 
-            ret = sid + "-" + ld.tag + "-" + ld.open + "-" + ld.close + "-" + ld.high + "-" + ld.totalmoney + "-" + ld.totalshare + "-"+ld.buyshare+"-" +ld.sellshare+ ",";
+            ret = sid + "-" + ld.tag + "-" + ld.open + "-" + ld.close + "-" + ld.high + "-" + ld.low + "-" + ld.totalmoney + "-" + ld.totalshare + "-" + ld.buyshare + "-" + ld.sellshare + ",";
 
             return ret.Substring(0, ret.Length - 1);
             

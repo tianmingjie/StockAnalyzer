@@ -32,7 +32,7 @@ namespace Import
             //    BizApi.InsertBasicData(bd);
             //}
 
-             Import.ImportRawData.Import(args[0]);
+             //Import.ImportRawData.Import(args[0]);
             //List<BasicData> list=Import.ImportRawData.ReadCsvFile(@"D:\temp\test\data\bad\sh600000_2012-09-03.csv", "sh600000", new decimal[] {  1000,2000 });
             //Console.WriteLine(list.Count);
             //BizApi.CreateDataTable("sz000005");
