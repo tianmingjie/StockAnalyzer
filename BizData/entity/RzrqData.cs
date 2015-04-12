@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace big.entity
 {
+    [Serializable]
     public class RzrqData
     {
         public DateTime time;

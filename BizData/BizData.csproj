@@ -38,9 +38,16 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib.0.84">
+      <HintPath>..\lib\memcached\ICSharpCode.SharpZipLib.0.84.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\StockAnalyzer\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Memcached.ClientLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=42c0400964dcc297, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\memcached\Memcached.ClientLibrary.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.8.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Web, Version=6.8.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
@@ -73,6 +80,7 @@
     <Compile Include="entity\RawData.cs" />
     <Compile Include="entity\RzrqData.cs" />
     <Compile Include="entity\TableStatus.cs" />
+    <Compile Include="MemCacheHelper.cs" />
     <Compile Include="MySQLHelper.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace big.entity
 {
+    [Serializable]
     [DataContract]
     public class AnalyzeData
     {
@@ -42,5 +43,9 @@ namespace big.entity
 
         [DataMember]
         public int big;
+
+        //public decimal liutonggu;
+
+        //public string location;
     }
 }

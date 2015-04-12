@@ -1,0 +1,3 @@
+创建服务.bat，可以创建memcached自动启动的windows服务。
+默认路径是：E:\Memcached\memcached.exe
+如果你的exe文件不放在默认位置，请修改 创建服务.bat 中的路径

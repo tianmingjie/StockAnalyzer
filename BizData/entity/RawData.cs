@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace big.entity
 {
+    [Serializable]
     public class RawData
     {
         public decimal price;

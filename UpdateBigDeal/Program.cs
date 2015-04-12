@@ -16,18 +16,19 @@ namespace UpdateBigDeal
     {
         public static void Main(string[] args)
         {
-            DateTime start = new DateTime(2014, 1, 1);
-            DateTime end = new DateTime(2015, 4, 3);
+            DateTime start = new DateTime(2014, 3, 21);
+            DateTime end = new DateTime(2014, 3, 21);
 
-            //DownloadData("sh600017", start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+            DownloadData("sh600000", start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
 
-            List<InfoData> list = BizApi.QueryInfoAll();
-            //List<InfoData> list = new List<InfoData>() { BizApi.QueryInfoById("sh600157") };
-            foreach (InfoData id in list)
-            {
-                DownloadData(id.sid, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
-                Console.WriteLine(id.sid + " done=====================================");
-            }
+
+            //List<InfoData> list = BizApi.QueryInfoAll();
+            ////List<InfoData> list = new List<InfoData>() { BizApi.QueryInfoById("sh600157") };
+            //foreach (InfoData id in list)
+            //{
+            //    DownloadData(id.sid, start.ToString("yyyy-MM-dd"), end.ToString("yyyy-MM-dd"));
+            //    Console.WriteLine(id.sid + " done=====================================");
+            //}
 
             Console.WriteLine();
         }

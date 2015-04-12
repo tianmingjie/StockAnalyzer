@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace big.entity
 {
+
     public class TableStatus
     {
         public int id;

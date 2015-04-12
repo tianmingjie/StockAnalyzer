@@ -1,0 +1,1 @@
+sc create "Memcached Server" binpath= "E:\Memcached\memcached.exe -d runservice -l 127.0.0.1 -m 512 -c 2048 -p 11011" DisplayName= "Memcached Server" start= auto  

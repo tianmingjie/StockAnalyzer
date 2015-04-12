@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace big.entity
 {
+    [Serializable]
     [DataContract]
     public class LineData
     {
