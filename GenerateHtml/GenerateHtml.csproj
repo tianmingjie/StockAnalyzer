@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AF16D744-EBA3-4716-A242-D3B495D81AE1}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{DAFC1185-48B7-4196-97EC-4144EB08524F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StockList</RootNamespace>
-    <AssemblyName>Test</AssemblyName>
+    <RootNamespace>GenerateHtml</RootNamespace>
+    <AssemblyName>GenerateHtml</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,22 +17,19 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>..\bin</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,10 +49,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Analyze\Analyze.csproj">
-      <Project>{16a1e72d-f214-47db-a3d0-59d441bbcccd}</Project>
-      <Name>Analyze</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BizData\BizData.csproj">
       <Project>{66c0b860-1c77-4e05-b6bb-4343290d7f2e}</Project>
       <Name>BizData</Name>
@@ -62,18 +56,6 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{8c100380-0414-43db-aa3b-32417c48c89f}</Project>
       <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DownloadData\DownloadData.csproj">
-      <Project>{8e37da8b-a01c-492a-b160-9adae343e638}</Project>
-      <Name>DownloadData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Import\Import.csproj">
-      <Project>{34b4cec5-b675-4bb9-ad79-b5f3ef9ce8e9}</Project>
-      <Name>Import</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rest\Rest.csproj">
-      <Project>{e9b9b532-23bb-4179-9163-586ac99948be}</Project>
-      <Name>Rest</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -12,7 +12,7 @@
             var init = true;
             if (init) {
                 var url = "/rest/rest/analyzevalue1";
-                $.ajaxSetup({ async: false });
+                //$.ajaxSetup({ async: false });
                 $.getJSON(url, function (data) {
                     var d = data.split('-');
                     $("#oldselect").empty();
@@ -27,24 +27,38 @@
             var end = new Date();
             var tag = chu_common.formatdate(end);
             var old = $("#oldselect  option:selected").text();
+            var url_default = "/web/analyze.html?tag=" + tag + "&level=0&old=" + old + "&daybefore=0";
             var level = $("#levelselect  option:selected").text();
 
-            var d_url = "/web/analyze.html?tag=" + tag + "&level=0&old=" + old + "&daybefore=0";
-            var s_url = "/web/temp/analyze_"+old+"_ALL.html";
-            FetchUrl(s_url, d_url);
+            function ImageExist(url) {
+                $.ajaxSetup({ async: false });
+                $.ajax({
+                    url: url,
+                    type: 'HEAD',
+                    error: function () {
+                        return false;
+                    },
+                    success: function () {
+                        return true;
+                    }
+                });
+            };
+
+
+            $("#day1").html("<iframe src='" + url_default + "' width=1200 height=1350 frameborder=0 ></iframe>");
 
 
             $("#oldselect").change(function () {
                 $("#IndustrySelect").val("");
                 $("#LocationSelect").val("");
+                //$("#day1").remove();
                 var old = $("#oldselect  option:selected").text();
-                var level = $("#levelselect  option:selected").text();
-                var location = $("#LocationSelect  option:selected").text();
+                
                 var industry = $("#IndustrySelect  option:selected").text();
-                var s_url = "/web/temp/analyze_" + old + "_ALL.html";
-                var d_url = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry + "&location=" + location;
-                FetchUrl(s_url, d_url);
-
+                var location = $("#LocationSelect  option:selected").text();
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry + "&location=" + location;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
 
@@ -53,7 +67,7 @@
             //$.ajaxSetup({ async: false });
             $.getJSON(url, function (data) {
                 $("#IndustrySelect").empty();
-                $("#IndustrySelect").append("<option>ALL</option>");
+                $("#IndustrySelect").append("<option></option>");
                 for (var i in data) {
                     $("#IndustrySelect").append("<option>" + data[i] + "</option>");
                 }
@@ -63,7 +77,7 @@
             //$.ajaxSetup({ async: false });
             $.getJSON(url_1, function (data) {
                 $("#LocationSelect").empty();
-                $("#LocationSelect").append("<option>ALL</option>");
+                $("#LocationSelect").append("<option></option>");
                 for (var i in data) {
                     $("#LocationSelect").append("<option>" + data[i] + "</option>");
                 }
@@ -75,9 +89,16 @@
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 var location = $("#LocationSelect  option:selected").text();
-                var s_url = "/web/temp/analyze_" + old + "_" + location + ".html";
-                var d_url = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&&location=" + location;
-                FetchUrl(s_url, d_url);
+                var u = "/web/temp/analyze_" + old + "_" + location + ".html";
+                if (ImageExist(u)) {
+                    var url_1 = u;
+                } else{
+                    var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&&location=" + location;
+                }
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+               // var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&&location=" + location;
+                
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
             $("#IndustrySelect").change(function () {
@@ -86,10 +107,9 @@
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 var industry = $("#IndustrySelect  option:selected").text();
-                var s_url = "/web/temp/analyze_" + old + "_" + industry + ".html";
-                var d_url = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry;
-                FetchUrl(s_url, d_url);
-
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&industry=" + industry;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
             $("#TypeSelect").change(function () {
@@ -99,19 +119,11 @@
                 var old = $("#oldselect  option:selected").text();
                 var level = $("#levelselect  option:selected").text();
                 var type = $("#TypeSelect  option:selected").val();
-                var s_url = "/web/temp/analyze_" + old + "_" + type + ".html";
-                var d_url = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&type=" + type;
-                FetchUrl(s_url, d_url);
+                //alert("/web/analyze.html?start=" + start1 + "&end=" + format(end) + "&level=1");
+                var url_1 = "/web/analyze.html?old=" + old + "&level=" + level + "&tag=" + tag + "&daybefore=0&type=" + type;
+                $("#day1").html("<iframe src='" + url_1 + "' width=1200 height=1500 frameborder=0></iframe>");
             });
 
-            function FetchUrl(s_url, d_url) {
-                if (chu_common.UrlExists(s_url)) {
-                    $("#day1").html("<iframe src='" + s_url + "' width=1300 height=1500 frameborder=0></iframe>");
-                } else {
-                    $("#day1").html("<iframe src='" + d_url + "' width=1300 height=1500 frameborder=0></iframe>");
-                }
-               
-            };
             //30日前
             //$("#query1").click(function () {
             //    //$("#day1").remove();
@@ -136,7 +148,7 @@
             行业:<select id="IndustrySelect" ><option>0</option></select> 
             区域:<select id="LocationSelect"><option>0</option></select>
 			类型:<select id="TypeSelect">
-                <option>ALL</option>
+                <option></option>
                 <option value="CYB">创业板</option>
 				<option value="XPG">小盘股（小于1亿）</option>
                 <option value="ZXB">中小板（小于3亿）</option>

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Import;
 using Common;
+using Analyze;
 
 namespace StockList
 {
@@ -50,20 +51,21 @@ namespace StockList
             //Console.WriteLine(MyBase64.UnCompressNumber("z8TlHFk"));
 
             //Console.WriteLine(MyBase64.UnCompressNumber("z8TlHFk"));
-            List<InfoData> list = BizApi.QueryInfoAll();
-            foreach (InfoData id in list)
-            {
-                try
-                {
-                    BizApi.AddBigDetail(id.sid);
-                    Console.WriteLine(id.sid + " succeed to add bigdetail");
-                }
-                catch
-                {
-                    Console.WriteLine(id.sid + " already to add bigdetail--------");
-                }
-            }
-            Console.WriteLine();
+            //List<InfoData> list = BizApi.QueryInfoAll();
+            //foreach (InfoData id in list)
+            //{
+            //    try
+            //    {
+            //        BizApi.AddBigDetail(id.sid);
+            //        Console.WriteLine(id.sid + " succeed to add bigdetail");
+            //    }
+            //    catch
+            //    {
+            //        Console.WriteLine(id.sid + " already to add bigdetail--------");
+            //    }
+            //}
+
+            //GenerateHtml.GenerateAll("", "");
         }
     }
 

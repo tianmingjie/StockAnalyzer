@@ -22,7 +22,6 @@ namespace Analyze
                 day_before = int.Parse(args[0]);
             }
 
-            //int[] list = new int[] { 3, 6, 12, 24 };
             exec(day_before);
         }
 

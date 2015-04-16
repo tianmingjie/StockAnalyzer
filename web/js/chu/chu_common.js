@@ -33,3 +33,10 @@ chu_common.parsepara = function (key_var) {
     }
     return ret;
 };
+
+chu_common.UrlExists=function(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status != 404;
+}

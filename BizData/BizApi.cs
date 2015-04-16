@@ -177,7 +177,19 @@ namespace big
         public static InfoExtData QueryInfoExtById(string sid)
         {
             string sql = string.Format("select sid,lastupdate,shouyi,shiyinglv,jingzichan,shijinglv,shouru,shourutongbi,jinglirun,jingliruntongbi,maolilv,jinglilv,ROE,fuzhailv,zongguben, liutonggu,zongzhi,liuzhi,meiguweifenpeilirun,shangshishijian from {0} where sid='{1}' ", INFOEXT, sid);
-            return BuildInfoExtData(sql)[0];
+            List<InfoExtData> list = BuildInfoExtData(sql);
+            if (list.Count > 0)
+            {
+                return list[0];
+            }
+            else
+            {
+                return new InfoExtData()
+                {
+                    sid=sid
+                };
+            }
+            
         }
 
         public static List<InfoExtData> BuildInfoExtData(string sql)
@@ -296,12 +308,6 @@ namespace big
             return list;
         }
 
-        public static List<AnalyzeData> QueryAnalyzeData(string tag, int level)
-        {
-            string sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where rank<{1} and tag='{2}'  and level={3} order by rank", ANALYZE, Constant.TOP, tag, level);
-            return BuildAnalyzeData(sql);
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -328,6 +334,9 @@ namespace big
                         case "ZXB":
                             sql = string.Format("select A.tag tag,A.level level,A.sid sid,A.name name,A.value value,A.firstlevel firstlevel,A.secondlevel secondlevel,A.enddate enddate,A.rank rank,A.startdate startdate,A.big big from {0} A join {6} B on A.sid=B.sid  and A.tag='{2}'  and A.level={3} and A.startdate='{4}' and A.enddate='{5}' and B.liutonggu<3  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), INFOEXT);
                             break;
+                        case "XPG":
+                            sql = string.Format("select A.tag tag,A.level level,A.sid sid,A.name name,A.value value,A.firstlevel firstlevel,A.secondlevel secondlevel,A.enddate enddate,A.rank rank,A.startdate startdate,A.big big from {0} A join {6} B on A.sid=B.sid  and A.tag='{2}'  and A.level={3} and A.startdate='{4}' and A.enddate='{5}' and B.liutonggu<1  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), INFOEXT);
+                            break;
                         case "ZB":
                             sql = string.Format("select A.tag tag,A.level level,A.sid sid,A.name name,A.value value,A.firstlevel firstlevel,A.secondlevel secondlevel,A.enddate enddate,A.rank rank,A.startdate startdate,A.big big from {0} A join {6} B on A.sid=B.sid  and A.tag='{2}'  and A.level={3} and A.startdate='{4}' and A.enddate='{5}' and B.liutonggu>20  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end), INFOEXT);
                             break;
@@ -339,6 +348,9 @@ namespace big
                             sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where  tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}'  and sid like 'sz%' order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
                             break;
 
+                        case "ALL":
+                            sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where  tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}'  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
+                            break;
                         default:
                             sql = string.Format("select tag,level,sid,name,value,firstlevel,secondlevel,enddate,rank,startdate,big from {0} where  tag='{2}'  and level={3} and startdate='{4}' and enddate='{5}'  order by rank limit {1}", ANALYZE, Constant.QUERY_TOP, tag, level, BizCommon.ProcessSQLString(start), BizCommon.ProcessSQLString(end));
                             break;
