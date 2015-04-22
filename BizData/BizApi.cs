@@ -221,7 +221,7 @@ namespace big
                     ied.zongzhi = decimal.Parse(dr["zongzhi"].ToString());
                     ied.liuzhi = decimal.Parse(dr["liuzhi"].ToString());
                     ied.meiguweifenpeilirun = decimal.Parse(dr["meiguweifenpeilirun"].ToString());
-                    ied.shangshishijian = BizCommon.ProcessSQLString(DateTime.Parse(dr["shangshishijian"].ToString()));
+                    //ied.shangshishijian = BizCommon.ProcessSQLString(DateTime.Parse(dr["shangshishijian"].ToString()));
                     list.Add(ied);
                 }
             }
@@ -1119,16 +1119,16 @@ namespace big
 
         public static string QueryLatestPrice(string sid, string tag)
         {
-
+            if (!string.IsNullOrEmpty(tag)) tag = BizCommon.ProcessWeekend(tag);
             string sql = "";
             if (string.IsNullOrEmpty(tag))
             {
-                sql = string.Format("select  close from {0} order by id desc limit 1", sid);
+                sql = string.Format("select  close from {0} where big=0 order by id desc limit 1", sid);
             }
             else
             {
                 string time = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag));
-                sql = string.Format("select  close from {0} where time='{1}' order by id desc limit 1", sid, time);
+                sql = string.Format("select  close from {0} where time='{1}' and big=0 order by id desc limit 1", sid, time);
             }
             DataSet ds = MySqlHelper.GetDataSet(sql);
             //DataTable dt = ds.Tables[0];
@@ -1137,7 +1137,7 @@ namespace big
             {
                 //取前一天的收盘价
                 string time1 = BizCommon.ProcessSQLString(BizCommon.ParseToDate(tag).AddDays(-1));
-                string sql1 = string.Format("select  close from {0} where time='{1}' order by id desc limit 1", sid, time1);
+                string sql1 = string.Format("select  close from {0} where time='{1}' and big=0 order by id desc limit 1", sid, time1);
                 DataSet ds1 = MySqlHelper.GetDataSet(sql1);
                 //DataTable dt = ds.Tables[0];
                 DataTable dt1 = ds1.Tables[0];
@@ -1147,7 +1147,7 @@ namespace big
                 }
                 else
                 {
-                    ds1.Tables[0].Rows[0]["close"].ToString();
+                    return ds1.Tables[0].Rows[0]["close"].ToString();
                 }
             }
             else

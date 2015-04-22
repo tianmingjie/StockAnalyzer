@@ -67,6 +67,10 @@
       <Project>{8e37da8b-a01c-492a-b160-9adae343e638}</Project>
       <Name>DownloadData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GenerateHtml\GenerateHtml.csproj">
+      <Project>{dafc1185-48b7-4196-97ec-4144eb08524f}</Project>
+      <Name>GenerateHtml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Import\Import.csproj">
       <Project>{34b4cec5-b675-4bb9-ad79-b5f3ef9ce8e9}</Project>
       <Name>Import</Name>

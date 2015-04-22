@@ -57,7 +57,7 @@ namespace Rest
         [WebGet(UriTemplate = "latestprice/id/{id}?tag={tag}", ResponseFormat = WebMessageFormat.Json)]
         public string QueryLatestPrice(string id,string tag)
         {
-            if(!string.IsNullOrEmpty(tag))tag = BizCommon.ProcessWeekend(tag);
+            
             return BizApi.QueryLatestPrice(id,tag);
         }
 
