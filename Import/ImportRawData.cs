@@ -59,7 +59,7 @@ namespace Import
 
                 StockLog.Log.Debug(sid + " complete at " + end);
             }
-            catch
+            catch(Exception e)
             {
                 StockLog.Log.Error(sid + " import fail");
             }

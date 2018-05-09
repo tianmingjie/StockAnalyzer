@@ -32,6 +32,10 @@ namespace DownloadData
                     {
                         StockLog.Log.Debug("None: " + stock+"-"+date);
                     }
+
+                    Random ran = new Random();
+                    int RandKey = ran.Next(1000, 6000);
+                    System.Threading.Thread.Sleep(RandKey);
             }
             catch
             {
